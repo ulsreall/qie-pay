@@ -52,6 +52,18 @@ async function readCall(abi, address, functionName, args = []) {
   return contract[functionName](...args);
 }
 
+async function sendTxRaw(to, data) {
+  if (!window.ethereum) throw new Error('No wallet connected');
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+  const from = await signer.getAddress();
+  const txHash = await window.ethereum.request({
+    method: 'eth_sendTransaction',
+    params: [{ from, to, data }],
+  });
+  return provider.waitForTransaction(txHash);
+}
+
 // ─── Staking ───
 
 export async function stakeQIE(amountWei) {
@@ -152,7 +164,14 @@ export async function burnQIEPForDiscount() {
 }
 
 export async function mintRewards(customer, paymentId) {
-  return sendTx(REWARDS_ABI, REWARDS_ADDRESS, 'mintRewards', [customer, BigInt(paymentId)]);
+  // Manual ABI encoding for QIE Wallet compatibility
+  // mintRewards(address,uint256) = 0x6a20de92
+  const selector = '0x6a20de92';
+  const data = selector + ethers.AbiCoder.defaultAbiCoder().encode(
+    ['address', 'uint256'],
+    [customer, BigInt(paymentId)]
+  ).slice(2);
+  return sendTxRaw(REWARDS_ADDRESS, data);
 }
 
 export async function getDiscountInfo(address) {
@@ -162,4 +181,20 @@ export async function getDiscountInfo(address) {
     expiresAt: Number(result.expiresAt ?? result[1]),
     hasDiscount: result.hasDiscount ?? result[2],
   };
+}
+
+export async function addQIEPToWallet() {
+  if (!window.ethereum) throw new Error('No wallet connected');
+  return window.ethereum.request({
+    method: 'wallet_watchAsset',
+    params: {
+      type: 'ERC20',
+      options: {
+        address: REWARDS_ADDRESS,
+        symbol: 'QIEP',
+        decimals: 18,
+        image: '',
+      },
+    },
+  });
 }

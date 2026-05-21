@@ -176,11 +176,11 @@ export default function Dashboard() {
         if (payment.customer && payment.customer !== '0x0000000000000000000000000000000000000000') {
           toast.loading('Minting QIEP rewards...', { id: 'rewards' });
           await mintRewards(payment.customer, id);
-          toast.success('QIEP rewards sent to customer!', { id: 'rewards' });
+          toast.success('QIEP rewards sent! Customer: add QIEP token (0x56A1...Ca4) to wallet to see balance.', { id: 'rewards', duration: 6000 });
         }
       } catch (rewardErr) {
         console.warn('Reward minting failed:', rewardErr);
-        // Don't fail the settle flow if rewards fail
+        toast.error('Reward mint failed — try manually from Rewards page', { id: 'rewards' });
       }
 
       if (address) await fetchPayments(address);

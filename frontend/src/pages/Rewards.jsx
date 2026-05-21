@@ -9,6 +9,7 @@ import {
   transferQIEP,
   burnQIEPForDiscount,
   getDiscountInfo,
+  addQIEPToWallet,
 } from '../utils/defi-contract';
 import { ethers } from 'ethers';
 import { QIEP_PER_PAYMENT, BURN_COST, DISCOUNT_PERCENT } from '../utils/defi-constants';
@@ -238,13 +239,29 @@ export default function Rewards() {
               <span className="text-sm font-normal text-[#A1A1AA] ml-2">QIEP</span>
             </p>
           </div>
-          <button
-            onClick={() => setShowTransfer(!showTransfer)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 border border-[#27272A] hover:border-[#3F3F46] text-[#A1A1AA] text-sm font-medium rounded-md transition-colors duration-150"
-          >
-            <Send size={14} />
-            Transfer
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={async () => {
+                try {
+                  await addQIEPToWallet();
+                  toast.success('QIEP added to wallet');
+                } catch {
+                  toast.error('Failed to add token');
+                }
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-2 border border-[#27272A] hover:border-[#10B981] text-[#10B981] text-xs font-medium rounded-md transition-colors duration-150"
+            >
+              <Gift size={12} />
+              + Add to Wallet
+            </button>
+            <button
+              onClick={() => setShowTransfer(!showTransfer)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 border border-[#27272A] hover:border-[#3F3F46] text-[#A1A1AA] text-sm font-medium rounded-md transition-colors duration-150"
+            >
+              <Send size={14} />
+              Transfer
+            </button>
+          </div>
         </div>
 
         {/* Transfer form */}
