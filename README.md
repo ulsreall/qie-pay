@@ -1,6 +1,6 @@
-# QIE Pay — Decentralized Payment Gateway
+# QIE Pay — Decentralized Payment Gateway + DeFi Protocol
 
-A full-stack crypto payment gateway built on the **QIE Blockchain**. Accept QIE payments with low fees, instant settlement, and smart escrow — all on-chain.
+A full-stack crypto payment gateway and DeFi protocol built on **QIE Blockchain**. Accept QIE payments with low fees, instant settlement, smart escrow, and earn rewards — all on-chain.
 
 > 🏆 Built for the **QIE Blockchain Hackathon 2026** — DeFi & Payments Track
 
@@ -8,133 +8,217 @@ A full-stack crypto payment gateway built on the **QIE Blockchain**. Accept QIE 
 
 ## ✨ Features
 
-| Feature | Description |
-|---------|-------------|
-| **Dashboard** | Real-time revenue charts, payment tracking, notifications |
-| **Create Payment** | Generate payment links with QR codes |
-| **Batch Payments** | Create multiple payments at once |
-| **POS Mode** | Tablet-friendly Point of Sale for retail |
-| **Storefront** | Public merchant page with product listings |
-| **Analytics** | Revenue charts, daily/weekly/monthly trends |
-| **Invoice Generator** | Downloadable HTML invoices per payment |
-| **Webhooks** | Real-time payment event notifications |
-| **API Docs** | Developer documentation with code snippets |
-| **Fee Calculator** | Instant fee calculation with USD conversion |
-| **CSV Export** | Export all transactions to CSV |
-| **QR Codes** | Auto-generated QR for every payment link |
+### Payment Gateway
+- **Dashboard** — Real-time revenue charts, payment tracking, sparkline trends, tabular-nums formatting
+- **Create Payment** — Generate payment links with amount, description, order ID
+- **Batch Payments** — Create multiple payments at once via CSV-style input
+- **POS Mode** — Tablet-friendly Point of Sale for retail, preset amounts
+- **Storefront** — Public merchant page with product listings and one-click checkout
+- **Invoice Generator** — Downloadable HTML invoices with emerald branding
+- **QR Codes** — Auto-generated QR for every payment link
+- **CSV Export** — Export all transactions to CSV
+- **Fee Calculator** — Instant fee calculation with QIE→USD conversion
+- **Webhooks** — Real-time payment event notifications
+- **API Docs** — Developer documentation with code snippets
+- **Notifications** — Bell icon with unread count, 30s polling, toast on new payment
+- **Merchant Settings** — Business name, description, category, logo upload, public profile
+
+### DeFi Protocol
+- **Staking** — 4-tier fee system: stake QIE → lower platform fees (2.5% → 1.0%)
+- **Governance** — Create proposals, vote for/against, quorum-based execution
+- **QIEP Rewards** — ERC-20 token, earn 1 QIEP per QIE paid, burn 10 QIEP for 10% discount
+- **On-Chain Faucet** — Decentralized testnet faucet, auto-funds new email wallets
+
+### Wallet & Auth
+- **Wallet Connect** — QIE Wallet / MetaMask via `window.ethereum`
+- **Email Wallet** — Create wallet with just an email address (deterministic key generation)
+- **Auto-Faucet** — New email wallets auto-receive 0.5 QIE on creation
+- **Demo Mode** — Explore full UI without wallet (mock data, amber indicator)
+
+### Technical
+- **Code Splitting** — 20+ lazy-loaded chunks, vendor separation (React, ethers, charts, motion)
+- **Mobile Responsive** — All 17+ pages adapt to mobile, tablet, desktop
+- **True Gray UI** — Near-black `#09090B`, emerald accent `#10B981`, Stripe/Vercel-inspired
+- **SVG Logo** — Custom emerald+sky gradient logo integrated throughout
+
+---
 
 ## 🖼️ Screenshots
 
-**Landing Page**
-![Landing Page](./screenshots/ss-home.png)
+| Landing Page | Dashboard | POS Mode |
+|:---:|:---:|:---:|
+| ![Landing](./screenshots/ss-home.png) | ![Dashboard](./screenshots/ss-dashboard.png) | ![POS](./screenshots/ss-pos.png) |
 
-**POS Mode**
-![POS Mode](./screenshots/ss-pos.png)
+| Staking | Governance | Faucet |
+|:---:|:---:|:---:|
+| ![Staking](./screenshots/ss-staking.png) | ![Governance](./screenshots/ss-governance.png) | ![Faucet](./screenshots/ss-faucet.png) |
 
-**Developer API**
-![API Docs](./screenshots/ss-api.png)
-
-**Fee Calculator**
-![Fee Calculator](./screenshots/ss-calc.png)
+---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** React 18, Vite, Tailwind CSS 3
-- **Blockchain:** ethers.js v6, QIE Testnet (Chain ID 1983)
-- **Smart Contract:** Solidity ^0.8.20, Hardhat
-- **UI:** Framer Motion, Recharts, Lucide React, React Hot Toast
-- **Design:** True gray color system, Stripe/Vercel-inspired dark mode
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | React 18, Vite, Tailwind CSS 3, Framer Motion |
+| **Blockchain** | ethers.js v6, QIE Testnet (Chain ID 1983) |
+| **Smart Contracts** | Solidity ^0.8.20, Hardhat |
+| **UI** | Recharts, Lucide React, React Hot Toast, qrcode.react |
+| **Backend** | Express.js, ethers.js (faucet API) |
+| **Deploy** | Vercel (frontend), Hardhat (contracts) |
+| **Design** | True gray system, 14px base, 6-8px radius, asymmetric layout |
 
-## 📦 Smart Contract
+---
 
-- **Network:** QIE Testnet (Chain ID 1983)
-- **Contract:** [`0xFFC670DA0f40c1602175415abd9CEcd6d6BADD42`](https://explorer.qie.io/address/0xFFC670DA0f40c1602175415abd9CEcd6d6BADD42)
-- **Fee:** 2.5% platform fee on settlement
-- **Statuses:** Created → Paid → Settled / Refunded / Cancelled
+## 📦 Smart Contracts
 
-### Contract Functions
+All deployed on **QIE Testnet** (Chain ID 1983):
 
+| Contract | Address | Purpose |
+|----------|---------|---------|
+| **QIEPay** | [`0xFFC670...BADD42`](https://testnet.qie.digital/address/0xFFC670DA0f40c1602175415abd9CEcd6d6BADD42) | Payment gateway — register, create, pay, settle, refund |
+| **QIEStaking** | `0x98D953...7140fC` | 4-tier staking for reduced fees |
+| **QIEGovernance** | `0xDBdDb2...1f4d74` | Proposal creation, voting, execution |
+| **QIERewards** | `0x56A140...DfaECa4` | QIEP ERC-20 reward token |
+| **QIEFaucet** | `0xe0BC1D...95E1E2a6` | Decentralized testnet faucet (10 QIE funded) |
+
+### QIEPay Functions
 ```solidity
-registerMerchant()                          // Register as merchant
-createPayment(description, orderId, amount) // Create payment request
-pay(paymentId)                              // Pay for a payment (payable)
-settlePayment(paymentId)                    // Settle paid payment
-refundPayment(paymentId)                    // Refund payment
-cancelPayment(paymentId)                    // Cancel payment
+registerMerchant()                              // Register as merchant
+createPayment(description, orderId, amountInQIE) // Create payment request
+pay(paymentId)                                  // Pay (payable, sends QIE)
+settlePayment(paymentId)                        // Merchant settles (minus 2.5% fee)
+refundPayment(paymentId)                        // Merchant refunds
+cancelPayment(paymentId)                        // Merchant cancels
 ```
+
+### QIEStaking Tiers
+| Stake | Fee Rate | Savings |
+|-------|----------|---------|
+| 0 QIE | 2.5% | — |
+| 100 QIE | 2.0% | 20% |
+| 500 QIE | 1.5% | 40% |
+| 1000 QIE | 1.0% | 60% |
+
+### QIEP Rewards
+- Earn 1 QIEP per 1 QIE settled
+- Burn 10 QIEP for 10% fee discount
+- Add QIEP to wallet via `wallet_watchAsset`
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-
 - Node.js 18+
 - QIE Wallet or MetaMask (configured for QIE Testnet)
+- OR just an email address (email wallet auto-created)
 
 ### Installation
 
 ```bash
-# Clone the repository
+# Clone
 git clone https://github.com/ulsreall/qie-pay.git
 cd qie-pay
 
-# Install frontend dependencies
+# Frontend
 cd frontend
 npm install
-
-# Start development server
 npm run dev
+
+# Backend (optional — for faucet API)
+cd ../backend
+npm install
+cp .env.example .env  # set PRIVATE_KEY + CONTRACT_ADDRESS
+node server.js
 ```
 
 ### Network Configuration
+| Key | Value |
+|-----|-------|
+| Chain ID | 1983 |
+| RPC URL | `https://rpc1testnet.qie.digital/` |
+| Explorer | `https://testnet.qie.digital` |
+| Currency | QIE |
 
-- **Chain ID:** 1983
-- **RPC URL:** `https://rpc.qie.io`
-- **Explorer:** `https://explorer.qie.io`
-- **Currency:** QIE
+---
 
 ## 📁 Project Structure
 
 ```
 qie-pay/
 ├── contracts/
-│   └── QIEPay.sol          # Smart contract
+│   ├── QIEPay.sol            # Payment gateway contract
+│   ├── QIEStaking.sol        # 4-tier staking contract
+│   ├── QIEGovernance.sol     # Governance + voting
+│   ├── QIERewards.sol        # QIEP ERC-20 token
+│   ├── QIEFaucet.sol         # Testnet faucet
+│   └── scripts/              # Deploy scripts
 ├── frontend/
-│   ├── public/              # Static assets (logos, favicons)
+│   ├── public/               # Logos, favicons, assets
 │   ├── src/
-│   │   ├── components/      # Reusable UI components
-│   │   ├── pages/           # Page components (16 routes)
-│   │   ├── utils/           # Contract, currency, invoice, export utils
-│   │   ├── App.jsx          # Router + lazy loading
-│   │   └── index.css        # Design system
+│   │   ├── components/       # Sidebar, WalletConnect, Notifications, Layout
+│   │   ├── context/          # DemoContext (demo mode state)
+│   │   ├── pages/            # 17+ route pages
+│   │   ├── utils/            # contract.js, email-wallet.jsx, currency, export
+│   │   ├── App.jsx           # Router + lazy loading
+│   │   └── index.css         # Design system
 │   ├── tailwind.config.js
-│   └── vite.config.js       # Code splitting config
-└── hardhat.config.js        # Contract deployment config
+│   └── vite.config.js        # Code splitting (20+ chunks)
+├── backend/
+│   ├── server.js             # Express API
+│   ├── routes/
+│   │   ├── payments.js       # Payment CRUD
+│   │   ├── merchants.js      # Merchant management
+│   │   └── faucet.js         # Faucet drip API
+│   └── config.js             # RPC, contract, chain config
+├── hardhat.config.js         # QIE Testnet + Mainnet config
+└── README.md
 ```
 
-## 📊 Architecture
+---
+
+## 🏗️ Architecture
 
 ```
 ┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
-│   Customer   │────▶│  Payment Page │────▶│  Smart Contract  │
+│   Customer   │────▶│  Payment Page │────▶│  QIEPay Contract │
 │  (Browser)   │     │  /pay/:id     │     │  (QIE Testnet)   │
 └─────────────┘     └──────────────┘     └─────────────────┘
-                           │                       │
-                    ┌──────┴──────┐         ┌──────┴──────┐
-                    │  QR Code    │         │  Escrow     │
-                    │  Share Link │         │  Settlement │
-                    └─────────────┘         └─────────────┘
+       │                    │                       │
+       │              ┌─────┴─────┐          ┌──────┴──────┐
+       │              │  QR Code   │          │  Escrow     │
+       │              │  Invoice   │          │  Settlement │
+       │              └────────────┘          │  2.5% Fee   │
+       │                                      └──────┬──────┘
+       │                                             │
+       ▼                                      ┌──────▼──────┐
+┌─────────────┐     ┌──────────────┐         │ QIEP Rewards │
+│  Email Wallet│────▶│   Faucet     │────────▶│  ERC-20 Mint │
+│  (No wallet?)│     │  0.5 QIE    │         └──────────────┘
+└─────────────┘     └──────────────┘
 
 ┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
 │   Merchant   │────▶│  Dashboard   │────▶│  Notifications   │
 │  (Browser)   │     │  Analytics   │     │  Webhooks        │
+│              │     │  POS/Store   │     │  API Docs        │
+└─────────────┘     └──────────────┘     └─────────────────┘
+       │
+       ▼
+┌─────────────┐     ┌──────────────┐     ┌─────────────────┐
+│   Staking    │────▶│  Lower Fees  │     │   Governance     │
+│  100-1000 QIE│     │  2.5%→1.0%  │     │  Vote on Props   │
 └─────────────┘     └──────────────┘     └─────────────────┘
 ```
+
+---
 
 ## 🔗 Links
 
 - **Live Demo:** [qie-pay.vercel.app](https://qie-pay.vercel.app/)
-- **Contract:** [explorer.qie.io](https://explorer.qie.io/address/0xFFC670DA0f40c1602175415abd9CEcd6d6BADD42)
 - **GitHub:** [ulsreall/qie-pay](https://github.com/ulsreall/qie-pay)
+- **QIE Explorer:** [testnet.qie.digital](https://testnet.qie.digital)
+
+---
 
 ## 📄 License
 
