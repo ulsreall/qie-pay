@@ -210,7 +210,7 @@ export default function Sidebar({ isOpen, onClose, collapsed, onToggle }) {
       <aside
         className={`
           fixed top-0 left-0 z-40 h-full
-          ${collapsed ? 'w-[64px]' : 'w-[220px]'}
+          ${collapsed ? 'w-[64px]' : 'w-[260px]'}
           flex flex-col
           bg-[#09090B] border-r border-[#1E1E21]
           transition-all duration-300 ease-in-out

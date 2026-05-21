@@ -52,7 +52,7 @@ export default function Layout({ children }) {
         {/* Desktop: override margin based on collapsed state */}
         <style>{`
           @media (min-width: 1024px) {
-            main { margin-left: ${collapsed ? '64px' : '220px'} !important; }
+            main { margin-left: ${collapsed ? '64px' : '260px'} !important; }
           }
         `}</style>
         {children}

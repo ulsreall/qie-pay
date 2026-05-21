@@ -83,7 +83,7 @@ export default function NotificationCenter({ collapsed = false }) {
             id: `${payment.id}-${payment.status}-${Date.now()}`,
             paymentId: payment.id,
             type: payment.status,
-            text: `${statusInfo.text} · ${formatQIEAmount(payment.amount)} QIE`,
+            text: `${statusInfo.text} ${formatQIEAmount(payment.amount)} QIE`,
             timestamp: Date.now(),
             read: false,
           };
@@ -195,8 +195,8 @@ export default function NotificationCenter({ collapsed = false }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className={`absolute top-full mt-1 w-64 max-h-80 overflow-y-auto bg-[#111113] border border-[#27272A] rounded-lg shadow-lg z-50 ${
-              collapsed ? 'left-1/2 -translate-x-1/2' : 'right-0'
+            className={`absolute top-full mt-1 max-h-80 overflow-y-auto bg-[#111113] border border-[#27272A] rounded-lg shadow-lg z-50 ${
+              collapsed ? 'left-1/2 -translate-x-1/2 w-56' : 'right-0 w-60'
             }`}
           >
             {/* Header */}
