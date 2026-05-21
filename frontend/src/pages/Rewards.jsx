@@ -71,7 +71,8 @@ export default function Rewards() {
       ]);
 
       // Convert from wei to QIEP (18 decimals)
-      const balQIEP = Number(bal) / 1e18;
+      // Use parseFloat on string to avoid BigInt precision loss
+      const balQIEP = parseFloat(bal.toString()) / 1e18;
       setBalance(balQIEP);
       setDiscount(disc);
 
