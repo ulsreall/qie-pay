@@ -42,6 +42,16 @@ export function DemoProvider({ children }) {
     };
 
     onAccountChange(handleAccounts);
+
+    // Listen for email wallet creation
+    const handleEmailWallet = (e) => {
+      if (e.detail && e.detail.address) {
+        setWalletConnected(true);
+        setWalletAddress(e.detail.address);
+      }
+    };
+    window.addEventListener('qiepay-email-wallet-created', handleEmailWallet);
+    return () => window.removeEventListener('qiepay-email-wallet-created', handleEmailWallet);
   }, []);
 
   /* Called by WalletConnect when a real wallet is connected */

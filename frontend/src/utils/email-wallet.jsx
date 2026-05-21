@@ -55,6 +55,8 @@ export function EmailWalletProvider({ children }) {
       const wallet = generateWalletFromEmail(email);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(wallet));
       setEmailWallet(wallet);
+      // Notify other contexts (DemoContext, WalletConnect) about new wallet
+      window.dispatchEvent(new CustomEvent('qiepay-email-wallet-created', { detail: wallet }));
       toast.success(`Wallet created for ${email}`);
       return wallet;
     } catch (err) {

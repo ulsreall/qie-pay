@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Zap, DollarSign, Shield, Wallet, QrCode, Layers, BarChart3,
@@ -62,6 +62,7 @@ function AnimatedCounter({ end, suffix = '' }) {
 
 /* ─── Page ─── */
 export default function Home() {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-[#09090B] text-white">
       {/* ─── Hero Section ─── */}
@@ -167,7 +168,7 @@ export default function Home() {
                 <span className="bg-[#09090B] px-2 text-[#52525B]">No wallet? No problem</span>
               </div>
             </div>
-            <EmailLoginButton />
+            <EmailLoginButton onConnect={() => navigate('/dashboard')} />
           </motion.div>
         </div>
       </section>
