@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 import {
   Zap, DollarSign, Shield, Wallet, QrCode, Layers, BarChart3,
   ArrowRight, Globe, Code2, Database, Cpu,
-  Monitor, Store, Webhook, FileText
+  Monitor, Store, Webhook, FileText, Coins, Vote, Gift
 } from 'lucide-react';
 
-/* ─── Features Data (trimmed to 9 for 3-col grid) ─── */
+/* ─── Features Data ─── */
 const features = [
   { icon: Zap, title: 'Instant Settlement', desc: 'Funds settle directly on-chain in seconds — no waiting for bank transfers.' },
   { icon: DollarSign, title: 'Low Fees', desc: 'Only 2.5% platform fee — far below traditional payment processors.' },
@@ -18,6 +18,9 @@ const features = [
   { icon: Layers, title: 'Batch Processing', desc: 'Create and settle multiple payments at once for high-volume merchants.' },
   { icon: BarChart3, title: 'Analytics', desc: 'Real-time revenue charts, payment tracking, and performance metrics.' },
   { icon: QrCode, title: 'QR Payments', desc: 'Generate QR codes for each invoice — customers scan and pay instantly.' },
+  { icon: Coins, title: 'Staking Rewards', desc: 'Stake QIE to reduce your payment fees — lower tiers get better rates.' },
+  { icon: Vote, title: 'Governance', desc: 'Vote on protocol changes and shape the future of QIE Pay.' },
+  { icon: Gift, title: 'Loyalty Tokens', desc: 'Earn QIEP reward tokens on every payment and burn them for discounts.' },
 ];
 
 const steps = [

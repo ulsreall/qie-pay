@@ -21,6 +21,9 @@ const Webhooks = lazy(() => import('./pages/Webhooks'));
 const Developers = lazy(() => import('./pages/Developers'));
 const MerchantSettings = lazy(() => import('./pages/MerchantSettings'));
 const FeeCalculator = lazy(() => import('./pages/FeeCalculator'));
+const Staking = lazy(() => import('./pages/Staking'));
+const Governance = lazy(() => import('./pages/Governance'));
+const Rewards = lazy(() => import('./pages/Rewards'));
 
 function PageLoader() {
   return (
@@ -70,6 +73,9 @@ export default function App() {
           <Route path="/developers" element={<Layout><Developers /></Layout>} />
           <Route path="/merchant-settings" element={<Layout><MerchantSettings /></Layout>} />
           <Route path="/calculator" element={<Layout><FeeCalculator /></Layout>} />
+          <Route path="/staking" element={<Layout><Staking /></Layout>} />
+          <Route path="/governance" element={<Layout><Governance /></Layout>} />
+          <Route path="/rewards" element={<Layout><Rewards /></Layout>} />
         </Routes>
       </Suspense>
     </div>

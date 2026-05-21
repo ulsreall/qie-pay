@@ -12,6 +12,9 @@ import {
   Webhook,
   Code2,
   Calculator,
+  Coins,
+  Vote,
+  Gift,
   X,
 } from 'lucide-react';
 import WalletConnect from './WalletConnect';
@@ -39,6 +42,14 @@ const navSections = [
       { path: '/batch', label: 'Batch Payments', icon: Layers },
       { path: '/store', label: 'Storefront', icon: Store },
       { path: '/merchant-settings', label: 'Merchant Profile', icon: UserCog },
+    ],
+  },
+  {
+    label: 'DeFi',
+    items: [
+      { path: '/staking', label: 'Staking', icon: Coins },
+      { path: '/governance', label: 'Governance', icon: Vote },
+      { path: '/rewards', label: 'Rewards', icon: Gift },
     ],
   },
   {
