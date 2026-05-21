@@ -70,7 +70,9 @@ export default function Rewards() {
         getDiscountInfo(conn.address).catch(() => ({ discountPercent: 0, expiresAt: 0, hasDiscount: false })),
       ]);
 
-      setBalance(Number(bal));
+      // Convert from wei to QIEP (18 decimals)
+      const balQIEP = Number(bal) / 1e18;
+      setBalance(balQIEP);
       setDiscount(disc);
 
       const localHistory = loadHistory();
@@ -124,7 +126,7 @@ export default function Rewards() {
 
     setLoading(true);
     try {
-      await transferQIEP(transferTo, ethers.parseUnits(transferAmount, 0));
+      await transferQIEP(transferTo, ethers.parseUnits(transferAmount, 18));
       const entry = {
         id: Date.now(),
         type: 'transfer',

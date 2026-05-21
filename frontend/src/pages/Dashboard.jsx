@@ -12,8 +12,9 @@ import { format, formatDistanceToNow } from 'date-fns';
 import StatusBadge from '../components/StatusBadge';
 import {
   connectWallet, checkConnection, isMerchant, registerMerchant,
-  getMerchantPayments, getMerchantEarnings, settlePayment
+  getMerchantPayments, getMerchantEarnings, settlePayment, getPayment
 } from '../utils/contract';
+import { mintRewards } from '../utils/defi-contract';
 import { formatQIEAmount, formatUSD } from '../utils/currency';
 import { useDemo } from '../context/DemoContext';
 
@@ -168,6 +169,20 @@ export default function Dashboard() {
       toast.loading('Settling payment...', { id: 'settle' });
       await settlePayment(id);
       toast.success('Payment settled!', { id: 'settle' });
+
+      // Mint QIEP rewards to customer
+      try {
+        const payment = await getPayment(id);
+        if (payment.customer && payment.customer !== '0x0000000000000000000000000000000000000000') {
+          toast.loading('Minting QIEP rewards...', { id: 'rewards' });
+          await mintRewards(payment.customer, id);
+          toast.success('QIEP rewards sent to customer!', { id: 'rewards' });
+        }
+      } catch (rewardErr) {
+        console.warn('Reward minting failed:', rewardErr);
+        // Don't fail the settle flow if rewards fail
+      }
+
       if (address) await fetchPayments(address);
     } catch (err) {
       toast.error(err?.reason || err?.message || 'Failed to settle', { id: 'settle' });
