@@ -6,21 +6,49 @@ import {
   PlusCircle,
   Layers,
   Settings,
+  Monitor,
+  Store,
+  Webhook,
+  Code2,
   X,
 } from 'lucide-react';
 import WalletConnect from './WalletConnect';
 
-const navItems = [
-  { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/analytics', label: 'Analytics', icon: BarChart3 },
-  { path: '/create', label: 'Create Payment', icon: PlusCircle },
-  { path: '/batch', label: 'Batch Payments', icon: Layers },
-  { path: '/settings', label: 'Settings', icon: Settings },
+const navSections = [
+  {
+    label: 'Main',
+    items: [
+      { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+      { path: '/analytics', label: 'Analytics', icon: BarChart3 },
+    ],
+  },
+  {
+    label: 'Payments',
+    items: [
+      { path: '/create', label: 'Create Payment', icon: PlusCircle },
+      { path: '/batch', label: 'Batch Payments', icon: Layers },
+      { path: '/pos', label: 'POS Mode', icon: Monitor },
+      { path: '/store', label: 'Storefront', icon: Store },
+    ],
+  },
+  {
+    label: 'Developer',
+    items: [
+      { path: '/webhooks', label: 'Webhooks', icon: Webhook },
+      { path: '/developers', label: 'API Docs', icon: Code2 },
+    ],
+  },
+  {
+    label: 'Other',
+    items: [
+      { path: '/settings', label: 'Settings', icon: Settings },
+    ],
+  },
 ];
 
 function SidebarContent({ onNavClick }) {
   const linkClass = ({ isActive }) =>
-    `flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+    `flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
       isActive
         ? 'bg-purple-500/15 text-purple-400 border border-purple-500/20 shadow-sm shadow-purple-500/5'
         : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
@@ -29,7 +57,7 @@ function SidebarContent({ onNavClick }) {
   return (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="p-6 pb-6">
+      <div className="p-6 pb-4">
         <Link
           to="/"
           className="flex items-center gap-3 group"
@@ -50,23 +78,32 @@ function SidebarContent({ onNavClick }) {
         </Link>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              end={item.path === '/'}
-              className={linkClass}
-              onClick={onNavClick}
-            >
-              <Icon size={18} />
-              {item.label}
-            </NavLink>
-          );
-        })}
+      {/* Navigation sections */}
+      <nav className="flex-1 px-3 space-y-4 overflow-y-auto">
+        {navSections.map((section) => (
+          <div key={section.label}>
+            <p className="px-4 mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-600">
+              {section.label}
+            </p>
+            <div className="space-y-0.5">
+              {section.items.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    end={item.path === '/'}
+                    className={linkClass}
+                    onClick={onNavClick}
+                  >
+                    <Icon size={17} />
+                    {item.label}
+                  </NavLink>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* Wallet at bottom */}
@@ -80,7 +117,7 @@ function SidebarContent({ onNavClick }) {
 export default function Sidebar({ isOpen, onClose }) {
   return (
     <>
-      {/* ---- Mobile overlay ---- */}
+      {/* Mobile overlay */}
       {isOpen && (
         <div
           className="lg:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
@@ -88,7 +125,7 @@ export default function Sidebar({ isOpen, onClose }) {
         />
       )}
 
-      {/* ---- Sidebar panel ---- */}
+      {/* Sidebar panel */}
       <aside
         className={`
           fixed top-0 left-0 z-40 h-full w-[280px]

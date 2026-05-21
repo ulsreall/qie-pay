@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import {
   Zap, DollarSign, Shield, Wallet, QrCode, Layers, BarChart3, Link2,
-  ArrowRight, ChevronRight, Globe, Code2, Database, Cpu
+  ArrowRight, ChevronRight, Globe, Code2, Database, Cpu,
+  Monitor, Store, Webhook, FileCode
 } from 'lucide-react';
 
 /* ─── Animated Section Wrapper ─── */
@@ -49,16 +50,20 @@ function AnimatedCounter({ end, suffix = '', prefix = '', duration = 1500 }) {
   return <span ref={ref}>{prefix}{count.toLocaleString()}{suffix}</span>;
 }
 
-/* ─── Features Data ─── */
+/* ─── Features Data (12 features!) ─── */
 const features = [
   { icon: Zap, title: 'Instant Settlement', desc: 'Funds settle directly on-chain in seconds — no waiting for bank transfers.', color: 'purple' },
   { icon: DollarSign, title: 'Low Fees', desc: 'Only 2.5% platform fee — far below traditional payment processors.', color: 'cyan' },
   { icon: Shield, title: 'Smart Escrow', desc: 'Payments held in a trustless smart contract until settlement.', color: 'green' },
   { icon: Wallet, title: 'Multi-Wallet Support', desc: 'Works with QIE Wallet, MetaMask, and any WalletConnect-compatible wallet.', color: 'blue' },
-  { icon: QrCode, title: 'QR Payments', desc: 'Generate QR codes for each invoice — customers scan and pay instantly.', color: 'pink' },
-  { icon: Layers, title: 'Batch Processing', desc: 'Create and settle multiple payments at once for high-volume merchants.', color: 'orange' },
-  { icon: BarChart3, title: 'Analytics Dashboard', desc: 'Real-time revenue charts, payment tracking, and performance metrics.', color: 'yellow' },
-  { icon: Link2, title: 'Payment Links', desc: 'Shareable payment URLs — no website integration required.', color: 'red' },
+  { icon: Monitor, title: 'POS Mode', desc: 'Tablet-friendly Point of Sale interface for in-store retail payments.', color: 'pink' },
+  { icon: Store, title: 'Storefront', desc: 'Public merchant page with product listings and direct payment links.', color: 'orange' },
+  { icon: Layers, title: 'Batch Processing', desc: 'Create and settle multiple payments at once for high-volume merchants.', color: 'yellow' },
+  { icon: BarChart3, title: 'Analytics Dashboard', desc: 'Real-time revenue charts, payment tracking, and performance metrics.', color: 'red' },
+  { icon: QrCode, title: 'QR Payments', desc: 'Generate QR codes for each invoice — customers scan and pay instantly.', color: 'purple' },
+  { icon: Webhook, title: 'Webhook Integration', desc: 'Real-time notifications to your server when payment events occur.', color: 'cyan' },
+  { icon: FileCode, title: 'Invoice Generator', desc: 'Professional downloadable invoices with QIEPay branding for every payment.', color: 'green' },
+  { icon: Code2, title: 'Developer API', desc: 'Full SDK and documentation for seamless integration into your app.', color: 'blue' },
 ];
 
 const colorClasses = {
@@ -81,14 +86,14 @@ const steps = [
 const techStack = [
   { icon: Globe, name: 'QIE Blockchain', desc: 'Layer 1 EVM-compatible chain with 30K TPS' },
   { icon: Code2, name: 'Solidity Contracts', desc: 'Audited smart contract on-chain escrow' },
-  { icon: Cpu, name: 'React', desc: 'Modern UI with Tailwind CSS & Framer Motion' },
+  { icon: Cpu, name: 'React + Tailwind', desc: 'Modern UI with glassmorphism & animations' },
   { icon: Database, name: 'ethers.js v6', desc: 'Direct blockchain interaction via JSON-RPC' },
 ];
 
 /* ─── Page ─── */
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-900 text-white overflow-hidden">
+    <div className="min-h-screen bg-[#06060e] text-white overflow-hidden">
       {/* ─── Hero Section ─── */}
       <section className="relative min-h-screen flex items-center justify-center px-4">
         {/* Animated gradient background */}
@@ -132,8 +137,8 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed"
           >
-            QIE Pay is a decentralized payment gateway built on the QIE Blockchain.
-            Accept QIE payments with low fees, instant settlement, and smart escrow — all on-chain.
+            QIE Pay is a full-stack decentralized payment gateway built on the QIE Blockchain.
+            Accept payments with POS mode, storefronts, webhooks, and developer APIs — all on-chain.
           </motion.p>
 
           <motion.div
@@ -150,10 +155,17 @@ export default function Home() {
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
+              to="/pos"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold rounded-xl backdrop-blur-sm transition-all"
+            >
+              Try POS Mode
+              <Monitor className="w-5 h-5" />
+            </Link>
+            <Link
               to="/dashboard"
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold rounded-xl backdrop-blur-sm transition-all"
             >
-              View Dashboard
+              Dashboard
               <ChevronRight className="w-5 h-5" />
             </Link>
           </motion.div>
@@ -178,18 +190,19 @@ export default function Home() {
 
       {/* ─── Stats Bar ─── */}
       <AnimatedSection className="py-8 px-4 border-y border-white/5 bg-white/[0.02]">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-5 gap-6">
           {[
-            { value: 30000, suffix: '+', label: 'TPS Throughput' },
+            { value: 12, suffix: '+', label: 'Features' },
+            { value: 30000, suffix: '+', label: 'TPS' },
             { value: 2, suffix: '.5%', label: 'Platform Fee' },
             { value: 1983, suffix: '', label: 'Chain ID' },
             { value: 100, suffix: '%', label: 'On-Chain' },
           ].map((stat, i) => (
             <div key={i} className="text-center">
-              <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+              <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
                 <AnimatedCounter end={stat.value} suffix={stat.suffix} />
               </div>
-              <p className="text-sm text-gray-500 mt-1">{stat.label}</p>
+              <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -220,7 +233,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
-                transition={{ delay: i * 0.08, duration: 0.5 }}
+                transition={{ delay: i * 0.06, duration: 0.5 }}
                 whileHover={{ y: -4, scale: 1.01 }}
                 className="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl p-6 group hover:border-purple-500/30 transition-all duration-300"
               >
@@ -253,7 +266,6 @@ export default function Home() {
                 transition={{ delay: i * 0.2, duration: 0.5 }}
                 className="text-center relative"
               >
-                {/* Connector line */}
                 {i < steps.length - 1 && (
                   <div className="hidden md:block absolute top-8 left-[60%] w-[80%] h-[2px] bg-gradient-to-r from-purple-500/40 to-transparent" />
                 )}
@@ -305,15 +317,24 @@ export default function Home() {
             <div className="relative z-10">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Start Accepting Payments Today</h2>
               <p className="text-gray-400 mb-8 max-w-xl mx-auto">
-                Join the decentralized payment revolution. No middlemen, no hidden fees — just fast, transparent crypto payments.
+                Join the decentralized payment revolution. POS mode, storefronts, webhooks, and developer APIs — everything you need.
               </p>
-              <Link
-                to="/create"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/25 transition-all transform hover:scale-[1.02]"
-              >
-                Create Your First Payment
-                <ArrowRight className="w-5 h-5" />
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  to="/create"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/25 transition-all transform hover:scale-[1.02]"
+                >
+                  Create Your First Payment
+                  <ArrowRight className="w-5 h-5" />
+                </Link>
+                <Link
+                  to="/developers"
+                  className="inline-flex items-center gap-2 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold rounded-xl backdrop-blur-sm transition-all"
+                >
+                  View API Docs
+                  <Code2 className="w-5 h-5" />
+                </Link>
+              </div>
             </div>
           </div>
         </div>
@@ -338,6 +359,9 @@ export default function Home() {
             <a href="https://rpc.qie.io" target="_blank" rel="noopener noreferrer" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
               RPC
             </a>
+            <Link to="/developers" className="text-sm text-gray-500 hover:text-gray-300 transition-colors">
+              API Docs
+            </Link>
           </div>
         </div>
       </footer>
