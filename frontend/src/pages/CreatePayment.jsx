@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import {
   FileText,
   Hash,
-  Link as LinkIcon,
   Copy,
   Check,
   Loader2,
@@ -11,13 +10,15 @@ import {
   ExternalLink,
   AlertCircle,
   UserPlus,
+  CheckCircle2,
+  Wallet,
 } from 'lucide-react';
 import {
   connectWallet,
-  ensureMerchant,
   createPayment,
   checkConnection,
   isMerchant,
+  getContract,
 } from '../utils/contract';
 
 export default function CreatePayment() {
@@ -31,6 +32,7 @@ export default function CreatePayment() {
   const [result, setResult] = useState(null);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState(null);
+  const [step, setStep] = useState(1); // 1=connect, 2=register, 3=create
 
   useEffect(() => {
     checkConnection().then((connected) => {
@@ -45,6 +47,8 @@ export default function CreatePayment() {
     try {
       const registered = await isMerchant(address);
       setMerchantRegistered(registered);
+      if (registered) setStep(3);
+      else setStep(2);
     } catch (err) {
       console.error('Failed to check merchant status:', err);
     }
@@ -52,11 +56,12 @@ export default function CreatePayment() {
 
   const handleConnect = async () => {
     try {
+      setError(null);
       const result = await connectWallet();
       setWallet({ address: result.address });
       await checkMerchantStatus(result.address);
     } catch (err) {
-      setError(err.message);
+      setError('Failed to connect wallet. Please try again.');
     }
   };
 
@@ -64,28 +69,20 @@ export default function CreatePayment() {
     setRegistering(true);
     setError(null);
     try {
-      if (!wallet) {
-        await handleConnect();
-      }
+      if (!wallet) await handleConnect();
 
-      const signer = await (await import('../utils/contract')).getSigner();
-      const currentAddress = await signer.getAddress();
-      console.log('Registering merchant:', currentAddress);
-
-      const contract = await (await import('../utils/contract')).getContract();
+      const contract = await getContract();
       const tx = await contract.registerMerchant();
-      console.log('Register TX:', tx.hash);
-      const receipt = await tx.wait();
-      console.log('Register confirmed:', receipt.hash);
+      await tx.wait();
 
       setMerchantRegistered(true);
-      setWallet({ address: currentAddress });
+      setStep(3);
     } catch (err) {
-      console.error('Register error:', err);
-      if (err.message.includes('already registered') || err.message.includes('already registered')) {
+      if (err.message?.includes('already registered')) {
         setMerchantRegistered(true);
+        setStep(3);
       } else {
-        setError('Registration failed: ' + (err.reason || err.message));
+        setError('Registration failed. Please try again.');
       }
     }
     setRegistering(false);
@@ -102,32 +99,19 @@ export default function CreatePayment() {
     setError(null);
 
     try {
-      if (!wallet) {
-        await handleConnect();
-      }
-
-      // Debug: log current address
-      const signer = await (await import('../utils/contract')).getSigner();
-      const currentAddress = await signer.getAddress();
-      console.log('Creating payment from:', currentAddress);
-
-      // Check if this address is a merchant
-      const { isMerchant } = await import('../utils/contract');
-      const registered = await isMerchant(currentAddress);
-      console.log('Is merchant:', registered);
-
-      if (!registered) {
-        setError(`Address ${currentAddress.slice(0,6)}...${currentAddress.slice(-4)} is not registered. Please register first.`);
+      if (!wallet) await handleConnect();
+      if (!merchantRegistered) {
+        setError('Please register as a merchant first');
         setLoading(false);
         return;
       }
 
       const { paymentId } = await createPayment(description, orderId || `ORD-${Date.now()}`);
-
       const paymentUrl = `${window.location.origin}/pay/${paymentId}`;
       setResult({ paymentId, paymentUrl });
     } catch (err) {
-      setError(err.message || 'Failed to create payment');
+      console.error('Create payment error:', err);
+      setError('Failed to create payment. Please check your wallet and try again.');
     }
 
     setLoading(false);
@@ -164,6 +148,7 @@ export default function CreatePayment() {
           Generate a payment link to share with your customers
         </p>
 
+        {/* Error */}
         {error && (
           <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-3">
             <AlertCircle size={20} className="text-red-400 flex-shrink-0" />
@@ -171,130 +156,164 @@ export default function CreatePayment() {
           </div>
         )}
 
-        {/* Wallet Connection */}
+        {/* Step Indicators */}
+        <div className="flex items-center gap-4 mb-8">
+          <StepIndicator
+            number={1}
+            label="Connect"
+            active={step >= 1}
+            done={!!wallet}
+          />
+          <div className="flex-1 h-px bg-gray-700" />
+          <StepIndicator
+            number={2}
+            label="Register"
+            active={step >= 2}
+            done={merchantRegistered}
+          />
+          <div className="flex-1 h-px bg-gray-700" />
+          <StepIndicator
+            number={3}
+            label="Create"
+            active={step >= 3}
+            done={!!result}
+          />
+        </div>
+
+        {/* Step 1: Connect Wallet */}
         {!wallet && (
-          <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-            <p className="text-yellow-300 text-sm mb-3">
-              Connect your wallet first
+          <div className="text-center py-8">
+            <Wallet size={48} className="text-primary-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Connect Your Wallet</h3>
+            <p className="text-gray-400 mb-6">
+              Connect QIE Wallet or MetaMask to get started
             </p>
-            <button onClick={handleConnect} className="btn-primary">
+            <button onClick={handleConnect} className="btn-primary px-8 py-3">
               Connect Wallet
             </button>
           </div>
         )}
 
-        {/* Merchant Registration */}
+        {/* Step 2: Register as Merchant */}
         {wallet && !merchantRegistered && (
-          <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-            <p className="text-blue-300 text-sm mb-3">
-              Register as a merchant to create payments
+          <div className="text-center py-8">
+            <UserPlus size={48} className="text-primary-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Register as Merchant</h3>
+            <p className="text-gray-400 mb-2">
+              One-time registration to start accepting payments
+            </p>
+            <p className="text-xs text-gray-500 mb-6 font-mono">
+              {wallet.address.slice(0, 6)}...{wallet.address.slice(-4)}
             </p>
             <button
               onClick={handleRegister}
               disabled={registering}
-              className="btn-primary flex items-center gap-2"
+              className="btn-primary px-8 py-3 flex items-center gap-2 mx-auto"
             >
               {registering ? (
                 <>
-                  <Loader2 size={16} className="animate-spin" />
+                  <Loader2 size={18} className="animate-spin" />
                   Registering...
                 </>
               ) : (
                 <>
-                  <UserPlus size={16} />
-                  Register as Merchant
+                  <UserPlus size={18} />
+                  Register Now
                 </>
               )}
             </button>
           </div>
         )}
 
-        {/* Merchant Status */}
-        {wallet && merchantRegistered && (
-          <div className="mb-6 p-3 bg-green-500/10 border border-green-500/20 rounded-lg flex items-center gap-2">
-            <Check size={16} className="text-green-400" />
-            <span className="text-green-300 text-sm">
-              Merchant registered ✓ | {wallet.address.slice(0, 6)}...{wallet.address.slice(-4)}
-            </span>
-          </div>
+        {/* Step 3: Create Payment */}
+        {wallet && merchantRegistered && !result && (
+          <>
+            <div className="mb-6 p-3 bg-green-500/10 border border-green-500/20 rounded-lg flex items-center gap-2">
+              <CheckCircle2 size={16} className="text-green-400" />
+              <span className="text-green-300 text-sm">
+                Merchant registered &middot; {wallet.address.slice(0, 6)}...{wallet.address.slice(-4)}
+              </span>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Description *
+                </label>
+                <div className="relative">
+                  <FileText
+                    size={18}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  />
+                  <input
+                    type="text"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="e.g., Premium subscription, T-shirt order..."
+                    className="input-field pl-10"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Order ID (optional)
+                </label>
+                <div className="relative">
+                  <Hash
+                    size={18}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  />
+                  <input
+                    type="text"
+                    value={orderId}
+                    onChange={(e) => setOrderId(e.target.value)}
+                    placeholder="e.g., ORD-12345"
+                    className="input-field pl-10"
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Auto-generated if left empty
+                </p>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn-primary w-full flex items-center justify-center gap-2 py-3"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    Creating Payment...
+                  </>
+                ) : (
+                  'Create Payment'
+                )}
+              </button>
+            </form>
+          </>
         )}
 
-        {!result ? (
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Description *
-              </label>
-              <div className="relative">
-                <FileText
-                  size={18}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
-                />
-                <input
-                  type="text"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="e.g., Premium subscription, T-shirt order..."
-                  className="input-field pl-10"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Order ID (optional)
-              </label>
-              <div className="relative">
-                <Hash
-                  size={18}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
-                />
-                <input
-                  type="text"
-                  value={orderId}
-                  onChange={(e) => setOrderId(e.target.value)}
-                  placeholder="e.g., ORD-12345"
-                  className="input-field pl-10"
-                />
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Auto-generated if left empty
-              </p>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading || !wallet || !merchantRegistered}
-              className="btn-primary w-full flex items-center justify-center gap-2 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Creating Payment...
-                </>
-              ) : (
-                'Create Payment'
-              )}
-            </button>
-          </form>
-        ) : (
+        {/* Success */}
+        {result && (
           <div className="space-y-6">
-            <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Check size={18} className="text-green-400" />
-                <span className="text-green-300 font-medium">
-                  Payment Created Successfully!
-                </span>
+            <div className="text-center py-4">
+              <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 size={32} className="text-green-400" />
               </div>
-              <p className="text-sm text-gray-400">
-                Payment ID: #{result.paymentId}
+              <h3 className="text-xl font-bold text-green-300 mb-1">
+                Payment Created!
+              </h3>
+              <p className="text-gray-400">
+                Payment ID: <span className="text-white font-mono">#{result.paymentId}</span>
               </p>
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Payment Link
+                Share this link with your customer
               </label>
               <div className="flex items-center gap-2">
                 <div className="flex-1 bg-gray-700 rounded-lg px-4 py-3 border border-gray-600 text-sm text-gray-300 font-mono truncate">
@@ -313,7 +332,7 @@ export default function CreatePayment() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <a
                 href={result.paymentUrl}
                 target="_blank"
@@ -333,6 +352,31 @@ export default function CreatePayment() {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function StepIndicator({ number, label, active, done }) {
+  return (
+    <div className="flex items-center gap-2">
+      <div
+        className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
+          done
+            ? 'bg-green-500 text-white'
+            : active
+            ? 'bg-primary-500 text-white'
+            : 'bg-gray-700 text-gray-400'
+        }`}
+      >
+        {done ? <Check size={16} /> : number}
+      </div>
+      <span
+        className={`text-sm font-medium ${
+          done ? 'text-green-300' : active ? 'text-white' : 'text-gray-500'
+        }`}
+      >
+        {label}
+      </span>
     </div>
   );
 }
