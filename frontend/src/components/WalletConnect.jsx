@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 
 const QIE_USD_RATE = 0.5; // Mock exchange rate
 
-export default function WalletConnect({ compact = false }) {
+export default function WalletConnect({ compact = false, collapsed = false }) {
   const { isDemo, demoAddress, demoBalance, setConnected, setDisconnected } = useDemo();
   const [wallet, setWallet] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -100,6 +100,16 @@ export default function WalletConnect({ compact = false }) {
 
   // ---- DEMO MODE (compact / sidebar) ----
   if (!wallet && isDemo && compact) {
+    if (collapsed) {
+      return (
+        <div className="flex flex-col items-center gap-1.5">
+          <div className="w-8 h-8 rounded-full bg-amber-400/10 flex items-center justify-center">
+            <Eye size={14} className="text-amber-400" />
+          </div>
+          <span className="text-[9px] text-amber-400 font-medium">Demo</span>
+        </div>
+      );
+    }
     return (
       <div className="space-y-2">
         {/* Demo badge */}
@@ -231,6 +241,22 @@ export default function WalletConnect({ compact = false }) {
 
   // ---- Compact (sidebar) view — real wallet ----
   if (compact) {
+    if (collapsed) {
+      return (
+        <div className="flex flex-col items-center gap-1.5">
+          <button
+            onClick={copyAddress}
+            className="w-8 h-8 rounded-full bg-[#10B981]/10 flex items-center justify-center hover:bg-[#10B981]/20 transition-colors"
+            title={wallet.address}
+          >
+            <div className="w-2 h-2 rounded-full bg-[#34D399]" />
+          </button>
+          <span className="text-[9px] text-[#34D399] font-medium tabular-nums">
+            {parseFloat(wallet.balance).toFixed(1)}
+          </span>
+        </div>
+      );
+    }
     return (
       <div className="space-y-2">
         {/* Address row */}

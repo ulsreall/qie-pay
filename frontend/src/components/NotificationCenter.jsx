@@ -40,7 +40,7 @@ function saveNotifications(address, notifications) {
   }
 }
 
-export default function NotificationCenter() {
+export default function NotificationCenter({ collapsed = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [address, setAddress] = useState(null);
@@ -195,7 +195,9 @@ export default function NotificationCenter() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-64 max-h-80 overflow-y-auto bg-[#111113] border border-[#27272A] rounded-lg shadow-lg z-50"
+            className={`absolute top-full mt-1 w-64 max-h-80 overflow-y-auto bg-[#111113] border border-[#27272A] rounded-lg shadow-lg z-50 ${
+              collapsed ? 'left-1/2 -translate-x-1/2' : 'right-0'
+            }`}
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-[#27272A]">

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -16,9 +17,13 @@ import {
   Vote,
   Gift,
   X,
+  ChevronsLeft,
+  ChevronsRight,
 } from 'lucide-react';
 import WalletConnect from './WalletConnect';
 import NotificationCenter from './NotificationCenter';
+
+const STORAGE_KEY = 'sidebar_collapsed';
 
 /* ─── Navigation: organized by merchant workflow ─── */
 const navSections = [
@@ -84,51 +89,71 @@ export function LogoIcon({ size = 32 }) {
   );
 }
 
-function SidebarContent({ onNavClick }) {
-  const linkClass = ({ isActive }) =>
-    `flex items-center gap-3 px-3 py-2 rounded-md text-[13px] font-medium transition-all duration-150 ${
+/* ─── Tooltip for collapsed nav items ─── */
+function NavTooltip({ label, children }) {
+  return (
+    <div className="relative group/tip">
+      {children}
+      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-[#27272A] text-[#FAFAFA] text-xs rounded-md whitespace-nowrap opacity-0 invisible group-hover/tip:opacity-100 group-hover/tip:visible transition-all duration-150 pointer-events-none z-50">
+        {label}
+      </div>
+    </div>
+  );
+}
+
+function SidebarContent({ onNavClick, collapsed, onToggle }) {
+  const linkClass = ({ isActive }) => {
+    const base = collapsed
+      ? 'flex items-center justify-center w-10 h-10 mx-auto rounded-md transition-all duration-150'
+      : 'flex items-center gap-3 px-3 py-2 rounded-md text-[13px] font-medium transition-all duration-150';
+    return `${base} ${
       isActive
         ? 'bg-[#111113] text-[#34D399]'
         : 'text-[#A1A1AA] hover:text-[#D4D4D8] hover:bg-[#111113]/50'
     }`;
+  };
 
   return (
     <div className="flex flex-col h-full">
       {/* Logo + Notifications */}
-      <div className="p-4 pb-2 flex items-center justify-between">
+      <div className={`${collapsed ? 'px-2 py-3' : 'p-4 pb-2'} flex items-center ${collapsed ? 'justify-center flex-col gap-2' : 'justify-between'}`}>
         <Link
           to="/"
-          className="flex items-center gap-2.5 group"
+          className={`flex items-center group ${collapsed ? 'justify-center' : 'gap-2.5'}`}
           onClick={onNavClick}
         >
-          <LogoIcon size={28} />
-          <div>
-            <span className="text-base font-bold tracking-tight">
-              <span className="text-[#FAFAFA]">QIE</span>
-              <span className="text-[#10B981]">Pay</span>
-            </span>
-            <p className="text-[9px] text-[#52525B] leading-tight tracking-wider uppercase">
-              Payment Gateway
-            </p>
-          </div>
+          <LogoIcon size={collapsed ? 28 : 28} />
+          {!collapsed && (
+            <div>
+              <span className="text-base font-bold tracking-tight">
+                <span className="text-[#FAFAFA]">QIE</span>
+                <span className="text-[#10B981]">Pay</span>
+              </span>
+              <p className="text-[9px] text-[#52525B] leading-tight tracking-wider uppercase">
+                Payment Gateway
+              </p>
+            </div>
+          )}
         </Link>
-        <NotificationCenter />
+        <NotificationCenter collapsed={collapsed} />
       </div>
 
       {/* Separator */}
-      <div className="mx-4 my-2 border-t border-[#1E1E21]" />
+      <div className={`${collapsed ? 'mx-2' : 'mx-4'} my-2 border-t border-[#1E1E21]`} />
 
       {/* Navigation sections */}
-      <nav className="flex-1 px-3 space-y-3 overflow-y-auto">
+      <nav className={`flex-1 ${collapsed ? 'px-1' : 'px-3'} space-y-3 overflow-y-auto`}>
         {navSections.map((section) => (
           <div key={section.label}>
-            <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-wider text-[#52525B]">
-              {section.label}
-            </p>
+            {!collapsed && (
+              <p className="px-3 mb-1 text-[10px] font-semibold uppercase tracking-wider text-[#52525B]">
+                {section.label}
+              </p>
+            )}
             <div className="space-y-0.5">
               {section.items.map((item) => {
                 const Icon = item.icon;
-                return (
+                const link = (
                   <NavLink
                     key={item.path}
                     to={item.path}
@@ -136,25 +161,41 @@ function SidebarContent({ onNavClick }) {
                     className={linkClass}
                     onClick={onNavClick}
                   >
-                    <Icon size={16} className="opacity-60" />
-                    {item.label}
+                    <Icon size={16} className="opacity-60 shrink-0" />
+                    {!collapsed && item.label}
                   </NavLink>
                 );
+
+                return collapsed ? (
+                  <NavTooltip key={item.path} label={item.label}>
+                    {link}
+                  </NavTooltip>
+                ) : link;
               })}
             </div>
           </div>
         ))}
       </nav>
 
+      {/* Collapse toggle — desktop only */}
+      <button
+        onClick={onToggle}
+        className="hidden lg:flex items-center justify-center gap-2 mx-2 mb-1 px-3 py-1.5 rounded-md text-[#52525B] hover:text-[#A1A1AA] hover:bg-[#111113]/50 transition-colors text-xs"
+        aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      >
+        {collapsed ? <ChevronsRight size={14} /> : <ChevronsLeft size={14} />}
+        {!collapsed && <span>Collapse</span>}
+      </button>
+
       {/* Wallet at bottom */}
-      <div className="p-3 border-t border-[#1E1E21]">
-        <WalletConnect compact />
+      <div className={`${collapsed ? 'px-2' : 'p-3'} border-t border-[#1E1E21]`}>
+        <WalletConnect compact collapsed={collapsed} />
       </div>
     </div>
   );
 }
 
-export default function Sidebar({ isOpen, onClose }) {
+export default function Sidebar({ isOpen, onClose, collapsed, onToggle }) {
   return (
     <>
       {/* Mobile overlay */}
@@ -168,10 +209,11 @@ export default function Sidebar({ isOpen, onClose }) {
       {/* Sidebar panel */}
       <aside
         className={`
-          fixed top-0 left-0 z-40 h-full w-[220px]
+          fixed top-0 left-0 z-40 h-full
+          ${collapsed ? 'w-[64px]' : 'w-[220px]'}
           flex flex-col
           bg-[#09090B] border-r border-[#1E1E21]
-          transition-transform duration-300 ease-in-out
+          transition-all duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
@@ -184,7 +226,7 @@ export default function Sidebar({ isOpen, onClose }) {
           <X size={16} />
         </button>
 
-        <SidebarContent onNavClick={onClose} />
+        <SidebarContent onNavClick={onClose} collapsed={collapsed} onToggle={onToggle} />
       </aside>
     </>
   );
