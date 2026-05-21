@@ -12,13 +12,13 @@ const modalVariants = {
     opacity: 1,
     scale: 1,
     y: 0,
-    transition: { type: 'spring', damping: 30, stiffness: 400 },
+    transition: { duration: 0.15, ease: 'easeOut' },
   },
   exit: {
     opacity: 0,
     scale: 0.95,
     y: 16,
-    transition: { duration: 0.15, ease: 'easeInOut' },
+    transition: { duration: 0.1, ease: 'easeIn' },
   },
 };
 
@@ -50,7 +50,7 @@ export default function Modal({
 
           {/* Modal card */}
           <motion.div
-            className={`relative ${maxWidth} w-full bg-slate-800 border border-slate-700 rounded-xl shadow-2xl p-6`}
+            className={`relative ${maxWidth} w-full bg-slate-800 border border-slate-700 rounded-lg p-5`}
             variants={modalVariants}
             initial="hidden"
             animate="visible"

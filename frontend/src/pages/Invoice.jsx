@@ -7,10 +7,9 @@ import {
 import toast from 'react-hot-toast';
 import { getPayment } from '../utils/contract';
 import { format } from 'date-fns';
-import { formatQIEAmount, formatUSD, getQIEPrice } from '../utils/currency';
+import { formatQIEAmount, formatUSD } from '../utils/currency';
 import { generateInvoiceHTML, downloadInvoice } from '../utils/invoice';
 import { EXPLORER_URL } from '../utils/constants';
-import StatusBadge from '../components/StatusBadge';
 
 export default function Invoice() {
   const { id } = useParams();
@@ -67,8 +66,8 @@ export default function Invoice() {
     return (
       <div className="p-6 lg:p-8">
         <div className="max-w-4xl mx-auto flex flex-col items-center justify-center py-20">
-          <Loader2 size={32} className="animate-spin text-emerald-500" />
-          <p className="text-slate-400 mt-4">Loading invoice...</p>
+          <Loader2 size={28} className="animate-spin text-emerald-500" />
+          <p className="text-slate-400 text-xs mt-3">Loading invoice...</p>
         </div>
       </div>
     );
@@ -82,13 +81,13 @@ export default function Invoice() {
           animate={{ opacity: 1 }}
           className="max-w-4xl mx-auto"
         >
-          <div className="bg-slate-800 border border-slate-700 rounded-xl p-12 text-center">
-            <AlertCircle size={48} className="text-red-400 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-slate-50 mb-2">Invoice Not Found</h2>
-            <p className="text-slate-400">{error}</p>
+          <div className="bg-slate-800 border border-slate-700 rounded-lg p-10 text-center">
+            <AlertCircle size={36} className="text-red-400 mx-auto mb-3" />
+            <h2 className="text-lg font-bold text-slate-50 mb-1">Invoice Not Found</h2>
+            <p className="text-slate-400 text-sm">{error}</p>
             <Link
               to="/dashboard"
-              className="inline-block mt-4 text-sm text-sky-400 hover:text-sky-300"
+              className="inline-block mt-3 text-xs text-emerald-500 hover:text-emerald-400"
             >
               ← Back to Dashboard
             </Link>
@@ -102,70 +101,67 @@ export default function Invoice() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.15 }}
       className="p-6 lg:p-8"
     >
       <div className="max-w-4xl mx-auto">
         {/* Page header */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-slate-50">Invoice</h1>
-              <p className="text-sm text-slate-400 mt-1">
-                QIE-{payment.id.toString().padStart(6, '0')} · {formatDate(payment.createdAt)}
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleCopyLink}
-                className="inline-flex items-center gap-2 border border-slate-600 hover:border-slate-500 text-slate-200 font-medium rounded-lg px-4 py-2.5 text-sm transition-colors"
-              >
-                {copied ? <Check size={14} /> : <Copy size={14} />}
-                Share
-              </button>
-              <button
-                onClick={handlePrint}
-                className="inline-flex items-center gap-2 border border-slate-600 hover:border-slate-500 text-slate-200 font-medium rounded-lg px-4 py-2.5 text-sm transition-colors"
-              >
-                <Printer size={14} /> Print
-              </button>
-              <button
-                onClick={handleDownload}
-                className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg px-4 py-2.5 text-sm transition-colors"
-              >
-                <Download size={14} /> Download HTML
-              </button>
-            </div>
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h1 className="text-lg font-semibold text-slate-50 tracking-tight">Invoice</h1>
+            <p className="text-xs text-slate-500 mt-0.5">
+              QIE-{payment.id.toString().padStart(6, '0')} · {formatDate(payment.createdAt)}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleCopyLink}
+              className="inline-flex items-center gap-1.5 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-3 py-1.5 text-xs transition-colors"
+            >
+              {copied ? <Check size={12} /> : <Copy size={12} />}
+              Share
+            </button>
+            <button
+              onClick={handlePrint}
+              className="inline-flex items-center gap-1.5 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-3 py-1.5 text-xs transition-colors"
+            >
+              <Printer size={12} /> Print
+            </button>
+            <button
+              onClick={handleDownload}
+              className="inline-flex items-center gap-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-md px-3 py-1.5 text-xs transition-colors"
+            >
+              <Download size={12} /> Download HTML
+            </button>
           </div>
         </div>
 
         {/* Payment summary card */}
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 mb-6">
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center">
-                <span className="text-emerald-500 font-bold text-lg">Q</span>
+        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 mb-5">
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 bg-emerald-500/10 rounded-md flex items-center justify-center">
+                <span className="text-emerald-500 font-bold text-sm">Q</span>
               </div>
               <div>
-                <p className="text-sm font-semibold text-slate-50">QIEPay Invoice</p>
+                <p className="text-xs font-semibold text-slate-50">QIEPay Invoice</p>
                 <p className="text-xs text-slate-500">
                   QIE-{payment.id.toString().padStart(6, '0')}
                 </p>
               </div>
             </div>
-            <StatusBadge status={payment.status} />
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-4 text-xs">
+          <div className="grid grid-cols-2 gap-3 mb-3 text-xs">
             <div>
-              <p className="text-slate-400 uppercase tracking-wider mb-1">From (Merchant)</p>
-              <p className="text-slate-50 font-mono break-all">{payment.merchant}</p>
+              <p className="text-slate-500 uppercase tracking-wider mb-0.5">From (Merchant)</p>
+              <p className="text-slate-300 font-mono break-all text-xs">{payment.merchant}</p>
             </div>
             <div>
-              <p className="text-slate-400 uppercase tracking-wider mb-1">To (Customer)</p>
-              <p className="text-slate-50 font-mono break-all">
+              <p className="text-slate-500 uppercase tracking-wider mb-0.5">To (Customer)</p>
+              <p className="text-slate-300 font-mono break-all text-xs">
                 {payment.customer && payment.customer !== '0x0000000000000000000000000000000000000000'
                   ? payment.customer
                   : 'Pending Payment'}
@@ -173,32 +169,32 @@ export default function Invoice() {
             </div>
           </div>
 
-          <div className="bg-slate-900 rounded-lg p-4">
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-sm text-slate-300">{payment.description || 'Payment'}</span>
-              <span className="text-sm font-semibold text-slate-50">
+          <div className="bg-slate-900 rounded-md p-3">
+            <div className="flex justify-between items-center mb-0.5">
+              <span className="text-xs text-slate-300">{payment.description || 'Payment'}</span>
+              <span className="text-xs font-semibold text-slate-50 tabular-nums">
                 {formatQIEAmount(payment.amount)} QIE
               </span>
             </div>
             {payment.orderId && (
               <p className="text-xs text-slate-500">Order: {payment.orderId}</p>
             )}
-            <div className="flex justify-between items-center mt-1">
+            <div className="flex justify-between items-center mt-0.5">
               <span className="text-xs text-slate-500">≈ {formatUSD(payment.amount)}</span>
             </div>
           </div>
 
           {payment.fee && parseFloat(payment.fee) > 0 && (
-            <div className="flex justify-between items-center mt-3 text-xs">
+            <div className="flex justify-between items-center mt-2 text-xs">
               <span className="text-slate-400">Platform Fee (2.5%)</span>
-              <span className="text-red-400">-{formatQIEAmount(payment.fee)} QIE</span>
+              <span className="text-red-400 tabular-nums">-{formatQIEAmount(payment.fee)} QIE</span>
             </div>
           )}
 
           {payment.settledAt > 0 && (
-            <div className="mt-3 bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3">
+            <div className="mt-2 bg-emerald-500/10 border border-emerald-500/20 rounded-md p-2">
               <p className="text-xs font-medium text-emerald-400">✓ Settled</p>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-slate-400 mt-0.5">
                 Settlement completed on {formatDate(payment.settledAt)}
               </p>
             </div>
@@ -206,17 +202,17 @@ export default function Invoice() {
         </div>
 
         {/* Iframe preview */}
-        <div className="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden">
-          <div className="px-4 py-3 border-b border-slate-700 flex items-center justify-between">
-            <span className="text-sm text-slate-400 flex items-center gap-2">
-              <FileText size={14} /> Invoice Preview
+        <div className="bg-slate-800 border border-slate-700 rounded-lg overflow-hidden">
+          <div className="px-4 py-2.5 border-b border-slate-700 flex items-center justify-between">
+            <span className="text-xs text-slate-400 flex items-center gap-1.5">
+              <FileText size={12} /> Invoice Preview
             </span>
             {payment.txHash && (
               <a
                 href={`${EXPLORER_URL}/tx/${payment.txHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-sky-400 hover:text-sky-300 flex items-center gap-1"
+                className="text-xs text-emerald-500 hover:text-emerald-400 flex items-center gap-1"
               >
                 View on Explorer <ExternalLink size={10} />
               </a>
@@ -227,16 +223,16 @@ export default function Invoice() {
             srcDoc={invoiceHTML}
             title={`Invoice QIE-${payment.id.toString().padStart(6, '0')}`}
             className="w-full border-0"
-            style={{ minHeight: '800px', background: '#f8fafc' }}
+            style={{ minHeight: '700px', background: '#f8fafc' }}
             sandbox="allow-same-origin"
           />
         </div>
 
         {/* Back link */}
-        <div className="mt-6 text-center">
+        <div className="mt-4 text-center">
           <Link
             to={`/pay/${id}`}
-            className="text-sm text-slate-400 hover:text-slate-200 transition-colors"
+            className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
           >
             ← Back to Payment
           </Link>

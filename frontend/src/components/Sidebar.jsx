@@ -46,7 +46,7 @@ const navSections = [
 ];
 
 /* ─── Inline SVG Logo (ring + bolt) ─── */
-function LogoIcon({ size = 36 }) {
+function LogoIcon({ size = 32 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -65,20 +65,20 @@ function SidebarContent({ onNavClick }) {
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
       isActive
-        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-transparent'
+        ? 'bg-slate-800 text-emerald-400'
+        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
     }`;
 
   return (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="p-6 pb-4">
+      <div className="p-4 pb-3">
         <Link
           to="/"
           className="flex items-center gap-3 group"
           onClick={onNavClick}
         >
-          <LogoIcon size={38} />
+          <LogoIcon size={32} />
           <div>
             <span className="text-lg font-bold">
               <span className="text-white">QIE</span>
@@ -141,7 +141,7 @@ export default function Sidebar({ isOpen, onClose }) {
       {/* Sidebar panel */}
       <aside
         className={`
-          fixed top-0 left-0 z-40 h-full w-[280px]
+          fixed top-0 left-0 z-40 h-full w-[240px]
           flex flex-col
           bg-slate-900 border-r border-slate-800
           transition-transform duration-300 ease-in-out

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Settings as SettingsIcon, User, Shield, Network, Download, Info, ExternalLink, Loader2,
-  FileText, Copy, Check, Globe, Hash,
+  User, Info, Download, ExternalLink, Loader2,
+  FileText, Copy, Check,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { connectWallet, checkConnection, isMerchant, getMerchantPayments } from '../utils/contract';
@@ -103,62 +103,60 @@ export default function Settings() {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.15 }}
       className="p-6 lg:p-8"
     >
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-50">Settings</h1>
-        <p className="text-slate-400 text-sm mt-1">Account information and platform settings</p>
+      <div className="mb-6">
+        <h1 className="text-lg font-semibold text-slate-50 tracking-tight">Settings</h1>
+        <p className="text-xs text-slate-500 mt-0.5">Account information and platform settings</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-5xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-5xl">
         {/* Merchant Info Card */}
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-9 h-9 bg-emerald-500/10 rounded-lg flex items-center justify-center">
-              <User size={18} className="text-emerald-500" />
-            </div>
-            <h2 className="text-lg font-semibold text-slate-50">Merchant Info</h2>
+        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <User size={14} className="text-emerald-400" />
+            <h2 className="text-sm font-semibold text-slate-300">Merchant Info</h2>
           </div>
 
           {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 size={20} className="animate-spin text-emerald-500" />
+            <div className="flex items-center justify-center py-6">
+              <Loader2 size={18} className="animate-spin text-emerald-500" />
             </div>
           ) : wallet ? (
-            <div className="space-y-4">
+            <div className="space-y-3">
               <div>
-                <label className="text-slate-400 text-sm mb-1.5 block">Wallet Address</label>
-                <div className="flex items-center gap-2 bg-slate-900 rounded-lg px-4 py-2.5 border border-slate-700">
-                  <span className="text-sm text-slate-50 font-mono break-all flex-1">
+                <label className="text-xs text-slate-500 mb-1 block">Wallet Address</label>
+                <div className="flex items-center gap-2 bg-slate-900 rounded-md px-3 py-2 border border-slate-700">
+                  <span className="text-xs text-slate-300 font-mono break-all flex-1">
                     {wallet.address}
                   </span>
                   <button
                     onClick={() => handleCopy(wallet.address, 'wallet')}
-                    className="p-1.5 rounded-lg hover:bg-slate-700 transition-colors flex-shrink-0"
+                    className="p-1 rounded hover:bg-slate-700 transition-colors flex-shrink-0"
                   >
                     {copied === 'wallet'
-                      ? <Check size={14} className="text-emerald-400" />
-                      : <Copy size={14} className="text-slate-500" />
+                      ? <Check size={12} className="text-emerald-400" />
+                      : <Copy size={12} className="text-slate-500" />
                     }
                   </button>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between py-3 border-b border-slate-700">
-                <span className="text-sm text-slate-400">Balance</span>
-                <span className="text-sm text-slate-50 font-medium">
+              <div className="flex items-center justify-between py-2 border-b border-slate-700/50">
+                <span className="text-xs text-slate-400">Balance</span>
+                <span className="text-xs text-slate-300 font-medium tabular-nums">
                   {parseFloat(wallet.balance).toFixed(4)} QIE
                 </span>
               </div>
 
-              <div className="flex items-center justify-between py-3">
-                <span className="text-sm text-slate-400">Merchant Status</span>
-                <div className="flex items-center gap-2">
-                  <span className={`w-2 h-2 rounded-full ${registered ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-                  <span className={`text-sm font-medium ${registered ? 'text-emerald-400' : 'text-amber-400'}`}>
+              <div className="flex items-center justify-between py-2">
+                <span className="text-xs text-slate-400">Merchant Status</span>
+                <div className="flex items-center gap-1.5">
+                  <span className={`w-1.5 h-1.5 rounded-full ${registered ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+                  <span className={`text-xs font-medium ${registered ? 'text-emerald-400' : 'text-amber-400'}`}>
                     {registered ? 'Registered' : 'Not Registered'}
                   </span>
                 </div>
@@ -168,17 +166,17 @@ export default function Settings() {
                 href={`${EXPLORER_URL}/address/${wallet.address}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm text-sky-400 hover:text-sky-300 transition-colors"
+                className="inline-flex items-center gap-1 text-xs text-emerald-500 hover:text-emerald-400 transition-colors"
               >
-                View on Explorer <ExternalLink size={13} />
+                View on Explorer <ExternalLink size={11} />
               </a>
             </div>
           ) : (
-            <div className="text-center py-8">
-              <p className="text-slate-400 mb-4 text-sm">Connect your wallet to view account settings</p>
+            <div className="text-center py-6">
+              <p className="text-slate-400 text-xs mb-3">Connect your wallet to view account settings</p>
               <button
                 onClick={handleConnect}
-                className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg px-5 py-2.5 text-sm transition-colors"
+                className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md px-4 py-2 text-xs transition-colors"
               >
                 Connect Wallet
               </button>
@@ -187,34 +185,32 @@ export default function Settings() {
         </div>
 
         {/* Platform Info Card */}
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-9 h-9 bg-sky-500/10 rounded-lg flex items-center justify-center">
-              <Info size={18} className="text-sky-500" />
-            </div>
-            <h2 className="text-lg font-semibold text-slate-50">Platform Info</h2>
+        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Info size={14} className="text-emerald-400" />
+            <h2 className="text-sm font-semibold text-slate-300">Platform Info</h2>
           </div>
 
-          <div className="space-y-0">
+          <div>
             <InfoRow label="Platform Fee" value="2.5%" />
             <InfoRow label="Settlement" value="Manual (merchant settles)" />
             <InfoRow label="Min Payment" value="0.001 QIE" />
             <InfoRow label="Network" value={CHAIN_NAME} />
             <InfoRow label="Chain ID" value={CHAIN_ID.toString()} />
             <InfoRow label="RPC URL" value={RPC_URL} mono />
-            <div className="flex items-center justify-between py-3 border-b border-slate-700 last:border-0">
-              <span className="text-sm text-slate-400">Contract</span>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-slate-50 font-mono">
+            <div className="flex items-center justify-between py-2 border-b border-slate-700/50 last:border-0">
+              <span className="text-xs text-slate-400">Contract</span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs text-slate-300 font-mono">
                   {truncateAddress(CONTRACT_ADDRESS)}
                 </span>
                 <button
                   onClick={() => handleCopy(CONTRACT_ADDRESS, 'contract')}
-                  className="p-1 rounded hover:bg-slate-700 transition-colors"
+                  className="p-0.5 rounded hover:bg-slate-700 transition-colors"
                 >
                   {copied === 'contract'
-                    ? <Check size={12} className="text-emerald-400" />
-                    : <Copy size={12} className="text-slate-500" />
+                    ? <Check size={11} className="text-emerald-400" />
+                    : <Copy size={11} className="text-slate-500" />
                   }
                 </button>
               </div>
@@ -225,54 +221,50 @@ export default function Settings() {
             href={`${EXPLORER_URL}/address/${CONTRACT_ADDRESS}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm text-sky-400 hover:text-sky-300 transition-colors mt-4"
+            className="inline-flex items-center gap-1 text-xs text-emerald-500 hover:text-emerald-400 transition-colors mt-3"
           >
-            View Contract on Explorer <ExternalLink size={13} />
+            View Contract on Explorer <ExternalLink size={11} />
           </a>
         </div>
 
         {/* Export CSV Card */}
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-9 h-9 bg-amber-500/10 rounded-lg flex items-center justify-center">
-              <Download size={18} className="text-amber-500" />
-            </div>
-            <h2 className="text-lg font-semibold text-slate-50">Export Data</h2>
+        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <Download size={14} className="text-emerald-400" />
+            <h2 className="text-sm font-semibold text-slate-300">Export Data</h2>
           </div>
-          <p className="text-sm text-slate-400 mb-4">
-            Download all your payment history as a CSV file for accounting and record-keeping.
+          <p className="text-xs text-slate-400 mb-3">
+            Download all your payment history as CSV for accounting.
           </p>
           <button
             onClick={handleExport}
             disabled={exporting || !wallet}
-            className="inline-flex items-center gap-2 border border-slate-600 hover:border-slate-500 text-slate-200 font-medium rounded-lg px-4 py-2.5 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-3 py-1.5 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {exporting
-              ? <><Loader2 size={14} className="animate-spin" /> Exporting...</>
-              : <><Download size={14} /> Export Transactions (CSV)</>
+              ? <><Loader2 size={12} className="animate-spin" /> Exporting...</>
+              : <><Download size={12} /> Export Transactions (CSV)</>
             }
           </button>
         </div>
 
         {/* Export Invoices Card */}
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-9 h-9 bg-blue-500/10 rounded-lg flex items-center justify-center">
-              <FileText size={18} className="text-blue-500" />
-            </div>
-            <h2 className="text-lg font-semibold text-slate-50">Export Invoices</h2>
+        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <FileText size={14} className="text-emerald-400" />
+            <h2 className="text-sm font-semibold text-slate-300">Export Invoices</h2>
           </div>
-          <p className="text-sm text-slate-400 mb-4">
-            Download HTML invoices for all paid and settled transactions. Each invoice includes merchant details, amounts, and transaction info.
+          <p className="text-xs text-slate-400 mb-3">
+            Download HTML invoices for all paid and settled transactions.
           </p>
           <button
             onClick={handleExportInvoices}
             disabled={exportingInvoices || !wallet}
-            className="inline-flex items-center gap-2 border border-slate-600 hover:border-slate-500 text-slate-200 font-medium rounded-lg px-4 py-2.5 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-3 py-1.5 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {exportingInvoices
-              ? <><Loader2 size={14} className="animate-spin" /> Generating Invoices...</>
-              : <><FileText size={14} /> Download All Invoices</>
+              ? <><Loader2 size={12} className="animate-spin" /> Generating...</>
+              : <><FileText size={12} /> Download All Invoices</>
             }
           </button>
         </div>
@@ -283,9 +275,9 @@ export default function Settings() {
 
 function InfoRow({ label, value, mono }) {
   return (
-    <div className="flex items-center justify-between py-3 border-b border-slate-700 last:border-0">
-      <span className="text-sm text-slate-400">{label}</span>
-      <span className={`text-sm text-slate-50 ${mono ? 'font-mono' : ''}`}>{value}</span>
+    <div className="flex items-center justify-between py-2 border-b border-slate-700/50 last:border-0">
+      <span className="text-xs text-slate-400">{label}</span>
+      <span className={`text-xs text-slate-300 ${mono ? 'font-mono' : ''}`}>{value}</span>
     </div>
   );
 }

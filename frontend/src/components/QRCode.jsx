@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 
-export default function PaymentQRCode({ value, size = 200 }) {
+export default function PaymentQRCode({ value, size = 160 }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -25,7 +25,7 @@ export default function PaymentQRCode({ value, size = 200 }) {
       transition={{ duration: 0.2 }}
       className="flex flex-col items-center gap-4"
     >
-      <div className="bg-white p-4 rounded-xl shadow-lg">
+      <div className="bg-white p-3 rounded-lg">
         <QRCodeSVG
           value={value}
           size={size}

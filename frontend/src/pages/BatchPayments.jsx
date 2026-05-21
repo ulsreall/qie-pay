@@ -95,36 +95,36 @@ export default function BatchPayments() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-slate-50">Batch Payments</h1>
-        <p className="text-slate-400 text-sm mt-1">Create multiple payment requests at once</p>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15 }}>
+      <div className="mb-6">
+        <h1 className="text-lg font-semibold text-slate-50 tracking-tight">Batch Payments</h1>
+        <p className="text-xs text-slate-500 mt-0.5">Create multiple payment requests at once</p>
       </div>
 
       {!results ? (
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
+        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
           {/* Items */}
-          <div className="space-y-4 mb-6">
+          <div className="space-y-3 mb-4">
             {items.map((item, i) => (
               <div
                 key={i}
-                className="bg-slate-900 border border-slate-700 rounded-lg p-4"
+                className="bg-slate-900 border border-slate-700 rounded-md p-3"
               >
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-medium text-slate-300">Payment #{i + 1}</span>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-medium text-slate-400">Payment #{i + 1}</span>
                   {items.length > 1 && (
-                    <button onClick={() => removeItem(i)} className="p-1 text-slate-500 hover:text-red-400 transition-colors">
-                      <Trash2 size={14} />
+                    <button onClick={() => removeItem(i)} className="p-0.5 text-slate-500 hover:text-red-400 transition-colors">
+                      <Trash2 size={12} />
                     </button>
                   )}
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                   <input
                     type="text"
                     placeholder="Description *"
                     value={item.description}
                     onChange={(e) => updateItem(i, 'description', e.target.value)}
-                    className="px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-50 text-sm placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                    className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-md text-slate-50 text-xs placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
                   />
                   <input
                     type="number"
@@ -133,54 +133,54 @@ export default function BatchPayments() {
                     min="0.001"
                     value={item.amount}
                     onChange={(e) => updateItem(i, 'amount', e.target.value)}
-                    className="px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-50 text-sm placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                    className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-md text-slate-50 text-xs placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
                   />
                   <input
                     type="text"
                     placeholder="Order ID (optional)"
                     value={item.orderId}
                     onChange={(e) => updateItem(i, 'orderId', e.target.value)}
-                    className="px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-50 text-sm placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                    className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-md text-slate-50 text-xs placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
                   />
                 </div>
                 {item.amount && (
-                  <p className="text-xs text-slate-500 mt-2">≈ {formatUSD(item.amount)}</p>
+                  <p className="text-xs text-slate-500 mt-1">≈ {formatUSD(item.amount)}</p>
                 )}
               </div>
             ))}
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button
               onClick={addItem}
-              className="flex items-center gap-2 px-4 py-2.5 border border-slate-600 hover:border-slate-500 text-slate-200 rounded-lg text-sm transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md text-xs transition-colors"
             >
-              <Plus size={16} /> Add Payment
+              <Plus size={14} /> Add Payment
             </button>
             <div className="flex-1" />
             <button
               onClick={handleCreateAll}
               disabled={creating}
-              className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg text-sm transition-colors disabled:opacity-60"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md text-xs transition-colors disabled:opacity-60"
             >
               {creating ? (
-                <><Loader2 size={16} className="animate-spin" /> Creating {progress.current}/{progress.total}...</>
+                <><Loader2 size={14} className="animate-spin" /> {progress.current}/{progress.total}...</>
               ) : (
-                <><Layers size={16} /> Create All ({items.filter((i) => i.description.trim() && i.amount).length})</>
+                <><Layers size={14} /> Create All ({items.filter((i) => i.description.trim() && i.amount).length})</>
               )}
             </button>
           </div>
 
-          {/* Progress bar */}
+          {/* Progress bar (thin) */}
           {creating && (
-            <div className="mt-4">
-              <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+            <div className="mt-3">
+              <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
                 <motion.div
                   className="h-full bg-emerald-500 rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: `${(progress.current / progress.total) * 100}%` }}
-                  transition={{ duration: 0.3 }}
+                  transition={{ duration: 0.15 }}
                 />
               </div>
             </div>
@@ -188,55 +188,50 @@ export default function BatchPayments() {
         </div>
       ) : (
         /* Results */
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-slate-50">Batch Results</h2>
+        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-slate-300">Batch Results</h2>
             <button
               onClick={copyAllLinks}
-              className="flex items-center gap-2 px-4 py-2.5 border border-slate-600 hover:border-slate-500 text-slate-200 rounded-lg text-sm transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md text-xs transition-colors"
             >
-              <Copy size={14} /> Copy All Links
+              <Copy size={12} /> Copy All Links
             </button>
           </div>
 
-          <div className="space-y-3 mb-6">
-            {results.map((r, i) => (
-              <div
-                key={i}
-                className={`flex items-center justify-between p-4 rounded-lg ${
-                  r.success
-                    ? 'bg-emerald-500/5 border border-emerald-500/20'
-                    : 'bg-red-500/5 border border-red-500/20'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  {r.success ? <CheckCircle size={18} className="text-emerald-400" /> : <XCircle size={18} className="text-red-400" />}
-                  <div>
-                    <p className="text-sm text-slate-50">{r.description}</p>
+          <table className="w-full text-sm mb-4">
+            <tbody>
+              {results.map((r, i) => (
+                <tr key={i} className={`h-10 ${i % 2 === 0 ? '' : 'bg-slate-800/50'}`}>
+                  <td className="w-5">
+                    {r.success ? <CheckCircle size={14} className="text-emerald-400" /> : <XCircle size={14} className="text-red-400" />}
+                  </td>
+                  <td className="pl-2">
+                    <p className="text-sm text-slate-200">{r.description}</p>
                     {r.success ? (
-                      <p className="text-xs text-slate-500">ID: #{r.paymentId} · {r.amount} QIE</p>
+                      <p className="text-xs text-slate-500">#{r.paymentId} · {r.amount} QIE</p>
                     ) : (
                       <p className="text-xs text-red-400">{r.error}</p>
                     )}
-                  </div>
-                </div>
-                {r.success && (
-                  <a href={`/pay/${r.paymentId}`} target="_blank" rel="noopener noreferrer" className="text-emerald-500 hover:text-emerald-400 text-xs">
-                    View →
-                  </a>
-                )}
-              </div>
-            ))}
-          </div>
+                  </td>
+                  {r.success && (
+                    <td className="text-right">
+                      <a href={`/pay/${r.paymentId}`} target="_blank" rel="noopener noreferrer" className="text-emerald-500 hover:text-emerald-400 text-xs">
+                        View →
+                      </a>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => { setResults(null); setItems([{ description: '', amount: '', orderId: '' }]); }}
-              className="flex-1 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg transition-colors"
-            >
-              Create Another Batch
-            </button>
-          </div>
+          <button
+            onClick={() => { setResults(null); setItems([{ description: '', amount: '', orderId: '' }]); }}
+            className="w-full px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md text-sm transition-colors"
+          >
+            Create Another Batch
+          </button>
         </div>
       )}
     </motion.div>

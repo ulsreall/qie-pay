@@ -70,14 +70,14 @@ export default function StatsCard({ icon: Icon, label, value, subValue, trend, c
   return (
     <div
       ref={ref}
-      className="card-hover group"
+      className="card"
     >
-      <div className="flex items-center justify-between mb-3">
-        <div className={`p-2.5 rounded-lg ${colors.bg}`}>
-          {Icon && <Icon className={`w-5 h-5 ${colors.text}`} />}
+      <div className="flex items-center justify-between mb-2">
+        <div className={`p-2 rounded-md ${colors.bg}`}>
+          {Icon && <Icon className={`w-4 h-4 ${colors.text}`} />}
         </div>
         {trend !== undefined && trend !== null && (
-          <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+          <span className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${
             trend >= 0 ? 'text-emerald-400 bg-emerald-400/10' : 'text-red-400 bg-red-400/10'
           }`}>
             {trend >= 0 ? '↑' : '↓'} {Math.abs(trend)}%
@@ -85,10 +85,10 @@ export default function StatsCard({ icon: Icon, label, value, subValue, trend, c
         )}
       </div>
 
-      <p className="text-sm text-slate-400 mb-1">{label}</p>
-      <p className="text-2xl font-bold text-slate-50">{formatDisplayValue()}</p>
+      <p className="text-xs text-slate-500 mb-1">{label}</p>
+      <p className="text-xl font-bold text-slate-50 tabular-nums tracking-tight">{formatDisplayValue()}</p>
       {subValue && (
-        <p className="text-sm text-slate-500 mt-1">{subValue}</p>
+        <p className="text-xs text-slate-600 mt-1">{subValue}</p>
       )}
     </div>
   );

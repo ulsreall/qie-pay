@@ -3,12 +3,11 @@ import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Zap, Copy, Check, Loader2, ExternalLink, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { ethers } from 'ethers';
 import {
-  connectWallet, payForPayment, createPayment, checkConnection, isMerchant,
+  connectWallet, payForPayment, createPayment, checkConnection,
 } from '../utils/contract';
 import { formatUSD, QIE_USD_PRICE } from '../utils/currency';
-import { CONTRACT_ADDRESS, EXPLORER_URL } from '../utils/constants';
+import { EXPLORER_URL } from '../utils/constants';
 
 export default function Widget() {
   const { address: merchantAddress } = useParams();
@@ -85,7 +84,7 @@ export default function Widget() {
     setPaying(false);
   };
 
-  const embedCode = `<iframe src="${window.location.origin}/widget/${merchantAddress}" width="400" height="500" frameborder="0" style="border-radius: 16px; overflow: hidden;"></iframe>`;
+  const embedCode = `<iframe src="${window.location.origin}/widget/${merchantAddress}" width="400" height="500" frameborder="0" style="border-radius: 12px; overflow: hidden;"></iframe>`;
 
   const handleCopyEmbed = () => {
     navigator.clipboard.writeText(embedCode);
@@ -97,10 +96,10 @@ export default function Widget() {
   if (!merchantAddress) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-900 p-4">
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-8 text-center max-w-sm">
-          <AlertCircle size={40} className="text-red-400 mx-auto mb-3" />
-          <h2 className="text-lg font-bold text-slate-50 mb-2">Invalid Widget</h2>
-          <p className="text-slate-400 text-sm">No merchant address specified.</p>
+        <div className="bg-slate-800 border border-slate-700 rounded-lg p-6 text-center max-w-xs">
+          <AlertCircle size={32} className="text-red-400 mx-auto mb-2" />
+          <h2 className="text-base font-bold text-slate-50 mb-1">Invalid Widget</h2>
+          <p className="text-slate-400 text-xs">No merchant address specified.</p>
         </div>
       </div>
     );
@@ -109,31 +108,31 @@ export default function Widget() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-900 p-4">
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="w-full max-w-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.15 }}
+        className="w-full max-w-xs"
       >
         {/* Widget Card */}
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
+        <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
           {/* Header */}
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-700">
-            <div className="w-9 h-9 bg-emerald-500 rounded-lg flex items-center justify-center">
-              <Zap size={18} className="text-white" />
+          <div className="flex items-center gap-2.5 mb-4 pb-3 border-b border-slate-700">
+            <div className="w-7 h-7 bg-emerald-500 rounded-md flex items-center justify-center">
+              <Zap size={14} className="text-white" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-50">QIEPay</h2>
-              <p className="text-[10px] text-slate-500 font-mono truncate max-w-[200px]">
+              <h2 className="text-sm font-bold text-slate-50">QIEPay</h2>
+              <p className="text-[10px] text-slate-500 font-mono truncate max-w-[180px]">
                 {merchantAddress}
               </p>
             </div>
           </div>
 
           {!result ? (
-            <form onSubmit={handlePay} className="space-y-4">
+            <form onSubmit={handlePay} className="space-y-3">
               {/* Amount */}
               <div>
-                <label className="block text-xs text-slate-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs text-slate-400 uppercase tracking-wider mb-1">
                   Amount (QIE)
                 </label>
                 <input
@@ -143,11 +142,11 @@ export default function Widget() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-50 text-lg font-semibold focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 outline-none transition-all"
+                  className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-slate-50 text-base font-semibold focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 outline-none transition-all"
                   required
                 />
                 {amount && parseFloat(amount) > 0 && (
-                  <p className="text-xs text-slate-500 mt-1.5">
+                  <p className="text-xs text-slate-500 mt-1">
                     ≈ {formatUSD(amount)} · Rate: ${QIE_USD_PRICE}/QIE
                   </p>
                 )}
@@ -155,7 +154,7 @@ export default function Widget() {
 
               {/* Description */}
               <div>
-                <label className="block text-xs text-slate-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs text-slate-400 uppercase tracking-wider mb-1">
                   Description
                 </label>
                 <input
@@ -163,7 +162,7 @@ export default function Widget() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Payment for..."
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-50 text-sm focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 outline-none transition-all"
+                  className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-slate-50 text-xs focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 outline-none transition-all"
                 />
               </div>
 
@@ -171,16 +170,16 @@ export default function Widget() {
               <button
                 type="submit"
                 disabled={paying || !amount}
-                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg px-4 py-3 flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full h-10 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md flex items-center justify-center gap-2 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {paying ? (
                   <>
-                    <Loader2 size={16} className="animate-spin" />
+                    <Loader2 size={14} className="animate-spin" />
                     Processing...
                   </>
                 ) : (
                   <>
-                    <Zap size={16} />
+                    <Zap size={14} />
                     Pay {amount ? `${amount} QIE` : ''}
                   </>
                 )}
@@ -191,42 +190,38 @@ export default function Widget() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center py-4"
+              className="text-center py-3"
             >
               {result.success ? (
                 <>
-                  <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Check size={32} className="text-emerald-400" />
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-50 mb-1">Payment Successful</h3>
-                  <p className="text-sm text-slate-400 mb-4">{result.amount} QIE</p>
+                  <Check size={28} className="text-emerald-400 mx-auto mb-2" />
+                  <h3 className="text-sm font-bold text-slate-50 mb-0.5">Payment Successful</h3>
+                  <p className="text-xs text-slate-400 mb-3">{result.amount} QIE</p>
                   {result.txHash && (
                     <a
                       href={`${EXPLORER_URL}/tx/${result.txHash}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-sky-400 hover:text-sky-300 flex items-center justify-center gap-1 mb-4"
+                      className="text-xs text-emerald-500 hover:text-emerald-400 flex items-center justify-center gap-1 mb-3"
                     >
-                      View Transaction <ExternalLink size={12} />
+                      View Transaction <ExternalLink size={11} />
                     </a>
                   )}
                   <button
                     onClick={() => setResult(null)}
-                    className="w-full border border-slate-600 hover:border-slate-500 text-slate-200 font-medium rounded-lg px-4 py-2.5 text-sm transition-colors"
+                    className="w-full border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-3 py-2 text-xs transition-colors"
                   >
                     Make Another Payment
                   </button>
                 </>
               ) : (
                 <>
-                  <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <AlertCircle size={32} className="text-red-400" />
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-50 mb-1">Payment Failed</h3>
-                  <p className="text-sm text-red-400 mb-4">{result.error}</p>
+                  <AlertCircle size={28} className="text-red-400 mx-auto mb-2" />
+                  <h3 className="text-sm font-bold text-slate-50 mb-0.5">Payment Failed</h3>
+                  <p className="text-xs text-red-400 mb-3">{result.error}</p>
                   <button
                     onClick={() => setResult(null)}
-                    className="w-full border border-slate-600 hover:border-slate-500 text-slate-200 font-medium rounded-lg px-4 py-2.5 text-sm transition-colors"
+                    className="w-full border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-3 py-2 text-xs transition-colors"
                   >
                     Try Again
                   </button>
@@ -236,30 +231,30 @@ export default function Widget() {
           )}
 
           {/* Footer */}
-          <div className="mt-4 pt-3 border-t border-slate-700 text-center">
+          <div className="mt-3 pt-2 border-t border-slate-700 text-center">
             <p className="text-[10px] text-slate-600">
               Powered by QIEPay · QIE Testnet
             </p>
           </div>
         </div>
 
-        {/* Embed Code Section (only shown in non-iframe context) */}
+        {/* Embed Code Section */}
         {window.self === window.top && (
-          <div className="mt-4 bg-slate-800 border border-slate-700 rounded-xl p-4">
-            <p className="text-xs text-slate-400 mb-2 font-medium">Embed this widget</p>
+          <div className="mt-3 bg-slate-800 border border-slate-700 rounded-lg p-3">
+            <p className="text-xs text-slate-400 mb-1.5 font-medium">Embed this widget</p>
             <div className="flex items-center gap-2">
-              <code className="flex-1 text-[10px] text-slate-500 bg-slate-900 rounded-lg p-2 overflow-hidden text-ellipsis whitespace-nowrap font-mono">
+              <code className="flex-1 text-[10px] text-slate-500 bg-slate-900 rounded-md p-2 overflow-hidden text-ellipsis whitespace-nowrap font-mono">
                 {embedCode}
               </code>
               <button
                 onClick={handleCopyEmbed}
-                className="p-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors flex-shrink-0"
+                className="p-1.5 rounded-md bg-slate-700 hover:bg-slate-600 transition-colors flex-shrink-0"
                 title="Copy embed code"
               >
                 {copied ? (
-                  <Check size={14} className="text-emerald-400" />
+                  <Check size={12} className="text-emerald-400" />
                 ) : (
-                  <Copy size={14} className="text-slate-300" />
+                  <Copy size={12} className="text-slate-300" />
                 )}
               </button>
             </div>

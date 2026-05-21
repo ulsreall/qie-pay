@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion';
 
 const sizeMap = {
-  xs: 'w-4 h-4 border-[2px]',
-  sm: 'w-6 h-6 border-[2px]',
-  md: 'w-10 h-10 border-[3px]',
-  lg: 'w-14 h-14 border-[3px]',
-  xl: 'w-20 h-20 border-[4px]',
+  xs: 'w-3 h-3 border-[1.5px]',
+  sm: 'w-4 h-4 border-[2px]',
+  md: 'w-6 h-6 border-[2px]',
+  lg: 'w-10 h-10 border-[3px]',
+  xl: 'w-14 h-14 border-[3px]',
 };
 
 export default function LoadingSpinner({ size = 'md', text = '', className = '' }) {
@@ -42,7 +42,7 @@ export default function LoadingSpinner({ size = 'md', text = '', className = '' 
 export function LoadingOverlay({ text = 'Loading…' }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="bg-slate-800 border border-slate-700 rounded-xl p-8">
+      <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
         <LoadingSpinner size="lg" text={text} />
       </div>
     </div>

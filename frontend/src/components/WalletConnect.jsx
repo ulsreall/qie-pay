@@ -116,7 +116,7 @@ export default function WalletConnect({ compact = false }) {
           className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-slate-600 transition-colors group"
         >
           <div className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-          <span className="text-sm font-medium text-slate-300 truncate flex-1 text-left">
+          <span className="text-xs font-medium text-slate-300 truncate flex-1 text-left font-mono tabular-nums">
             {truncateAddress(wallet.address)}
           </span>
           {copied ? (
@@ -133,7 +133,7 @@ export default function WalletConnect({ compact = false }) {
         <div className="flex items-center justify-between px-3 py-1.5">
           <div>
             <p className="text-xs text-slate-500">Balance</p>
-            <p className="text-sm font-semibold text-emerald-400">
+            <p className="text-sm font-semibold text-emerald-400 tabular-nums">
               {parseFloat(wallet.balance).toFixed(4)}{' '}
               <span className="text-slate-400 font-normal">QIE</span>
             </p>
@@ -170,7 +170,7 @@ export default function WalletConnect({ compact = false }) {
       {/* Balance pill */}
       <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700">
         <div className="w-2 h-2 rounded-full bg-emerald-400" />
-        <span className="text-sm text-emerald-400 font-medium">
+        <span className="text-sm text-emerald-400 font-medium tabular-nums">
           {parseFloat(wallet.balance).toFixed(4)} QIE
         </span>
         <span className="text-xs text-slate-500">(${usdValue})</span>
@@ -181,7 +181,7 @@ export default function WalletConnect({ compact = false }) {
         onClick={copyAddress}
         className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-slate-600 transition-colors"
       >
-        <span className="text-sm font-medium text-slate-300 font-mono">
+        <span className="text-xs font-medium text-slate-300 font-mono tabular-nums">
           {truncateAddress(wallet.address)}
         </span>
         {copied ? (

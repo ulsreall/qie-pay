@@ -23,7 +23,7 @@ export default function Layout({ children }) {
       </button>
 
       {/* Main content — scrollable, offset for sidebar on desktop */}
-      <main className="lg:ml-[280px] min-h-screen">
+      <main className="lg:ml-[240px] min-h-screen">
         {children}
       </main>
     </div>

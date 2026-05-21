@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Wallet, UserPlus, FileText, ArrowRight, ArrowLeft, CheckCircle2,
-  Loader2, Copy, ExternalLink, Share2, QrCode
+  Loader2, Copy, ExternalLink, QrCode
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { QRCodeSVG } from 'qrcode.react';
@@ -112,29 +112,18 @@ export default function CreatePayment() {
     }
   };
 
-  /* ─── Step Indicator ─── */
+  /* ─── Step Indicator (horizontal bar) ─── */
   const StepIndicator = () => (
-    <div className="flex items-center justify-center gap-2 mb-10">
+    <div className="flex items-center gap-1 mb-6">
       {STEP_LABELS.map((label, i) => {
-        const active = i === step;
         const done = i < step || (i === 2 && result);
+        const active = i === step;
         return (
-          <div key={i} className="flex items-center gap-2">
-            <div
-              className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
-                done
-                  ? 'bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/30'
-                  : active
-                    ? 'bg-emerald-500 text-white'
-                    : 'bg-slate-800 text-slate-500 ring-1 ring-slate-700'
-              }`}
-            >
-              {done ? <CheckCircle2 className="w-4 h-4" /> : i + 1}
-            </div>
-            <span className={`text-xs hidden sm:block ${active ? 'text-slate-50' : 'text-slate-500'}`}>{label}</span>
-            {i < STEP_LABELS.length - 1 && (
-              <div className={`w-8 h-0.5 mx-1 rounded ${i < step ? 'bg-emerald-500/40' : 'bg-slate-700'}`} />
-            )}
+          <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
+            <div className={`w-full h-1.5 rounded-full transition-all ${
+              done ? 'bg-emerald-500' : active ? 'bg-emerald-500/40' : 'bg-slate-700'
+            }`} />
+            <span className={`text-xs ${active ? 'text-slate-300' : 'text-slate-600'}`}>{label}</span>
           </div>
         );
       })}
@@ -145,39 +134,39 @@ export default function CreatePayment() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.15 }}
       className="min-h-screen bg-slate-900 flex items-center justify-center p-4"
     >
-      <div className="w-full max-w-xl">
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-8 md:p-10">
-          <h1 className="text-2xl font-bold text-slate-50 text-center mb-2">Create Payment</h1>
-          <p className="text-slate-500 text-center text-sm mb-6">Set up a new crypto payment request</p>
+      <div className="w-full max-w-md">
+        <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
+          <h1 className="text-lg font-semibold text-slate-50 text-center mb-1 tracking-tight">Create Payment</h1>
+          <p className="text-slate-500 text-center text-xs mb-5">Set up a new crypto payment request</p>
 
           <StepIndicator />
 
           {/* ─── STEP 0: Connect ─── */}
           {step === 0 && (
             <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
-                <Wallet className="w-10 h-10 text-emerald-500" />
+              <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                <Wallet className="w-7 h-7 text-emerald-500" />
               </div>
-              <h2 className="text-xl font-semibold text-slate-50 mb-2">Connect Your Wallet</h2>
-              <p className="text-slate-400 text-sm mb-8 max-w-sm mx-auto">
+              <h2 className="text-base font-semibold text-slate-50 mb-1">Connect Your Wallet</h2>
+              <p className="text-slate-400 text-xs mb-5 max-w-xs mx-auto">
                 Connect your wallet to the QIE Blockchain to start creating payments.
               </p>
               <button
                 onClick={handleConnect}
                 disabled={connecting}
-                className="inline-flex items-center gap-2 px-8 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg transition-colors disabled:opacity-60"
+                className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md text-sm transition-colors disabled:opacity-60"
               >
                 {connecting ? (
-                  <><Loader2 className="w-5 h-5 animate-spin" /> Connecting...</>
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Connecting...</>
                 ) : (
-                  <><Wallet className="w-5 h-5" /> Connect Wallet</>
+                  <><Wallet className="w-4 h-4" /> Connect Wallet</>
                 )}
               </button>
               {!window.ethereum && (
-                <p className="text-red-400 text-xs mt-4">
+                <p className="text-red-400 text-xs mt-3">
                   No wallet detected. Please install QIE Wallet or MetaMask.
                 </p>
               )}
@@ -187,49 +176,49 @@ export default function CreatePayment() {
           {/* ─── STEP 1: Register ─── */}
           {step === 1 && (
             <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-emerald-500/10 flex items-center justify-center">
-                <UserPlus className="w-10 h-10 text-emerald-500" />
+              <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                <UserPlus className="w-7 h-7 text-emerald-500" />
               </div>
-              <h2 className="text-xl font-semibold text-slate-50 mb-2">Register as Merchant</h2>
-              <p className="text-slate-400 text-sm mb-2 max-w-sm mx-auto">
+              <h2 className="text-base font-semibold text-slate-50 mb-1">Register as Merchant</h2>
+              <p className="text-slate-400 text-xs mb-1.5 max-w-xs mx-auto">
                 Register your wallet address on the QIE Pay smart contract to receive payments.
               </p>
               {address && (
-                <p className="text-xs text-slate-500 font-mono mb-6">{address}</p>
+                <p className="text-xs text-slate-500 font-mono mb-4">{address}</p>
               )}
               {isRegistered ? (
-                <div className="space-y-4">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                    <span className="text-sm text-emerald-400">Already registered</span>
+                <div className="space-y-3">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-md">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                    <span className="text-xs text-emerald-400">Already registered</span>
                   </div>
                   <div>
                     <button
                       onClick={() => setStep(2)}
-                      className="inline-flex items-center gap-2 px-8 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg transition-colors"
+                      className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md text-sm transition-colors"
                     >
-                      Continue <ArrowRight className="w-5 h-5" />
+                      Continue <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <button
                     onClick={handleRegister}
                     disabled={registering}
-                    className="inline-flex items-center gap-2 px-8 py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg transition-colors disabled:opacity-60"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md text-sm transition-colors disabled:opacity-60"
                   >
                     {registering ? (
-                      <><Loader2 className="w-5 h-5 animate-spin" /> Registering...</>
+                      <><Loader2 className="w-4 h-4 animate-spin" /> Registering...</>
                     ) : (
-                      <><UserPlus className="w-5 h-5" /> Register Now</>
+                      <><UserPlus className="w-4 h-4" /> Register Now</>
                     )}
                   </button>
                   <button
                     onClick={() => setStep(0)}
-                    className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-300 mx-auto transition-colors"
+                    className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-300 mx-auto transition-colors"
                   >
-                    <ArrowLeft className="w-4 h-4" /> Back
+                    <ArrowLeft className="w-3 h-3" /> Back
                   </button>
                 </div>
               )}
@@ -238,21 +227,21 @@ export default function CreatePayment() {
 
           {/* ─── STEP 2: Create Form ─── */}
           {step === 2 && !result && (
-            <form onSubmit={handleCreate} className="space-y-5">
+            <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="block text-sm text-slate-400 mb-1.5">Description *</label>
+                <label className="block text-xs text-slate-400 mb-1">Description *</label>
                 <input
                   type="text"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="e.g., Premium subscription"
-                  className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-50 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                  className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-md text-sm text-slate-50 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-slate-400 mb-1.5">Amount (QIE) *</label>
+                <label className="block text-xs text-slate-400 mb-1">Amount (QIE) *</label>
                 <input
                   type="number"
                   step="0.0001"
@@ -260,66 +249,66 @@ export default function CreatePayment() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
-                  className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-50 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                  className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-md text-sm text-slate-50 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
                   required
                 />
                 {amount && parseFloat(amount) > 0 && (
-                  <p className="text-xs text-slate-500 mt-1.5">
+                  <p className="text-xs text-slate-500 mt-1">
                     ≈ {formatUSD(parseFloat(amount))} (at ${getQIEPrice()}/QIE)
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm text-slate-400 mb-1.5">Order ID (optional)</label>
+                <label className="block text-xs text-slate-400 mb-1">Order ID (optional)</label>
                 <input
                   type="text"
                   value={orderId}
                   onChange={(e) => setOrderId(e.target.value)}
                   placeholder="e.g., ORD-12345"
-                  className="w-full px-4 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-slate-50 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                  className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-md text-sm text-slate-50 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
                 />
               </div>
 
-              <div className="flex gap-3 pt-2">
+              <div className="flex gap-2 pt-1">
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="px-5 py-2.5 border border-slate-600 hover:border-slate-500 text-slate-200 rounded-lg transition-colors"
+                  className="px-3 py-2 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg transition-colors disabled:opacity-60"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md text-sm transition-colors disabled:opacity-60"
                 >
                   {creating ? (
-                    <><Loader2 className="w-5 h-5 animate-spin" /> Creating...</>
+                    <><Loader2 className="w-4 h-4 animate-spin" /> Creating...</>
                   ) : (
-                    <><FileText className="w-5 h-5" /> Create Payment</>
+                    <><FileText className="w-4 h-4" /> Create Payment</>
                   )}
                 </button>
               </div>
             </form>
           )}
 
-          {/* ─── Success Result ─── */}
+          {/* ─── Success Result (simplified) ─── */}
           {step === 2 && result && (
-            <div className="text-center space-y-6">
-              <div className="w-20 h-20 mx-auto rounded-2xl bg-emerald-500/10 flex items-center justify-center">
-                <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+            <div className="text-center space-y-4">
+              <div className="w-14 h-14 mx-auto rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                <CheckCircle2 className="w-7 h-7 text-emerald-500" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-slate-50 mb-1">Payment Created!</h2>
-                <p className="text-slate-400 text-sm">Payment #{result.paymentId}</p>
+                <h2 className="text-base font-semibold text-slate-50 mb-0.5">Payment Created</h2>
+                <p className="text-xs text-slate-400">Payment #{result.paymentId}</p>
               </div>
 
               <div className="flex justify-center">
-                <div className="bg-white p-4 rounded-xl">
+                <div className="bg-white p-3 rounded-lg">
                   <QRCodeSVG
                     value={result.url}
-                    size={180}
+                    size={140}
                     bgColor="#ffffff"
                     fgColor="#10B981"
                     level="H"
@@ -328,26 +317,18 @@ export default function CreatePayment() {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="flex gap-2 justify-center">
                 <button
                   onClick={copyLink}
-                  className="flex items-center justify-center gap-2 px-5 py-2.5 border border-slate-600 hover:border-slate-500 rounded-lg text-sm text-slate-200 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-2 border border-slate-600 hover:border-slate-500 rounded-md text-xs text-slate-300 transition-colors"
                 >
-                  <Copy className="w-4 h-4" /> Copy Link
+                  <Copy className="w-3.5 h-3.5" /> Copy Link
                 </button>
-                {navigator.share && (
-                  <button
-                    onClick={() => navigator.share({ url: result.url }).catch(() => {})}
-                    className="flex items-center justify-center gap-2 px-5 py-2.5 border border-slate-600 hover:border-slate-500 rounded-lg text-sm text-slate-200 transition-colors"
-                  >
-                    <Share2 className="w-4 h-4" /> Share
-                  </button>
-                )}
                 <Link
                   to={`/pay/${result.paymentId}`}
-                  className="flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-sm text-emerald-400 hover:bg-emerald-500/20 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-md text-xs text-emerald-400 hover:bg-emerald-500/20 transition-colors"
                 >
-                  <ExternalLink className="w-4 h-4" /> View Invoice
+                  <ExternalLink className="w-3.5 h-3.5" /> View Invoice
                 </Link>
               </div>
 
@@ -358,7 +339,7 @@ export default function CreatePayment() {
                   setAmount('');
                   setOrderId('');
                 }}
-                className="text-sm text-slate-500 hover:text-slate-300 transition-colors"
+                className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
               >
                 + Create another payment
               </button>

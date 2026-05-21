@@ -1,17 +1,26 @@
+const dotColors = {
+  0: 'bg-sky-400',
+  1: 'bg-amber-400',
+  2: 'bg-emerald-400',
+  3: 'bg-blue-400',
+  4: 'bg-red-400',
+};
+
 const statusConfig = {
-  0: { label: 'Created', badgeClass: 'badge badge-created' },
-  1: { label: 'Paid', badgeClass: 'badge badge-warning' },
-  2: { label: 'Settled', badgeClass: 'badge badge-success' },
-  3: { label: 'Refunded', badgeClass: 'badge badge-info' },
-  4: { label: 'Cancelled', badgeClass: 'badge badge-danger' },
+  0: { label: 'Created' },
+  1: { label: 'Paid' },
+  2: { label: 'Settled' },
+  3: { label: 'Refunded' },
+  4: { label: 'Cancelled' },
 };
 
 export default function StatusBadge({ status }) {
   const config = statusConfig[status] || statusConfig[0];
 
   return (
-    <span className={config.badgeClass}>
-      {config.label}
+    <span className="inline-flex items-center gap-1.5">
+      <span className={`w-1.5 h-1.5 rounded-full ${dotColors[status] || dotColors[0]}`} />
+      <span className="text-xs text-slate-400">{config.label}</span>
     </span>
   );
 }

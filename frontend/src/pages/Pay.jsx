@@ -10,7 +10,7 @@ import { format } from 'date-fns';
 import { QRCodeSVG } from 'qrcode.react';
 import StatusBadge from '../components/StatusBadge';
 import { getPayment, payForPayment, connectWallet, checkConnection } from '../utils/contract';
-import { formatQIEAmount, formatUSD, getQIEPrice } from '../utils/currency';
+import { formatQIEAmount, formatUSD } from '../utils/currency';
 import { pollPaymentStatus } from '../utils/polling';
 import { EXPLORER_URL } from '../utils/constants';
 
@@ -18,17 +18,17 @@ import { EXPLORER_URL } from '../utils/constants';
 function PaySkeleton() {
   return (
     <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-lg bg-slate-800 border border-slate-700 rounded-xl p-8 animate-pulse">
-        <div className="h-6 w-48 bg-slate-700 rounded mx-auto mb-8" />
-        <div className="space-y-4">
-          {[...Array(5)].map((_, i) => (
+      <div className="w-full max-w-md bg-slate-800 border border-slate-700 rounded-lg p-6 animate-pulse">
+        <div className="h-5 w-40 bg-slate-700 rounded mx-auto mb-6" />
+        <div className="space-y-3">
+          {[...Array(4)].map((_, i) => (
             <div key={i} className="flex justify-between">
               <div className="h-4 w-24 bg-slate-700 rounded" />
               <div className="h-4 w-32 bg-slate-700 rounded" />
             </div>
           ))}
         </div>
-        <div className="h-12 w-full bg-slate-700 rounded-lg mt-8" />
+        <div className="h-10 w-full bg-slate-700 rounded-md mt-6" />
       </div>
     </div>
   );
@@ -104,82 +104,86 @@ export default function Pay() {
 
   const truncateAddr = (addr) => addr ? `${addr.slice(0, 8)}...${addr.slice(-6)}` : '—';
 
+  const statusDot = {
+    0: 'bg-sky-400',
+    1: 'bg-amber-400',
+    2: 'bg-emerald-400',
+    3: 'bg-amber-400',
+    4: 'bg-red-400',
+  };
+
+  const statusLabel = {
+    0: 'Awaiting Payment',
+    1: 'Paid',
+    2: 'Settled',
+    3: 'Refunded',
+    4: 'Cancelled',
+  };
+
   if (loading) return <PaySkeleton />;
   if (!payment) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
         <div className="text-center">
-          <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-slate-50 mb-2">Payment Not Found</h2>
-          <p className="text-slate-400 mb-6">Payment #{id} does not exist or has been removed.</p>
-          <Link to="/" className="text-emerald-500 hover:text-emerald-400 transition-colors flex items-center gap-1 justify-center">
-            <ArrowLeft className="w-4 h-4" /> Back to Home
+          <AlertTriangle className="w-10 h-10 text-red-400 mx-auto mb-3" />
+          <h2 className="text-lg font-bold text-slate-50 mb-1">Payment Not Found</h2>
+          <p className="text-slate-400 text-sm mb-4">Payment #{id} does not exist or has been removed.</p>
+          <Link to="/" className="text-xs text-emerald-500 hover:text-emerald-400 transition-colors">
+            ← Back to Home
           </Link>
         </div>
       </div>
     );
   }
 
-  const statusIcon = {
-    0: <Clock className="w-8 h-8 text-sky-400" />,
-    1: <CheckCircle2 className="w-8 h-8 text-amber-400" />,
-    2: <CheckCircle2 className="w-8 h-8 text-emerald-400" />,
-    3: <RefreshCw className="w-8 h-8 text-amber-400" />,
-    4: <XCircle className="w-8 h-8 text-red-400" />,
-  };
-
   return (
     <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className="w-full max-w-lg"
+        transition={{ duration: 0.15 }}
+        className="w-full max-w-md"
       >
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-8 relative">
+        <div className="bg-slate-800 border border-slate-700 rounded-lg p-6 relative">
           {/* Header */}
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-slate-700 flex items-center justify-center">
-              {statusIcon[payment.status]}
+          <div className="text-center mb-5">
+            <h1 className="text-lg font-semibold text-slate-50 mb-1 tracking-tight">Payment #{payment.id}</h1>
+            <div className="flex items-center justify-center gap-1.5">
+              <span className={`w-2 h-2 rounded-full ${statusDot[payment.status] || 'bg-slate-500'}`} />
+              <span className="text-xs text-slate-400">{statusLabel[payment.status] || 'Unknown'}</span>
             </div>
-            <h1 className="text-2xl font-bold text-slate-50 mb-2">Payment #{payment.id}</h1>
-            <StatusBadge status={payment.status} />
             {polling && payment.status === 0 && (
-              <p className="text-xs text-sky-400 mt-2 flex items-center justify-center gap-1">
+              <p className="text-xs text-sky-400 mt-1.5 flex items-center justify-center gap-1">
                 <Loader2 className="w-3 h-3 animate-spin" /> Waiting for payment...
               </p>
             )}
           </div>
 
-          {/* Amount highlight */}
-          <div className="bg-slate-900 border border-slate-700 rounded-xl p-6 text-center mb-6">
-            <p className="text-3xl font-bold text-emerald-500 mb-1">
+          {/* Amount */}
+          <div className="bg-slate-900 border border-slate-700 rounded-lg p-4 text-center mb-5">
+            <p className="text-3xl font-bold text-emerald-500 tabular-nums">
               {formatQIEAmount(payment.amount)} QIE
             </p>
-            <p className="text-sm text-slate-400">{formatUSD(payment.amount)}</p>
+            <p className="text-xs text-slate-500 mt-0.5">{formatUSD(payment.amount)}</p>
           </div>
 
           {/* Details */}
-          <div className="space-y-3 mb-8">
+          <div className="space-y-0 mb-5">
             {[
               { label: 'Description', value: payment.description || '—' },
               { label: 'Order ID', value: payment.orderId || '—' },
               {
                 label: 'Merchant',
-                value: (
-                  <span className="text-sky-400 text-sm font-mono">
-                    {truncateAddr(payment.merchant)}
-                  </span>
-                ),
+                value: <span className="text-sky-400 text-xs font-mono">{truncateAddr(payment.merchant)}</span>,
                 isJSX: true,
               },
               { label: 'Date', value: formatDate(payment.createdAt) },
-              { label: 'Platform Fee', value: `${formatQIEAmount(payment.fee)} QIE (${formatUSD(payment.fee)})` },
+              { label: 'Fee', value: `${formatQIEAmount(payment.fee)} QIE (${formatUSD(payment.fee)})` },
             ].map((item) => (
-              <div key={item.label} className="flex justify-between items-center py-2 border-b border-slate-700/50 last:border-0">
-                <span className="text-sm text-slate-400">{item.label}</span>
+              <div key={item.label} className="flex justify-between items-center py-2 border-b border-slate-700/40 last:border-0">
+                <span className="text-xs text-slate-500">{item.label}</span>
                 {item.isJSX ? item.value : (
-                  <span className="text-sm text-slate-200">{item.value}</span>
+                  <span className="text-xs text-slate-300">{item.value}</span>
                 )}
               </div>
             ))}
@@ -187,91 +191,83 @@ export default function Pay() {
 
           {/* Action area based on status */}
           {payment.status === 0 && (
-            <div className="space-y-4">
-              <button
-                onClick={handlePay}
-                disabled={paying}
-                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg text-lg transition-colors disabled:opacity-60"
-              >
-                {paying ? (
-                  <><Loader2 className="w-5 h-5 animate-spin" /> Processing Payment...</>
-                ) : (
-                  <><Wallet className="w-5 h-5" /> Pay {formatQIEAmount(payment.amount)} QIE</>
-                )}
-              </button>
-            </div>
+            <button
+              onClick={handlePay}
+              disabled={paying}
+              className="w-full h-10 flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md text-sm transition-colors disabled:opacity-60"
+            >
+              {paying ? (
+                <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
+              ) : (
+                <><Wallet className="w-4 h-4" /> Pay {formatQIEAmount(payment.amount)} QIE</>
+              )}
+            </button>
           )}
 
           {(payment.status === 1 || payment.status === 2) && (
-            <div className="text-center space-y-4">
-              <div className="w-20 h-20 mx-auto rounded-full bg-emerald-500/10 flex items-center justify-center ring-2 ring-emerald-500/20">
-                <CheckCircle2 className="w-10 h-10 text-emerald-400" />
-              </div>
-              <p className="text-lg font-semibold text-slate-50">
-                Payment {payment.status === 2 ? 'Settled' : 'Paid'}!
+            <div className="text-center space-y-3">
+              <CheckCircle2 className="w-10 h-10 text-emerald-400 mx-auto" />
+              <p className="text-sm font-semibold text-slate-50">
+                Payment {payment.status === 2 ? 'Settled' : 'Paid'}
               </p>
-              <div className="flex gap-3 justify-center">
+              <div className="flex gap-2 justify-center">
                 <a
                   href={`${EXPLORER_URL}/tx/${payment.customer || ''}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2.5 border border-slate-600 hover:border-slate-500 rounded-lg text-sm text-slate-200 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-2 border border-slate-600 hover:border-slate-500 rounded-md text-xs text-slate-300 transition-colors"
                 >
-                  <ExternalLink className="w-4 h-4" /> Explorer
+                  <ExternalLink className="w-3.5 h-3.5" /> Explorer
                 </a>
                 <Link
                   to={`/pay/${payment.id}`}
-                  className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500/10 border border-emerald-500/20 rounded-lg text-sm text-emerald-400 hover:bg-emerald-500/20 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-md text-xs text-emerald-400 hover:bg-emerald-500/20 transition-colors"
                 >
-                  <FileText className="w-4 h-4" /> Invoice
+                  <FileText className="w-3.5 h-3.5" /> Invoice
                 </Link>
               </div>
             </div>
           )}
 
           {payment.status === 3 && (
-            <div className="text-center space-y-3">
-              <div className="w-16 h-16 mx-auto rounded-full bg-amber-500/10 flex items-center justify-center">
-                <RefreshCw className="w-8 h-8 text-amber-400" />
-              </div>
-              <p className="text-lg font-semibold text-slate-50">Payment Refunded</p>
-              <p className="text-sm text-slate-400">The payment amount has been refunded to the customer.</p>
+            <div className="text-center space-y-2">
+              <RefreshCw className="w-8 h-8 text-amber-400 mx-auto" />
+              <p className="text-sm font-semibold text-slate-50">Payment Refunded</p>
+              <p className="text-xs text-slate-400">The amount has been refunded to the customer.</p>
             </div>
           )}
 
           {payment.status === 4 && (
-            <div className="text-center space-y-3">
-              <div className="w-16 h-16 mx-auto rounded-full bg-red-500/10 flex items-center justify-center">
-                <XCircle className="w-8 h-8 text-red-400" />
-              </div>
-              <p className="text-lg font-semibold text-slate-50">Payment Cancelled</p>
-              <p className="text-sm text-slate-400">This payment has been cancelled by the merchant.</p>
+            <div className="text-center space-y-2">
+              <XCircle className="w-8 h-8 text-red-400 mx-auto" />
+              <p className="text-sm font-semibold text-slate-50">Payment Cancelled</p>
+              <p className="text-xs text-slate-400">This payment has been cancelled by the merchant.</p>
             </div>
           )}
 
           {/* QR Code (only for Created) */}
           {payment.status === 0 && (
-            <div className="mt-8 pt-6 border-t border-slate-700 flex justify-center">
-              <div className="flex flex-col items-center gap-3">
-                <div className="bg-white p-4 rounded-xl">
+            <div className="mt-5 pt-4 border-t border-slate-700 flex justify-center">
+              <div className="flex flex-col items-center gap-2">
+                <div className="bg-white p-3 rounded-lg">
                   <QRCodeSVG
                     value={`${window.location.origin}/pay/${payment.id}`}
-                    size={150}
+                    size={120}
                     bgColor="#ffffff"
                     fgColor="#10B981"
                     level="H"
                     includeMargin={false}
                   />
                 </div>
-                <p className="text-sm text-slate-400 font-medium">Scan to Pay</p>
+                <p className="text-xs text-slate-500">Scan to Pay</p>
               </div>
             </div>
           )}
 
           {/* Back link */}
-          <div className="mt-6 text-center">
-            <Link to="/" className="text-sm text-slate-500 hover:text-slate-300 transition-colors flex items-center gap-1 justify-center">
-              <ArrowLeft className="w-3 h-3" /> Back to QIE Pay
+          <div className="mt-4 text-center">
+            <Link to="/" className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
+              ← Back to QIE Pay
             </Link>
           </div>
         </div>

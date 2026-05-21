@@ -119,10 +119,10 @@ export default function PaymentTable({ payments = [], showActions = false, onSet
       {/* Table */}
       {paginated.length === 0 ? (
         <div className="text-center py-16">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center">
-            <FileText className="w-8 h-8 text-slate-500" />
+          <div className="w-12 h-12 mx-auto mb-3 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center">
+            <FileText className="w-6 h-6 text-slate-500" />
           </div>
-          <p className="text-slate-400 text-lg font-medium">No payments found</p>
+          <p className="text-slate-400 text-sm font-medium">No payments found</p>
           <p className="text-slate-500 text-sm mt-1">
             {search || statusFilter !== 'all' ? 'Try adjusting your filters' : 'Payments will appear here'}
           </p>
@@ -131,7 +131,7 @@ export default function PaymentTable({ payments = [], showActions = false, onSet
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-700">
+              <tr className="border-b border-slate-800">
                 <th className="text-left py-3 px-4 text-xs font-medium text-slate-500 uppercase tracking-wider">ID</th>
                 <th className="text-left py-3 px-4 text-xs font-medium text-slate-500 uppercase tracking-wider">Description</th>
                 <th className="text-left py-3 px-4 text-xs font-medium text-slate-500 uppercase tracking-wider">Order</th>
@@ -150,35 +150,35 @@ export default function PaymentTable({ payments = [], showActions = false, onSet
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ delay: i * 0.03 }}
-                    className="hover:bg-slate-800/50 transition-colors"
+                    className={i % 2 === 1 ? 'bg-slate-800/30' : ''}
                   >
-                    <td className="py-3 px-4">
-                      <span className="text-sm text-emerald-400 font-mono">#{payment.id}</span>
+                    <td className="py-2 px-4 h-10">
+                      <span className="text-xs text-emerald-400 font-mono tabular-nums">#{payment.id}</span>
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-2 px-4 h-10">
                       <span className="text-sm text-slate-200 truncate max-w-[200px] block">{payment.description || '—'}</span>
                     </td>
-                    <td className="py-3 px-4">
-                      <span className="text-sm text-slate-400">{payment.orderId || '—'}</span>
+                    <td className="py-2 px-4 h-10">
+                      <span className="text-xs text-slate-400">{payment.orderId || '—'}</span>
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-2 px-4 h-10">
                       <div>
-                        <span className="text-sm text-slate-50 font-medium">{formatQIEAmount(payment.amount)} QIE</span>
+                        <span className="text-sm text-slate-50 font-medium tabular-nums">{formatQIEAmount(payment.amount)} QIE</span>
                         <span className="block text-xs text-slate-500">{formatUSD(payment.amount)}</span>
                       </div>
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-2 px-4 h-10">
                       <StatusBadge status={payment.status} />
                     </td>
-                    <td className="py-3 px-4">
-                      <span className="text-sm text-slate-400">{formatDate(payment.createdAt)}</span>
+                    <td className="py-2 px-4 h-10">
+                      <span className="text-xs text-slate-400 tabular-nums">{formatDate(payment.createdAt)}</span>
                     </td>
                     {showActions && (
-                      <td className="py-3 px-4">
-                        <div className="flex items-center justify-end gap-2">
+                      <td className="py-2 px-4 h-10">
+                        <div className="flex items-center justify-end gap-1">
                           <Link
                             to={`/pay/${payment.id}`}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-400 transition-colors"
+                            className="p-1 rounded-md text-slate-400 hover:text-emerald-400 transition-colors"
                             title="View"
                           >
                             <ExternalLink className="w-4 h-4" />
@@ -186,7 +186,7 @@ export default function PaymentTable({ payments = [], showActions = false, onSet
                           {payment.status === 1 && onSettle && (
                             <button
                               onClick={() => onSettle(payment.id)}
-                              className="p-1.5 rounded-lg text-emerald-400 hover:bg-emerald-500/10 transition-colors"
+                              className="p-1 rounded-md text-emerald-400 hover:bg-emerald-500/10 transition-colors"
                               title="Settle"
                             >
                               <CheckCircle className="w-4 h-4" />
@@ -195,7 +195,7 @@ export default function PaymentTable({ payments = [], showActions = false, onSet
                           {payment.status === 0 && onCancel && (
                             <button
                               onClick={() => onCancel(payment.id)}
-                              className="p-1.5 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors"
+                              className="p-1 rounded-md text-red-400 hover:bg-red-500/10 transition-colors"
                               title="Cancel"
                             >
                               <XCircle className="w-4 h-4" />
@@ -203,7 +203,7 @@ export default function PaymentTable({ payments = [], showActions = false, onSet
                           )}
                           <Link
                             to={`/pay/${payment.id}`}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-sky-400 transition-colors"
+                            className="p-1 rounded-md text-slate-400 hover:text-sky-400 transition-colors"
                             title="Invoice"
                           >
                             <FileText className="w-4 h-4" />

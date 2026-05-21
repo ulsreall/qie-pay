@@ -2,31 +2,41 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  DollarSign, TrendingUp, CreditCard, CheckCircle2, Plus, Layers, BarChart3,
+  DollarSign, TrendingUp, CreditCard, Plus, Layers, BarChart3,
   ArrowRight, RefreshCw, Loader2
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { format } from 'date-fns';
+import { AreaChart, Area, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { format, formatDistanceToNow } from 'date-fns';
 
-import StatsCard from '../components/StatsCard';
 import StatusBadge from '../components/StatusBadge';
 import {
   connectWallet, checkConnection, isMerchant, registerMerchant,
   getMerchantPayments, getMerchantEarnings, settlePayment
 } from '../utils/contract';
-import { formatQIEAmount, formatUSD, qieToUSD } from '../utils/currency';
-import { EXPLORER_URL } from '../utils/constants';
+import { formatQIEAmount, formatUSD } from '../utils/currency';
+
+/* ─── Status Dot ─── */
+function StatusDot({ status }) {
+  const colors = {
+    0: 'bg-sky-400',
+    1: 'bg-amber-400',
+    2: 'bg-emerald-400',
+    3: 'bg-amber-400',
+    4: 'bg-red-400',
+  };
+  return <span className={`inline-block w-2 h-2 rounded-full ${colors[status] || 'bg-slate-500'}`} />;
+}
 
 /* ─── Skeleton ─── */
 function SkeletonCard() {
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-xl p-5 animate-pulse">
+    <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 animate-pulse">
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-10 h-10 rounded-lg bg-slate-700" />
+        <div className="w-8 h-8 rounded-md bg-slate-700" />
         <div className="h-3 w-20 bg-slate-700 rounded" />
       </div>
-      <div className="h-7 w-28 bg-slate-700 rounded mb-2" />
+      <div className="h-6 w-28 bg-slate-700 rounded mb-2" />
       <div className="h-3 w-16 bg-slate-700 rounded" />
     </div>
   );
@@ -34,19 +44,19 @@ function SkeletonCard() {
 
 function SkeletonChart() {
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 animate-pulse">
-      <div className="h-5 w-32 bg-slate-700 rounded mb-6" />
-      <div className="h-64 bg-slate-700 rounded-xl" />
+    <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 animate-pulse">
+      <div className="h-5 w-32 bg-slate-700 rounded mb-4" />
+      <div className="h-[200px] bg-slate-700 rounded-md" />
     </div>
   );
 }
 
 function SkeletonTable() {
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 animate-pulse">
-      <div className="h-5 w-40 bg-slate-700 rounded mb-6" />
+    <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 animate-pulse">
+      <div className="h-5 w-40 bg-slate-700 rounded mb-4" />
       {[...Array(5)].map((_, i) => (
-        <div key={i} className="flex items-center gap-4 py-3 border-b border-slate-700/50">
+        <div key={i} className="flex items-center gap-4 py-2.5 border-b border-slate-700/50">
           <div className="h-4 w-8 bg-slate-700 rounded" />
           <div className="h-4 w-32 bg-slate-700 rounded flex-1" />
           <div className="h-4 w-20 bg-slate-700 rounded" />
@@ -147,11 +157,7 @@ export default function Dashboard() {
 
   /* ─── Compute stats ─── */
   const totalPayments = payments.length;
-  const settledPayments = payments.filter((p) => p.status === 2);
   const totalVolume = payments.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
-  const successRate = totalPayments > 0
-    ? ((settledPayments.length / totalPayments) * 100).toFixed(1)
-    : '0.0';
 
   /* ─── Chart data (last 7 days) ─── */
   const chartData = (() => {
@@ -168,7 +174,6 @@ export default function Dashboard() {
       days.push({
         date: format(new Date(dayStart * 1000), 'MMM d'),
         revenue: parseFloat(revenue.toFixed(2)),
-        count: dayPayments.length,
       });
     }
     return days;
@@ -179,21 +184,31 @@ export default function Dashboard() {
   const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 shadow-xl">
-        <p className="text-xs text-slate-400 mb-1">{label}</p>
-        <p className="text-sm font-semibold text-slate-50">{payload[0].value} QIE</p>
+      <div className="bg-slate-800 border border-slate-700 rounded-md px-3 py-2 shadow-lg">
+        <p className="text-xs text-slate-400 mb-0.5">{label}</p>
+        <p className="text-sm font-semibold text-slate-50 tabular-nums">{payload[0].value} QIE</p>
         <p className="text-xs text-slate-500">{formatUSD(payload[0].value)}</p>
       </div>
     );
   };
 
+  const relativeTime = (ts) => {
+    if (!ts) return '—';
+    try {
+      return formatDistanceToNow(new Date(ts * 1000), { addSuffix: true });
+    } catch {
+      return '—';
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-900 p-6 lg:p-8">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <div className="h-8 w-64 bg-slate-800 rounded animate-pulse" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
+        <div className="max-w-7xl mx-auto space-y-5">
+          <div className="h-6 w-48 bg-slate-800 rounded animate-pulse" />
+          <div className="grid grid-cols-3 gap-4">
+            <div className="col-span-2"><SkeletonCard /></div>
+            <SkeletonCard />
           </div>
           <SkeletonChart />
           <SkeletonTable />
@@ -206,164 +221,165 @@ export default function Dashboard() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.15 }}
       className="min-h-screen bg-slate-900 p-6 lg:p-8"
     >
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-5">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-slate-50">Welcome back</h1>
-            <p className="text-slate-500 text-sm mt-1 font-mono">{truncateAddr(address)}</p>
+            <h1 className="text-lg font-semibold text-slate-50 tracking-tight">Dashboard</h1>
+            <p className="text-xs text-slate-500 font-mono mt-0.5">{truncateAddr(address)}</p>
           </div>
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="flex items-center gap-2 px-4 py-2.5 border border-slate-600 hover:border-slate-500 rounded-lg text-sm text-slate-200 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-700 hover:border-slate-600 rounded-md text-xs text-slate-400 transition-colors disabled:opacity-50"
           >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
             Refresh
           </button>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <StatsCard
-            icon={DollarSign}
-            label="Total Earnings"
-            value={parseFloat(earnings).toFixed(2)}
-            subValue={formatUSD(earnings)}
-            color="emerald"
-          />
-          <StatsCard
-            icon={TrendingUp}
-            label="Total Volume"
-            value={totalVolume.toFixed(2)}
-            subValue={formatUSD(totalVolume)}
-            color="emerald"
-          />
-          <StatsCard
-            icon={CreditCard}
-            label="Total Payments"
-            value={totalPayments}
-            color="emerald"
-          />
-          <StatsCard
-            icon={CheckCircle2}
-            label="Success Rate"
-            value={`${successRate}%`}
-            color="emerald"
-          />
+        {/* Stats Cards — asymmetric layout */}
+        <div className="grid grid-cols-3 gap-4">
+          {/* Earnings — wider */}
+          <div className="col-span-2 bg-slate-800 border border-slate-700 rounded-lg p-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-md bg-emerald-500/10 flex items-center justify-center">
+                  <DollarSign className="w-4 h-4 text-emerald-400" />
+                </div>
+                <span className="text-xs text-slate-400">Total Earnings</span>
+              </div>
+              {/* Sparkline */}
+              <div className="w-20 h-8">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={chartData}>
+                    <Area type="monotone" dataKey="revenue" stroke="#10B981" strokeWidth={1.5} fill="#10B981" fillOpacity={0.1} />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            <p className="text-xl font-semibold text-slate-50 tabular-nums">{parseFloat(earnings).toFixed(2)} QIE</p>
+            <p className="text-xs text-slate-500 mt-0.5">{formatUSD(earnings)}</p>
+          </div>
+
+          {/* Volume */}
+          <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-md bg-emerald-500/10 flex items-center justify-center">
+                <TrendingUp className="w-4 h-4 text-emerald-400" />
+              </div>
+              <span className="text-xs text-slate-400">Volume</span>
+            </div>
+            <p className="text-xl font-semibold text-slate-50 tabular-nums">{totalVolume.toFixed(2)} QIE</p>
+            <p className="text-xs text-slate-500 mt-0.5">{formatUSD(totalVolume)}</p>
+          </div>
+
+          {/* Payments count — below volume on mobile, same row on desktop */}
+          <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-8 h-8 rounded-md bg-emerald-500/10 flex items-center justify-center">
+                <CreditCard className="w-4 h-4 text-emerald-400" />
+              </div>
+              <span className="text-xs text-slate-400">Payments</span>
+            </div>
+            <p className="text-xl font-semibold text-slate-50 tabular-nums">{totalPayments}</p>
+            <p className="text-xs text-slate-500 mt-0.5">total</p>
+          </div>
         </div>
 
         {/* Revenue Chart */}
-        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
-          <h2 className="text-lg font-semibold text-slate-50 mb-6">Revenue — Last 7 Days</h2>
-          <div className="h-64">
+        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+          <h2 className="text-sm font-semibold text-slate-300 mb-4 tracking-tight">Revenue — Last 7 Days</h2>
+          <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData}>
                 <defs>
-                  <linearGradient id="emeraldGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#10B981" stopOpacity={0.3} />
-                    <stop offset="100%" stopColor="#10B981" stopOpacity={0} />
+                  <linearGradient id="emeraldFill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#10B981" stopOpacity={0.1} />
+                    <stop offset="100%" stopColor="#10B981" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="date" tick={{ fill: '#94A3B8', fontSize: 12 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: '#94A3B8', fontSize: 12 }} axisLine={false} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
                 <Tooltip content={<CustomTooltip />} />
                 <Area
                   type="monotone"
                   dataKey="revenue"
                   stroke="#10B981"
                   strokeWidth={2}
-                  fill="url(#emeraldGradient)"
+                  fill="url(#emeraldFill)"
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Recent Payments + Quick Actions */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Recent Payments */}
-          <div className="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg font-semibold text-slate-50">Recent Payments</h2>
-              <Link to="/analytics" className="text-sm text-emerald-500 hover:text-emerald-400 transition-colors flex items-center gap-1">
-                View All <ArrowRight className="w-4 h-4" />
+        {/* Recent Payments */}
+        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-slate-300 tracking-tight">Recent Payments</h2>
+            <Link to="/analytics" className="text-xs text-emerald-500 hover:text-emerald-400 transition-colors flex items-center gap-1">
+              View All <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          {recentPayments.length === 0 ? (
+            <div className="text-center py-10">
+              <CreditCard className="w-8 h-8 text-slate-600 mx-auto mb-2" />
+              <p className="text-sm text-slate-500">No payments yet</p>
+              <Link to="/create" className="text-xs text-emerald-500 hover:text-emerald-400 mt-1.5 inline-block">
+                Create your first payment →
               </Link>
             </div>
-
-            {recentPayments.length === 0 ? (
-              <div className="text-center py-12">
-                <CreditCard className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-                <p className="text-slate-400">No payments yet</p>
-                <Link to="/create" className="text-sm text-emerald-500 hover:text-emerald-400 mt-2 inline-block">
-                  Create your first payment →
-                </Link>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {recentPayments.map((p) => (
-                  <div
+          ) : (
+            <table className="w-full text-sm">
+              <tbody>
+                {recentPayments.map((p, i) => (
+                  <tr
                     key={p.id}
-                    className="flex items-center justify-between py-3 px-3 rounded-lg hover:bg-slate-800/50 transition-colors"
+                    className={`h-10 ${i % 2 === 0 ? '' : 'bg-slate-800/50'} hover:bg-slate-700/30 transition-colors`}
                   >
-                    <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
-                        <span className="text-xs font-bold text-emerald-500">#{p.id}</span>
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm text-slate-50 truncate">{p.description || 'No description'}</p>
-                        <p className="text-xs text-slate-500">
-                          {p.createdAt ? format(new Date(p.createdAt * 1000), 'MMM d, HH:mm') : '—'}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 shrink-0 ml-3">
-                      <div className="text-right">
-                        <p className="text-sm font-medium text-slate-50">{formatQIEAmount(p.amount)} QIE</p>
-                        <p className="text-xs text-slate-500">{formatUSD(p.amount)}</p>
-                      </div>
-                      <StatusBadge status={p.status} />
-                      {p.status === 1 && (
+                    <td className="pl-2 pr-3">
+                      <StatusDot status={p.status} />
+                    </td>
+                    <td className="pr-3">
+                      <p className="text-sm text-slate-200 truncate max-w-[200px]">{p.description || 'No description'}</p>
+                    </td>
+                    <td className="text-xs text-slate-500 pr-3 whitespace-nowrap">
+                      {relativeTime(p.createdAt)}
+                    </td>
+                    <td className="text-right pr-2">
+                      <span className="text-sm text-slate-50 font-medium tabular-nums">{formatQIEAmount(p.amount)} QIE</span>
+                    </td>
+                    {p.status === 1 && (
+                      <td className="pl-2">
                         <button
                           onClick={() => handleSettle(p.id)}
-                          className="px-3 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs rounded-lg transition-colors"
+                          className="px-2 py-0.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs rounded transition-colors"
                         >
                           Settle
                         </button>
-                      )}
-                    </div>
-                  </div>
+                      </td>
+                    )}
+                  </tr>
                 ))}
-              </div>
-            )}
-          </div>
+              </tbody>
+            </table>
+          )}
 
-          {/* Quick Actions */}
-          <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
-            <h2 className="text-lg font-semibold text-slate-50 mb-5">Quick Actions</h2>
-            <div className="space-y-3">
-              {[
-                { icon: Plus, label: 'Create Payment', to: '/create' },
-                { icon: Layers, label: 'Batch Payments', to: '/batch' },
-                { icon: BarChart3, label: 'View Analytics', to: '/analytics' },
-              ].map((action) => (
-                <Link
-                  key={action.label}
-                  to={action.to}
-                  className="flex items-center gap-3 p-3.5 rounded-lg border border-slate-700 hover:border-slate-600 transition-colors group"
-                >
-                  <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                    <action.icon className="w-4 h-4 text-emerald-500" />
-                  </div>
-                  <span className="text-sm text-slate-300 group-hover:text-slate-50 transition-colors flex-1">{action.label}</span>
-                  <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors" />
-                </Link>
-              ))}
-            </div>
+          {/* Inline quick links */}
+          <div className="flex items-center gap-4 mt-4 pt-3 border-t border-slate-700/50">
+            <Link to="/create" className="text-xs text-emerald-500 hover:text-emerald-400 transition-colors flex items-center gap-1">
+              <Plus className="w-3 h-3" /> Create Payment
+            </Link>
+            <Link to="/batch" className="text-xs text-emerald-500 hover:text-emerald-400 transition-colors flex items-center gap-1">
+              <Layers className="w-3 h-3" /> Batch Payments
+            </Link>
+            <Link to="/analytics" className="text-xs text-emerald-500 hover:text-emerald-400 transition-colors flex items-center gap-1">
+              <BarChart3 className="w-3 h-3" /> Analytics
+            </Link>
           </div>
         </div>
       </div>
