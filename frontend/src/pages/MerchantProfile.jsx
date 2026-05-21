@@ -122,7 +122,7 @@ export default function MerchantProfile() {
   // Loading skeleton
   if (loading) {
     return (
-      <div className="p-6 lg:p-8">
+      <div className="p-4 sm:p-6 lg:p-8">
         <div className="max-w-6xl mx-auto space-y-4 animate-pulse">
           <div className="h-16 bg-[#18181B] rounded-lg" />
           <div className="h-12 bg-[#18181B] rounded-lg" />
@@ -151,7 +151,7 @@ export default function MerchantProfile() {
   }
 
   return (
-    <div className="p-6 lg:p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto space-y-4">
         {/* Hero — minimal */}
         <motion.div
@@ -181,7 +181,7 @@ export default function MerchantProfile() {
         </motion.div>
 
         {/* Stats — 3 inline */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
             <div className="flex items-center gap-2 mb-1.5">
               <DollarSign size={14} className="text-[#34D399]" />
@@ -211,7 +211,7 @@ export default function MerchantProfile() {
         {/* Revenue Chart */}
         <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
           <h2 className="text-sm font-semibold text-[#A1A1AA] mb-4 tracking-tight">Revenue — Last 7 Days</h2>
-          <div className="h-[200px]">
+          <div className="h-[180px] sm:h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData}>
                 <defs>

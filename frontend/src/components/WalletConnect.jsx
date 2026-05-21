@@ -5,12 +5,14 @@ import {
   onAccountChange,
   checkConnection,
 } from '../utils/contract';
-import { Wallet, LogOut, Copy, Check, RefreshCw } from 'lucide-react';
+import { useDemo } from '../context/DemoContext';
+import { Wallet, LogOut, Copy, Check, RefreshCw, Eye } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const QIE_USD_RATE = 0.5; // Mock exchange rate
 
 export default function WalletConnect({ compact = false }) {
+  const { isDemo, demoAddress, demoBalance, setConnected, setDisconnected } = useDemo();
   const [wallet, setWallet] = useState(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -19,28 +21,36 @@ export default function WalletConnect({ compact = false }) {
   // Auto-detect existing connection on mount
   useEffect(() => {
     checkConnection().then((connected) => {
-      if (connected) setWallet(connected);
+      if (connected && !connected.isDemo) {
+        setWallet(connected);
+        setConnected(connected.address);
+      }
     });
 
     const handleAccounts = (accounts) => {
       if (accounts.length === 0) {
         setWallet(null);
+        setDisconnected();
         toast('Wallet disconnected', { icon: '🔌' });
       } else {
         checkConnection().then((w) => {
-          if (w) setWallet(w);
+          if (w && !w.isDemo) {
+            setWallet(w);
+            setConnected(w.address);
+          }
         });
       }
     };
 
     onAccountChange(handleAccounts);
-  }, []);
+  }, [setConnected, setDisconnected]);
 
   const handleConnect = async () => {
     setLoading(true);
     try {
       const result = await connectWallet();
       setWallet({ address: result.address, balance: result.balance });
+      setConnected(result.address);
       toast.success('Wallet connected');
     } catch (err) {
       console.error('Connection failed:', err);
@@ -52,8 +62,9 @@ export default function WalletConnect({ compact = false }) {
 
   const handleDisconnect = useCallback(() => {
     setWallet(null);
+    setDisconnected();
     toast.success('Wallet disconnected');
-  }, []);
+  }, [setDisconnected]);
 
   const refreshBalance = useCallback(async () => {
     if (!wallet?.address) return;
@@ -69,21 +80,133 @@ export default function WalletConnect({ compact = false }) {
   }, [wallet?.address]);
 
   const copyAddress = useCallback(() => {
-    if (!wallet?.address) return;
-    navigator.clipboard.writeText(wallet.address);
+    const addr = wallet?.address || demoAddress;
+    if (!addr) return;
+    navigator.clipboard.writeText(addr);
     setCopied(true);
     toast.success('Address copied to clipboard');
     setTimeout(() => setCopied(false), 2000);
-  }, [wallet?.address]);
+  }, [wallet?.address, demoAddress]);
 
   const truncateAddress = (addr) =>
     addr ? `${addr.slice(0, 6)}⋯${addr.slice(-4)}` : '';
 
-  const usdValue = wallet?.balance
-    ? (parseFloat(wallet.balance) * QIE_USD_RATE).toFixed(2)
+  // Use demo values when no wallet is connected
+  const displayAddress = wallet?.address || demoAddress;
+  const displayBalance = wallet?.balance || demoBalance;
+  const usdValue = displayBalance
+    ? (parseFloat(displayBalance) * QIE_USD_RATE).toFixed(2)
     : '0.00';
 
-  // ---- Disconnected state ----
+  // ---- DEMO MODE (compact / sidebar) ----
+  if (!wallet && isDemo && compact) {
+    return (
+      <div className="space-y-2">
+        {/* Demo badge */}
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-amber-500/10 border border-amber-500/20">
+          <Eye size={12} className="text-amber-400" />
+          <span className="text-[10px] font-medium text-amber-400">Demo Mode</span>
+        </div>
+
+        {/* Address row */}
+        <button
+          onClick={copyAddress}
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-[#111113] border border-[#27272A] hover:border-[#3F3F46] transition-colors group"
+        >
+          <div className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
+          <span className="text-xs font-medium text-[#A1A1AA] truncate flex-1 text-left font-mono tabular-nums">
+            {truncateAddress(displayAddress)}
+          </span>
+          {copied ? (
+            <Check size={12} className="text-[#34D399] shrink-0" />
+          ) : (
+            <Copy
+              size={12}
+              className="text-[#71717A] group-hover:text-[#A1A1AA] shrink-0 transition-colors"
+            />
+          )}
+        </button>
+
+        {/* Balance row */}
+        <div className="flex items-center justify-between px-3 py-1.5">
+          <div>
+            <p className="text-xs text-[#71717A]">Balance</p>
+            <p className="text-sm font-semibold text-[#34D399] tabular-nums">
+              {parseFloat(displayBalance).toFixed(4)}{' '}
+              <span className="text-[#A1A1AA] font-normal">QIE</span>
+            </p>
+            <p className="text-[11px] text-[#71717A]">≈ ${usdValue} USD</p>
+          </div>
+        </div>
+
+        {/* Connect Wallet button to exit demo */}
+        <button
+          onClick={handleConnect}
+          disabled={loading}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm bg-[#10B981] hover:bg-[#059669] text-white font-medium transition-colors disabled:opacity-50"
+        >
+          <Wallet size={14} />
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Connecting…
+            </span>
+          ) : (
+            'Connect Wallet'
+          )}
+        </button>
+      </div>
+    );
+  }
+
+  // ---- DEMO MODE (full / navbar) ----
+  if (!wallet && isDemo) {
+    return (
+      <div className="flex items-center gap-3">
+        {/* Demo badge */}
+        <div className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20">
+          <Eye size={14} className="text-amber-400" />
+          <span className="text-xs font-medium text-amber-400">Demo</span>
+        </div>
+
+        {/* Balance pill */}
+        <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg bg-[#111113] border border-[#27272A]">
+          <div className="w-2 h-2 rounded-full bg-amber-400" />
+          <span className="text-sm text-[#34D399] font-medium tabular-nums">
+            {parseFloat(displayBalance).toFixed(4)} QIE
+          </span>
+          <span className="text-xs text-[#71717A]">(${usdValue})</span>
+        </div>
+
+        {/* Address with copy */}
+        <button
+          onClick={copyAddress}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#111113] border border-[#27272A] hover:border-[#3F3F46] transition-colors"
+        >
+          <span className="text-xs font-medium text-[#A1A1AA] font-mono tabular-nums">
+            {truncateAddress(displayAddress)}
+          </span>
+          {copied ? (
+            <Check size={14} className="text-[#34D399]" />
+          ) : (
+            <Copy size={14} className="text-[#A1A1AA] hover:text-[#D4D4D8]" />
+          )}
+        </button>
+
+        {/* Connect button */}
+        <button
+          onClick={handleConnect}
+          disabled={loading}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#10B981] hover:bg-[#059669] text-white text-xs font-medium transition-colors disabled:opacity-50"
+        >
+          <Wallet size={14} />
+          {loading ? 'Connecting…' : 'Connect'}
+        </button>
+      </div>
+    );
+  }
+
+  // ---- Disconnected state (no demo, no wallet — fallback) ----
   if (!wallet) {
     return (
       <button
@@ -106,7 +229,7 @@ export default function WalletConnect({ compact = false }) {
     );
   }
 
-  // ---- Compact (sidebar) view ----
+  // ---- Compact (sidebar) view — real wallet ----
   if (compact) {
     return (
       <div className="space-y-2">
@@ -164,7 +287,7 @@ export default function WalletConnect({ compact = false }) {
     );
   }
 
-  // ---- Full (navbar) view ----
+  // ---- Full (navbar) view — real wallet ----
   return (
     <div className="flex items-center gap-3">
       {/* Balance pill */}

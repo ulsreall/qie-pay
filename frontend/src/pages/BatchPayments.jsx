@@ -199,7 +199,8 @@ export default function BatchPayments() {
             </button>
           </div>
 
-          <table className="w-full text-sm mb-4">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm mb-4 min-w-[400px]">
             <tbody>
               {results.map((r, i) => (
                 <tr key={i} className={`h-10 ${i % 2 === 0 ? '' : 'bg-[#111113]/50'}`}>
@@ -225,6 +226,7 @@ export default function BatchPayments() {
               ))}
             </tbody>
           </table>
+          </div>
 
           <button
             onClick={() => { setResults(null); setItems([{ description: '', amount: '', orderId: '' }]); }}

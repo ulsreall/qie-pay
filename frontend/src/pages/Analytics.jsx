@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   BarChart3, TrendingUp, DollarSign, CreditCard,
-  Loader2,
+  Loader2, Eye,
 } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -12,8 +12,21 @@ import {
   connectWallet, getMerchantPayments, getMerchantEarnings, checkConnection,
 } from '../utils/contract';
 import { formatQIEAmount, formatUSD } from '../utils/currency';
+import { useDemo } from '../context/DemoContext';
+
+/* ─── Demo Mode Banner ─── */
+function DemoBanner() {
+  return (
+    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20 mb-6">
+      <Eye size={14} className="text-amber-400" />
+      <span className="text-xs font-medium text-amber-400">Viewing demo data</span>
+      <span className="text-[10px] text-amber-400/60 ml-1">Connect a wallet to see your real data</span>
+    </div>
+  );
+}
 
 export default function Analytics() {
+  const { isDemo, demoAddress, demoPayments, demoEarnings, demoChartData } = useDemo();
   const [wallet, setWallet] = useState(null);
   const [payments, setPayments] = useState([]);
   const [earnings, setEarnings] = useState('0');
@@ -28,7 +41,16 @@ export default function Analytics() {
     setLoading(true);
     try {
       const connected = await checkConnection();
-      if (!connected) { setLoading(false); return; }
+
+      if (connected.isDemo) {
+        // Demo mode — load demo data
+        setWallet({ address: demoAddress, isDemo: true });
+        setPayments([...demoPayments].reverse());
+        setEarnings(demoEarnings);
+        setLoading(false);
+        return;
+      }
+
       setWallet(connected);
       const [earningsData, paymentsData] = await Promise.all([
         getMerchantEarnings(connected.address),
@@ -58,6 +80,11 @@ export default function Analytics() {
     revenueByDate[date] = (revenueByDate[date] || 0) + parseFloat(p.amount);
   });
   const revenueData = Object.entries(revenueByDate).map(([name, amount]) => ({ name, amount: parseFloat(amount.toFixed(4)) }));
+
+  // Use demo chart data if no real revenue data in demo mode
+  const chartDisplayData = (isDemo && revenueData.length === 0)
+    ? demoChartData.map(d => ({ name: d.date, amount: d.revenue }))
+    : revenueData;
 
   // Stats
   const paidPayments = filteredPayments.filter((p) => p.status >= 1);
@@ -94,6 +121,9 @@ export default function Analytics() {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15 }}>
+      {/* Demo Mode Banner */}
+      {isDemo && <DemoBanner />}
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3">
         <div>
@@ -146,9 +176,9 @@ export default function Analytics() {
       {/* Revenue Chart (same style as Dashboard) */}
       <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 mb-6">
         <h3 className="text-sm font-semibold text-[#A1A1AA] mb-4 tracking-tight">Revenue Over Time</h3>
-        {revenueData.length > 0 ? (
+        {chartDisplayData.length > 0 ? (
           <ResponsiveContainer width="100%" height={200}>
-            <AreaChart data={revenueData}>
+            <AreaChart data={chartDisplayData}>
               <defs>
                 <linearGradient id="emeraldRevenue" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#10B981" stopOpacity={0.1} />

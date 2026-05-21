@@ -133,7 +133,7 @@ export default function MerchantSettings() {
 
   if (loading) {
     return (
-      <div className="p-6 lg:p-8">
+      <div className="p-4 sm:p-6 lg:p-8">
         <div className="animate-pulse space-y-4">
           <div className="h-6 w-48 bg-[#111113] rounded" />
           <div className="h-4 w-64 bg-[#111113] rounded" />
@@ -148,7 +148,7 @@ export default function MerchantSettings() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.15 }}
-      className="p-6 lg:p-8"
+      className="p-4 sm:p-6 lg:p-8"
     >
       <div className="max-w-5xl mx-auto">
         {/* Header */}

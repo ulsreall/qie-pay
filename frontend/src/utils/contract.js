@@ -1,5 +1,11 @@
 import { ethers } from 'ethers';
 import { CONTRACT_ADDRESS, QIEPAY_ABI, CHAIN_ID, CHAIN_ID_HEX, CHAIN_NAME, RPC_URL } from './constants';
+import {
+  DEMO_ADDRESS,
+  DEMO_PAYMENTS,
+  DEMO_EARNINGS,
+  DEMO_BALANCE,
+} from './demoData';
 
 // Get provider (read-only)
 export function getProvider() {
@@ -266,6 +272,10 @@ export async function cancelPayment(paymentId) {
 
 // Get payment details
 export async function getPayment(paymentId) {
+  // Check demo payments first
+  const demoPayment = DEMO_PAYMENTS.find((p) => p.id === paymentId || p.id === String(paymentId));
+  if (demoPayment) return { ...demoPayment };
+
   const contract = getReadContract();
   const payment = await contract.getPayment(paymentId);
   return formatPayment(payment);
@@ -273,6 +283,11 @@ export async function getPayment(paymentId) {
 
 // Get merchant payments
 export async function getMerchantPayments(merchantAddress) {
+  // If requesting demo address payments, return demo data
+  if (merchantAddress === DEMO_ADDRESS) {
+    return [...DEMO_PAYMENTS];
+  }
+
   const contract = getReadContract();
   const paymentIds = await contract.getMerchantPayments(merchantAddress);
 
@@ -291,6 +306,10 @@ export async function getMerchantPayments(merchantAddress) {
 
 // Get merchant earnings
 export async function getMerchantEarnings(merchantAddress) {
+  if (merchantAddress === DEMO_ADDRESS) {
+    return DEMO_EARNINGS;
+  }
+
   const contract = getReadContract();
   const earnings = await contract.getMerchantEarnings(merchantAddress);
   return ethers.formatEther(earnings);
@@ -298,6 +317,10 @@ export async function getMerchantEarnings(merchantAddress) {
 
 // Check if address is registered merchant
 export async function isMerchant(address) {
+  if (address === DEMO_ADDRESS) {
+    return true;
+  }
+
   const contract = getReadContract();
   return contract.merchants(address);
 }
@@ -341,14 +364,29 @@ export function onAccountChange(callback) {
 }
 
 // Check if wallet is connected
+// Returns real wallet data if available, otherwise returns demo data for demo mode
 export async function checkConnection() {
-  if (!window.ethereum) return null;
+  if (!window.ethereum) {
+    // No wallet provider → enter demo mode
+    return {
+      address: DEMO_ADDRESS,
+      balance: DEMO_BALANCE,
+      isDemo: true,
+    };
+  }
 
   try {
     const accounts = await window.ethereum.request({
       method: 'eth_accounts',
     });
-    if (accounts.length === 0) return null;
+    if (accounts.length === 0) {
+      // Wallet installed but no account connected → demo mode
+      return {
+        address: DEMO_ADDRESS,
+        balance: DEMO_BALANCE,
+        isDemo: true,
+      };
+    }
 
     const provider = new ethers.BrowserProvider(window.ethereum);
     const balance = await provider.getBalance(accounts[0]);
@@ -356,8 +394,13 @@ export async function checkConnection() {
     return {
       address: accounts[0],
       balance: ethers.formatEther(balance),
+      isDemo: false,
     };
   } catch {
-    return null;
+    return {
+      address: DEMO_ADDRESS,
+      balance: DEMO_BALANCE,
+      isDemo: true,
+    };
   }
 }

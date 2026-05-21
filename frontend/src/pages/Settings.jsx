@@ -106,7 +106,7 @@ export default function Settings() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.15 }}
-      className="p-6 lg:p-8"
+      className="p-4 sm:p-6 lg:p-8"
     >
       <div className="mb-6">
         <h1 className="text-lg font-semibold text-[#FAFAFA] tracking-tight">Settings</h1>

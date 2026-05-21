@@ -64,7 +64,7 @@ export default function Invoice() {
 
   if (loading) {
     return (
-      <div className="p-6 lg:p-8">
+      <div className="p-4 sm:p-6 lg:p-8">
         <div className="max-w-4xl mx-auto flex flex-col items-center justify-center py-20">
           <Loader2 size={28} className="animate-spin text-[#10B981]" />
           <p className="text-[#A1A1AA] text-xs mt-3">Loading invoice...</p>
@@ -75,7 +75,7 @@ export default function Invoice() {
 
   if (error || !payment) {
     return (
-      <div className="p-6 lg:p-8">
+      <div className="p-4 sm:p-6 lg:p-8">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -104,7 +104,7 @@ export default function Invoice() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.15 }}
-      className="p-6 lg:p-8"
+      className="p-4 sm:p-6 lg:p-8"
     >
       <div className="max-w-4xl mx-auto">
         {/* Page header */}
@@ -115,7 +115,7 @@ export default function Invoice() {
               QIE-{payment.id.toString().padStart(6, '0')} · {formatDate(payment.createdAt)}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap justify-end">
             <button
               onClick={handleCopyLink}
               className="inline-flex items-center gap-1.5 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md px-3 py-1.5 text-xs transition-colors"
@@ -154,7 +154,7 @@ export default function Invoice() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mb-3 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 text-xs">
             <div>
               <p className="text-[#71717A] uppercase tracking-wider mb-0.5">From (Merchant)</p>
               <p className="text-[#A1A1AA] font-mono break-all text-xs">{payment.merchant}</p>

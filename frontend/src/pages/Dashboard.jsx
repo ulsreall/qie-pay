@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   DollarSign, TrendingUp, CreditCard, Plus, Layers, BarChart3,
-  ArrowRight, RefreshCw, Loader2, PlusCircle, Store, UserCog
+  ArrowRight, RefreshCw, Loader2, PlusCircle, Store, UserCog, Eye
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { AreaChart, Area, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -15,6 +15,7 @@ import {
   getMerchantPayments, getMerchantEarnings, settlePayment
 } from '../utils/contract';
 import { formatQIEAmount, formatUSD } from '../utils/currency';
+import { useDemo } from '../context/DemoContext';
 
 /* ─── Status Dot ─── */
 function StatusDot({ status }) {
@@ -67,8 +68,20 @@ function SkeletonTable() {
   );
 }
 
+/* ─── Demo Mode Banner ─── */
+function DemoBanner() {
+  return (
+    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20">
+      <Eye size={14} className="text-amber-400" />
+      <span className="text-xs font-medium text-amber-400">Viewing demo data</span>
+      <span className="text-[10px] text-amber-400/60 ml-1">Connect a wallet to see your real data</span>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { isDemo, demoAddress, demoPayments, demoEarnings, demoChartData } = useDemo();
   const [address, setAddress] = useState(null);
   const [payments, setPayments] = useState([]);
   const [earnings, setEarnings] = useState('0');
@@ -84,29 +97,31 @@ export default function Dashboard() {
     try {
       if (!silent) setRefreshing(true);
       const conn = await checkConnection();
-      if (!conn) {
+
+      if (conn.isDemo) {
+        // Demo mode — show demo data directly
+        setAddress(demoAddress);
+        setPayments([...demoPayments].sort((a, b) => b.createdAt - a.createdAt));
+        setEarnings(demoEarnings);
+        prevPaymentCount.current = demoPayments.length;
+        setLoading(false);
+        setRefreshing(false);
+        return;
+      }
+
+      // Real wallet connected
+      setAddress(conn.address);
+      const registered = await isMerchant(conn.address);
+      if (!registered) {
         try {
-          const wallet = await connectWallet();
-          setAddress(wallet.address);
-          const registered = await isMerchant(wallet.address);
-          if (!registered) {
-            await registerMerchant();
-            toast.success('Merchant registered!');
-          }
-          await fetchPayments(wallet.address);
+          await registerMerchant();
+          toast.success('Merchant registered!');
         } catch {
           navigate('/create');
           return;
         }
-      } else {
-        setAddress(conn.address);
-        const registered = await isMerchant(conn.address);
-        if (!registered) {
-          navigate('/create');
-          return;
-        }
-        await fetchPayments(conn.address);
       }
+      await fetchPayments(conn.address);
     } catch (err) {
       console.error('Dashboard load error:', err);
       if (!silent) toast.error('Failed to load dashboard');
@@ -114,7 +129,7 @@ export default function Dashboard() {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [navigate]);
+  }, [navigate, demoAddress, demoPayments, demoEarnings]);
 
   const fetchPayments = async (addr) => {
     const [pmts, earned] = await Promise.all([
@@ -133,18 +148,22 @@ export default function Dashboard() {
     loadData();
   }, [loadData]);
 
-  // Real-time polling every 10s
+  // Real-time polling every 10s (only for real wallets)
   useEffect(() => {
-    if (!address) return;
+    if (!address || isDemo) return;
     pollRef.current = setInterval(() => {
       fetchPayments(address).catch(console.error);
     }, 10000);
     return () => { if (pollRef.current) clearInterval(pollRef.current); };
-  }, [address]);
+  }, [address, isDemo]);
 
   const handleRefresh = () => loadData();
 
   const handleSettle = async (id) => {
+    if (isDemo) {
+      toast('Settle is not available in demo mode', { icon: '🔒' });
+      return;
+    }
     try {
       toast.loading('Settling payment...', { id: 'settle' });
       await settlePayment(id);
@@ -161,6 +180,9 @@ export default function Dashboard() {
 
   /* ─── Chart data (last 7 days) ─── */
   const chartData = (() => {
+    // In demo mode, use pre-computed chart data
+    if (isDemo) return demoChartData;
+
     const days = [];
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
@@ -225,6 +247,9 @@ export default function Dashboard() {
       className="min-h-screen bg-[#09090B] p-6 lg:p-8"
     >
       <div className="max-w-7xl mx-auto space-y-5">
+        {/* Demo Mode Banner */}
+        {isDemo && <DemoBanner />}
+
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
@@ -250,8 +275,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Getting Started — show when no payments yet */}
-        {totalPayments === 0 && (
+        {/* Getting Started — show when no payments yet (not in demo mode) */}
+        {totalPayments === 0 && !isDemo && (
           <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
             <p className="text-sm font-medium text-[#FAFAFA] mb-2">Getting Started</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">

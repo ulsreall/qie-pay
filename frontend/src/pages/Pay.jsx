@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Loader2, Wallet, CheckCircle2, XCircle, Clock, ExternalLink, FileText,
-  ArrowLeft, AlertTriangle, RefreshCw
+  ArrowLeft, AlertTriangle, RefreshCw, Eye
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
@@ -13,6 +13,8 @@ import { getPayment, payForPayment, connectWallet, checkConnection } from '../ut
 import { formatQIEAmount, formatUSD } from '../utils/currency';
 import { pollPaymentStatus } from '../utils/polling';
 import { EXPLORER_URL } from '../utils/constants';
+import { useDemo } from '../context/DemoContext';
+import { DEMO_PAYMENTS, DEMO_ADDRESS } from '../utils/demoData';
 
 /* ─── Skeleton ─── */
 function PaySkeleton() {
@@ -36,6 +38,7 @@ function PaySkeleton() {
 
 export default function Pay() {
   const { id } = useParams();
+  const { isDemo, demoPayments } = useDemo();
   const [payment, setPayment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [paying, setPaying] = useState(false);
@@ -46,6 +49,17 @@ export default function Pay() {
   /* ─── Load payment ─── */
   const loadPayment = async () => {
     try {
+      // First check demo payments
+      const demoPayment = demoPayments.find(
+        (p) => p.id === id || p.id === String(id)
+      );
+
+      if (demoPayment) {
+        setPayment({ ...demoPayment });
+        setLoading(false);
+        return;
+      }
+
       const p = await getPayment(id);
       setPayment(p);
     } catch (err) {
@@ -59,14 +73,16 @@ export default function Pay() {
   useEffect(() => {
     loadPayment();
     checkConnection().then((conn) => {
-      if (conn) setWalletAddress(conn.address);
+      if (conn && !conn.isDemo) {
+        setWalletAddress(conn.address);
+      }
     }).catch(() => {});
     return () => { if (pollCleanup.current) pollCleanup.current(); };
   }, [id]);
 
-  /* ─── Auto-poll if payment is Created ─── */
+  /* ─── Auto-poll if payment is Created (real wallets only) ─── */
   useEffect(() => {
-    if (!payment || payment.status !== 0) return;
+    if (!payment || payment.status !== 0 || isDemo) return;
     setPolling(true);
     pollCleanup.current = pollPaymentStatus(id, (updated, changed) => {
       if (changed) {
@@ -76,10 +92,27 @@ export default function Pay() {
       }
     }, 5000);
     return () => { if (pollCleanup.current) pollCleanup.current(); };
-  }, [payment?.status, id]);
+  }, [payment?.status, id, isDemo]);
 
   /* ─── Pay ─── */
   const handlePay = async () => {
+    // In demo mode, prompt wallet connection first
+    if (isDemo) {
+      try {
+        const wallet = await connectWallet();
+        setWalletAddress(wallet.address);
+        toast.success('Wallet connected! Now processing payment...');
+        // After connecting, proceed with real payment
+        await payForPayment(payment.id, payment.amount);
+        toast.success('Payment sent!');
+        const updated = await getPayment(id);
+        setPayment(updated);
+      } catch (err) {
+        toast.error(err?.reason || err?.message || 'Please connect a wallet to pay');
+      }
+      return;
+    }
+
     setPaying(true);
     try {
       if (!walletAddress) {
@@ -145,6 +178,14 @@ export default function Pay() {
         className="w-full max-w-md"
       >
         <div className="bg-[#111113] border border-[#27272A] rounded-lg p-6 relative">
+          {/* Demo Badge */}
+          {isDemo && (
+            <div className="flex items-center justify-center gap-1.5 mb-4 px-3 py-1.5 rounded-md bg-amber-500/10 border border-amber-500/20">
+              <Eye size={12} className="text-amber-400" />
+              <span className="text-[10px] font-medium text-amber-400">Demo Payment</span>
+            </div>
+          )}
+
           {/* Header */}
           <div className="text-center mb-5">
             <h1 className="text-lg font-semibold text-[#FAFAFA] mb-1 tracking-tight">Payment #{payment.id}</h1>
@@ -198,6 +239,8 @@ export default function Pay() {
             >
               {paying ? (
                 <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
+              ) : isDemo ? (
+                <><Wallet className="w-4 h-4" /> Connect Wallet to Pay</>
               ) : (
                 <><Wallet className="w-4 h-4" /> Pay {formatQIEAmount(payment.amount)} QIE</>
               )}

@@ -138,7 +138,7 @@ export default function CreatePayment() {
       className="min-h-screen bg-[#09090B] flex items-center justify-center p-4"
     >
       <div className="w-full max-w-md">
-        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-6">
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4 sm:p-6">
           <h1 className="text-lg font-semibold text-[#FAFAFA] text-center mb-1 tracking-tight">Create Payment</h1>
           <p className="text-[#71717A] text-center text-xs mb-5">Set up a new crypto payment request</p>
 
