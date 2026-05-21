@@ -83,7 +83,7 @@ export default function NotificationCenter() {
             id: `${payment.id}-${payment.status}-${Date.now()}`,
             paymentId: payment.id,
             type: payment.status,
-            text: `Payment #${payment.id} ${statusInfo.text} — ${formatQIEAmount(payment.amount)} QIE`,
+            text: `${statusInfo.text} · ${formatQIEAmount(payment.amount)} QIE`,
             timestamp: Date.now(),
             read: false,
           };
@@ -195,7 +195,7 @@ export default function NotificationCenter() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.15 }}
-            className="absolute top-full right-0 mt-1 w-80 max-h-96 overflow-y-auto bg-[#111113] border border-[#27272A] rounded-lg shadow-lg z-50"
+            className="absolute top-full right-0 mt-1 w-72 max-h-96 overflow-y-auto bg-[#111113] border border-[#27272A] rounded-lg shadow-lg z-50"
           >
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-[#27272A]">
@@ -236,7 +236,7 @@ export default function NotificationCenter() {
                       {getNotifIcon(notif.type)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className={`text-xs leading-relaxed ${!notif.read ? 'text-[#FAFAFA] font-medium' : 'text-[#A1A1AA]'}`}>
+                      <p className={`text-xs leading-relaxed break-words ${!notif.read ? 'text-[#FAFAFA] font-medium' : 'text-[#A1A1AA]'}`}>
                         {notif.text}
                       </p>
                       <p className="text-[11px] text-[#52525B] mt-0.5">
