@@ -6,8 +6,11 @@
 </linearGradient>
 </defs>
 
-<circle cx="256" cy="256" r="170" stroke="url(#grad)" stroke-width="38" fill="none"/>
+<circle cx="256" cy="256" r="170"
+stroke="url(#grad)"
+stroke-width="36"
+fill="none"/>
 
-<path d="M292 108L175 302H248L220 410L342 220H266L292 108Z"
+<path d="M290 108L175 300H245L220 410L340 220H265L290 108Z"
 fill="url(#grad)"/>
 </svg>

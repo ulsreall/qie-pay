@@ -1,4 +1,7 @@
 <svg width="1400" height="320" viewBox="0 0 1400 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+<rect width="1400" height="320" fill="#0F172A"/>
+
 <defs>
 <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
 <stop offset="0%" stop-color="#10B981"/>
@@ -6,8 +9,12 @@
 </linearGradient>
 </defs>
 
-<circle cx="170" cy="160" r="95" stroke="url(#grad)" stroke-width="24" fill="none"/>
-<path d="M188 76L125 192H166L145 270L223 145H177L188 76Z"
+<circle cx="170" cy="160" r="95"
+stroke="url(#grad)"
+stroke-width="22"
+fill="none"/>
+
+<path d="M188 74L125 192H165L145 270L222 145H176L188 74Z"
 fill="url(#grad)"/>
 
 <text x="320" y="175"
@@ -24,7 +31,7 @@ fill="url(#grad)">Pay</text>
 
 <text x="325" y="235"
 font-family="Inter, Arial, sans-serif"
-font-size="38"
-letter-spacing="10"
+font-size="36"
+letter-spacing="9"
 fill="#94A3B8">PAYMENT GATEWAY</text>
 </svg>

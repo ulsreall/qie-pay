@@ -55,8 +55,8 @@ function LogoIcon({ size = 36 }) {
           <stop offset="100%" stopColor="#38BDF8"/>
         </linearGradient>
       </defs>
-      <circle cx="256" cy="256" r="170" stroke="url(#sidebar-grad)" strokeWidth="38" fill="none"/>
-      <path d="M292 108L175 302H248L220 410L342 220H266L292 108Z" fill="url(#sidebar-grad)"/>
+      <circle cx="256" cy="256" r="170" stroke="url(#sidebar-grad)" strokeWidth="36" fill="none"/>
+      <path d="M290 108L175 300H245L220 410L340 220H265L290 108Z" fill="url(#sidebar-grad)"/>
     </svg>
   );
 }
