@@ -6,7 +6,7 @@ export const RPC_URL = 'https://rpc.qie.io';
 export const BLOCK_EXPLORER = 'https://explorer.qie.io';
 
 // Contract address - update after deployment
-export const CONTRACT_ADDRESS = '0xa16AD240D5E360990D982f973a47329DAd349e18';
+export const CONTRACT_ADDRESS = '0xFFC670DA0f40c1602175415abd9CEcd6d6BADD42';
 
 export const QIEPAY_ABI = [
   // Events
@@ -20,7 +20,7 @@ export const QIEPAY_ABI = [
 
   // Write functions
   'function registerMerchant() external',
-  'function createPayment(string calldata _description, string calldata _orderId) external returns (uint256 paymentId)',
+  'function createPayment(string calldata _description, string calldata _orderId, uint256 _amountInQIE) external returns (uint256 paymentId)',
   'function pay(uint256 _paymentId) external payable',
   'function settlePayment(uint256 _paymentId) external',
   'function refundPayment(uint256 _paymentId) external',

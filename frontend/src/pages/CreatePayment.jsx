@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   FileText,
   Hash,
+  DollarSign,
   Copy,
   Check,
   Loader2,
@@ -28,11 +29,12 @@ export default function CreatePayment() {
   const [registering, setRegistering] = useState(false);
   const [description, setDescription] = useState('');
   const [orderId, setOrderId] = useState('');
+  const [amount, setAmount] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState(null);
-  const [step, setStep] = useState(1); // 1=connect, 2=register, 3=create
+  const [step, setStep] = useState(1);
 
   useEffect(() => {
     checkConnection().then((connected) => {
@@ -70,11 +72,9 @@ export default function CreatePayment() {
     setError(null);
     try {
       if (!wallet) await handleConnect();
-
       const contract = await getContract();
       const tx = await contract.registerMerchant();
       await tx.wait();
-
       setMerchantRegistered(true);
       setStep(3);
     } catch (err) {
@@ -94,6 +94,10 @@ export default function CreatePayment() {
       setError('Description is required');
       return;
     }
+    if (!amount || parseFloat(amount) <= 0) {
+      setError('Amount must be greater than 0');
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -106,9 +110,13 @@ export default function CreatePayment() {
         return;
       }
 
-      const { paymentId } = await createPayment(description, orderId || `ORD-${Date.now()}`);
+      const { paymentId } = await createPayment(
+        description,
+        orderId || `ORD-${Date.now()}`,
+        amount
+      );
       const paymentUrl = `${window.location.origin}/pay/${paymentId}`;
-      setResult({ paymentId, paymentUrl });
+      setResult({ paymentId, paymentUrl, amount });
     } catch (err) {
       console.error('Create payment error:', err);
       setError('Failed to create payment. Please check your wallet and try again.');
@@ -129,6 +137,7 @@ export default function CreatePayment() {
     setResult(null);
     setDescription('');
     setOrderId('');
+    setAmount('');
     setError(null);
   };
 
@@ -148,7 +157,6 @@ export default function CreatePayment() {
           Generate a payment link to share with your customers
         </p>
 
-        {/* Error */}
         {error && (
           <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg flex items-center gap-3">
             <AlertCircle size={20} className="text-red-400 flex-shrink-0" />
@@ -158,26 +166,11 @@ export default function CreatePayment() {
 
         {/* Step Indicators */}
         <div className="flex items-center gap-4 mb-8">
-          <StepIndicator
-            number={1}
-            label="Connect"
-            active={step >= 1}
-            done={!!wallet}
-          />
+          <StepIndicator number={1} label="Connect" active={step >= 1} done={!!wallet} />
           <div className="flex-1 h-px bg-gray-700" />
-          <StepIndicator
-            number={2}
-            label="Register"
-            active={step >= 2}
-            done={merchantRegistered}
-          />
+          <StepIndicator number={2} label="Register" active={step >= 2} done={merchantRegistered} />
           <div className="flex-1 h-px bg-gray-700" />
-          <StepIndicator
-            number={3}
-            label="Create"
-            active={step >= 3}
-            done={!!result}
-          />
+          <StepIndicator number={3} label="Create" active={step >= 3} done={!!result} />
         </div>
 
         {/* Step 1: Connect Wallet */}
@@ -185,9 +178,7 @@ export default function CreatePayment() {
           <div className="text-center py-8">
             <Wallet size={48} className="text-primary-400 mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">Connect Your Wallet</h3>
-            <p className="text-gray-400 mb-6">
-              Connect QIE Wallet or MetaMask to get started
-            </p>
+            <p className="text-gray-400 mb-6">Connect QIE Wallet or MetaMask to get started</p>
             <button onClick={handleConnect} className="btn-primary px-8 py-3">
               Connect Wallet
             </button>
@@ -199,9 +190,7 @@ export default function CreatePayment() {
           <div className="text-center py-8">
             <UserPlus size={48} className="text-primary-400 mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">Register as Merchant</h3>
-            <p className="text-gray-400 mb-2">
-              One-time registration to start accepting payments
-            </p>
+            <p className="text-gray-400 mb-2">One-time registration to start accepting payments</p>
             <p className="text-xs text-gray-500 mb-6 font-mono">
               {wallet.address.slice(0, 6)}...{wallet.address.slice(-4)}
             </p>
@@ -211,15 +200,9 @@ export default function CreatePayment() {
               className="btn-primary px-8 py-3 flex items-center gap-2 mx-auto"
             >
               {registering ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Registering...
-                </>
+                <><Loader2 size={18} className="animate-spin" /> Registering...</>
               ) : (
-                <>
-                  <UserPlus size={18} />
-                  Register Now
-                </>
+                <><UserPlus size={18} /> Register Now</>
               )}
             </button>
           </div>
@@ -237,14 +220,9 @@ export default function CreatePayment() {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Description *
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Description *</label>
                 <div className="relative">
-                  <FileText
-                    size={18}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
-                  />
+                  <FileText size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   <input
                     type="text"
                     value={description}
@@ -257,14 +235,29 @@ export default function CreatePayment() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Order ID (optional)
-                </label>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Amount (QIE) *</label>
                 <div className="relative">
-                  <Hash
-                    size={18}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+                  <DollarSign size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+                  <input
+                    type="number"
+                    step="0.001"
+                    min="0.001"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="e.g., 0.5"
+                    className="input-field pl-10"
+                    required
                   />
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Customer will pay this exact amount
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Order ID (optional)</label>
+                <div className="relative">
+                  <Hash size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   <input
                     type="text"
                     value={orderId}
@@ -273,9 +266,7 @@ export default function CreatePayment() {
                     className="input-field pl-10"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  Auto-generated if left empty
-                </p>
+                <p className="text-xs text-gray-500 mt-1">Auto-generated if left empty</p>
               </div>
 
               <button
@@ -284,10 +275,7 @@ export default function CreatePayment() {
                 className="btn-primary w-full flex items-center justify-center gap-2 py-3"
               >
                 {loading ? (
-                  <>
-                    <Loader2 size={18} className="animate-spin" />
-                    Creating Payment...
-                  </>
+                  <><Loader2 size={18} className="animate-spin" /> Creating Payment...</>
                 ) : (
                   'Create Payment'
                 )}
@@ -303,11 +291,12 @@ export default function CreatePayment() {
               <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle2 size={32} className="text-green-400" />
               </div>
-              <h3 className="text-xl font-bold text-green-300 mb-1">
-                Payment Created!
-              </h3>
+              <h3 className="text-xl font-bold text-green-300 mb-1">Payment Created!</h3>
               <p className="text-gray-400">
                 Payment ID: <span className="text-white font-mono">#{result.paymentId}</span>
+              </p>
+              <p className="text-gray-400">
+                Amount: <span className="text-white font-bold">{result.amount} QIE</span>
               </p>
             </div>
 
@@ -319,15 +308,8 @@ export default function CreatePayment() {
                 <div className="flex-1 bg-gray-700 rounded-lg px-4 py-3 border border-gray-600 text-sm text-gray-300 font-mono truncate">
                   {result.paymentUrl}
                 </div>
-                <button
-                  onClick={copyLink}
-                  className="btn-secondary px-4 py-3 flex items-center gap-2"
-                >
-                  {copied ? (
-                    <Check size={16} className="text-green-400" />
-                  ) : (
-                    <Copy size={16} />
-                  )}
+                <button onClick={copyLink} className="btn-secondary px-4 py-3 flex items-center gap-2">
+                  {copied ? <Check size={16} className="text-green-400" /> : <Copy size={16} />}
                 </button>
               </div>
             </div>
@@ -342,10 +324,7 @@ export default function CreatePayment() {
                 <ExternalLink size={16} />
                 Preview Payment Page
               </a>
-              <button
-                onClick={handleCreateAnother}
-                className="btn-primary flex-1"
-              >
+              <button onClick={handleCreateAnother} className="btn-primary flex-1">
                 Create Another
               </button>
             </div>
@@ -361,20 +340,12 @@ function StepIndicator({ number, label, active, done }) {
     <div className="flex items-center gap-2">
       <div
         className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
-          done
-            ? 'bg-green-500 text-white'
-            : active
-            ? 'bg-primary-500 text-white'
-            : 'bg-gray-700 text-gray-400'
+          done ? 'bg-green-500 text-white' : active ? 'bg-primary-500 text-white' : 'bg-gray-700 text-gray-400'
         }`}
       >
         {done ? <Check size={16} /> : number}
       </div>
-      <span
-        className={`text-sm font-medium ${
-          done ? 'text-green-300' : active ? 'text-white' : 'text-gray-500'
-        }`}
-      >
+      <span className={`text-sm font-medium ${done ? 'text-green-300' : active ? 'text-white' : 'text-gray-500'}`}>
         {label}
       </span>
     </div>

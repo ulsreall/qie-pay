@@ -99,7 +99,9 @@ export async function registerMerchant() {
 }
 
 // Create payment
-export async function createPayment(description, orderId) {
+export async function createPayment(description, orderId, amountInQIE) {
+  const amountWei = ethers.parseEther(amountInQIE.toString());
+
   // Try direct approach for QIE Wallet compatibility
   if (window.ethereum) {
     try {
@@ -109,10 +111,10 @@ export async function createPayment(description, orderId) {
 
       // Encode function call manually
       const iface = new ethers.Interface(QIEPAY_ABI);
-      const data = iface.encodeFunctionData('createPayment', [description, orderId]);
+      const data = iface.encodeFunctionData('createPayment', [description, orderId, amountWei]);
 
       console.log('Creating payment from:', address);
-      console.log('Contract:', CONTRACT_ADDRESS);
+      console.log('Amount:', amountInQIE, 'QIE =', amountWei.toString(), 'wei');
       console.log('Encoded data:', data);
 
       // Send raw transaction via wallet
@@ -156,7 +158,7 @@ export async function createPayment(description, orderId) {
 
   // Fallback to ethers.js
   const contract = await getContract();
-  const tx = await contract.createPayment(description, orderId);
+  const tx = await contract.createPayment(description, orderId, amountWei);
   const receipt = await tx.wait();
 
   const event = receipt.logs.find((log) => {

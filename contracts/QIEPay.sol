@@ -85,16 +85,19 @@ contract QIEPay {
     }
 
     /**
-     * @notice Create a payment request
+     * @notice Create a payment request with a specific amount
      * @param _description Description of the payment
      * @param _orderId Merchant's order ID
+     * @param _amountInQIE Amount in QIE (in wei)
      * @return paymentId The created payment ID
      */
-    function createPayment(string calldata _description, string calldata _orderId)
+    function createPayment(string calldata _description, string calldata _orderId, uint256 _amountInQIE)
         external
         onlyMerchant
         returns (uint256 paymentId)
     {
+        require(_amountInQIE > 0, "QIEPay: amount must be > 0");
+
         paymentCounter++;
         paymentId = paymentCounter;
 
@@ -102,7 +105,7 @@ contract QIEPay {
             id: paymentId,
             merchant: msg.sender,
             customer: address(0),
-            amount: 0,
+            amount: _amountInQIE,
             fee: 0,
             createdAt: block.timestamp,
             settledAt: 0,
@@ -113,7 +116,7 @@ contract QIEPay {
 
         merchantPayments[msg.sender].push(paymentId);
 
-        emit PaymentCreated(paymentId, msg.sender, 0, _description, _orderId);
+        emit PaymentCreated(paymentId, msg.sender, _amountInQIE, _description, _orderId);
     }
 
     /**
@@ -128,14 +131,21 @@ contract QIEPay {
         Payment storage payment = payments[_paymentId];
         require(payment.status == PaymentStatus.Created, "QIEPay: not available");
         require(msg.value > 0, "QIEPay: zero amount");
+        require(msg.value >= payment.amount, "QIEPay: insufficient amount");
         require(msg.sender != payment.merchant, "QIEPay: merchant cannot pay own invoice");
 
         payment.customer = msg.sender;
-        payment.amount = msg.value;
-        payment.fee = (msg.value * feePercent) / 10000;
+        payment.fee = (payment.amount * feePercent) / 10000;
         payment.status = PaymentStatus.Paid;
 
-        emit PaymentPaid(_paymentId, msg.sender, msg.value);
+        // Refund excess payment
+        if (msg.value > payment.amount) {
+            uint256 refund = msg.value - payment.amount;
+            (bool refundSuccess, ) = payable(msg.sender).call{value: refund}("");
+            require(refundSuccess, "QIEPay: refund failed");
+        }
+
+        emit PaymentPaid(_paymentId, msg.sender, payment.amount);
     }
 
     /**
@@ -258,7 +268,5 @@ contract QIEPay {
     }
 
     // ─── Receive ──────────────────────────────────────────────────────
-    receive() external payable {
-        // Allow direct deposits (no payment ID) - treat as advance payment
-    }
+    receive() external payable {}
 }
