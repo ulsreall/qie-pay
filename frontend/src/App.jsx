@@ -18,21 +18,20 @@ import Developers from './pages/Developers';
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-[#06060e] text-white">
+    <div className="min-h-screen bg-[#0F172A] text-slate-50">
       <Toaster
         position="top-right"
         toastOptions={{
           duration: 4000,
           style: {
-            background: 'rgba(15, 15, 30, 0.95)',
-            backdropFilter: 'blur(16px)',
-            color: '#e2e8f0',
-            border: '1px solid rgba(139, 92, 246, 0.2)',
-            borderRadius: '12px',
+            background: '#1E293B',
+            color: '#F8FAFC',
+            border: '1px solid #334155',
+            borderRadius: '0.75rem',
             fontSize: '14px',
           },
-          success: { iconTheme: { primary: '#10B981', secondary: '#06060e' } },
-          error: { iconTheme: { primary: '#EF4444', secondary: '#06060e' } },
+          success: { iconTheme: { primary: '#10B981', secondary: '#1E293B' } },
+          error: { iconTheme: { primary: '#EF4444', secondary: '#1E293B' } },
         }}
       />
 

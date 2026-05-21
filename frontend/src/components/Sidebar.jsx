@@ -51,8 +51,8 @@ function LogoIcon({ size = 36 }) {
     <svg width={size} height={size} viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="sidebar-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#A855F7"/>
-          <stop offset="100%" stopColor="#22D3EE"/>
+          <stop offset="0%" stopColor="#10B981"/>
+          <stop offset="100%" stopColor="#38BDF8"/>
         </linearGradient>
       </defs>
       <circle cx="256" cy="256" r="170" stroke="url(#sidebar-grad)" strokeWidth="38" fill="none"/>
@@ -63,10 +63,10 @@ function LogoIcon({ size = 36 }) {
 
 function SidebarContent({ onNavClick }) {
   const linkClass = ({ isActive }) =>
-    `flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+    `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
       isActive
-        ? 'bg-purple-500/15 text-purple-400 border border-purple-500/20 shadow-sm shadow-purple-500/5'
-        : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800 border border-transparent'
     }`;
 
   return (
@@ -82,7 +82,7 @@ function SidebarContent({ onNavClick }) {
           <div>
             <span className="text-lg font-bold">
               <span className="text-white">QIE</span>
-              <span className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">Pay</span>
+              <span className="gradient-text">Pay</span>
             </span>
             <p className="text-[10px] text-slate-500 -mt-0.5 leading-tight tracking-wider">
               PAYMENT GATEWAY
@@ -95,7 +95,7 @@ function SidebarContent({ onNavClick }) {
       <nav className="flex-1 px-3 space-y-4 overflow-y-auto">
         {navSections.map((section) => (
           <div key={section.label}>
-            <p className="px-4 mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-600">
+            <p className="px-4 mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
               {section.label}
             </p>
             <div className="space-y-0.5">
@@ -120,7 +120,7 @@ function SidebarContent({ onNavClick }) {
       </nav>
 
       {/* Wallet at bottom */}
-      <div className="p-4 border-t border-white/5">
+      <div className="p-4 border-t border-slate-800">
         <WalletConnect compact />
       </div>
     </div>
@@ -133,7 +133,7 @@ export default function Sidebar({ isOpen, onClose }) {
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+          className="lg:hidden fixed inset-0 z-40 bg-black/60"
           onClick={onClose}
         />
       )}
@@ -143,20 +143,15 @@ export default function Sidebar({ isOpen, onClose }) {
         className={`
           fixed top-0 left-0 z-40 h-full w-[280px]
           flex flex-col
+          bg-slate-900 border-r border-slate-800
           transition-transform duration-300 ease-in-out
           ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
-        style={{
-          background: 'rgba(8, 8, 18, 0.92)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
-          borderRight: '1px solid rgba(139, 92, 246, 0.08)',
-        }}
       >
         {/* Mobile close button */}
         <button
           onClick={onClose}
-          className="lg:hidden absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+          className="lg:hidden absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
           aria-label="Close sidebar"
         >
           <X size={18} />

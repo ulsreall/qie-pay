@@ -7,18 +7,18 @@ const backdropVariants = {
 };
 
 const modalVariants = {
-  hidden: { opacity: 0, scale: 0.92, y: 24 },
+  hidden: { opacity: 0, scale: 0.95, y: 16 },
   visible: {
     opacity: 1,
     scale: 1,
     y: 0,
-    transition: { type: 'spring', damping: 28, stiffness: 320 },
+    transition: { type: 'spring', damping: 30, stiffness: 400 },
   },
   exit: {
     opacity: 0,
-    scale: 0.92,
-    y: 24,
-    transition: { duration: 0.2, ease: 'easeInOut' },
+    scale: 0.95,
+    y: 16,
+    transition: { duration: 0.15, ease: 'easeInOut' },
   },
 };
 
@@ -41,7 +41,7 @@ export default function Modal({
         >
           {/* Backdrop */}
           <motion.div
-            className="absolute inset-0 bg-black/70 backdrop-blur-md"
+            className="absolute inset-0 bg-black/60"
             onClick={onClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -50,7 +50,7 @@ export default function Modal({
 
           {/* Modal card */}
           <motion.div
-            className={`relative ${maxWidth} w-full glass-strong p-6 shadow-2xl shadow-black/40`}
+            className={`relative ${maxWidth} w-full bg-slate-800 border border-slate-700 rounded-xl shadow-2xl p-6`}
             variants={modalVariants}
             initial="hidden"
             animate="visible"
@@ -59,10 +59,10 @@ export default function Modal({
             {/* Header */}
             {title && (
               <div className="flex items-center justify-between mb-5">
-                <h3 className="text-lg font-semibold text-white">{title}</h3>
+                <h3 className="text-lg font-semibold text-slate-50">{title}</h3>
                 <button
                   onClick={onClose}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-700 transition-colors"
                   aria-label="Close modal"
                 >
                   <X size={18} />
@@ -74,7 +74,7 @@ export default function Modal({
             {!title && (
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors z-10"
+                className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-700 transition-colors z-10"
                 aria-label="Close modal"
               >
                 <X size={18} />

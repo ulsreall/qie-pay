@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   Settings as SettingsIcon, User, Shield, Network, Download, Info, ExternalLink, Loader2,
-  FileText, Copy, Check,
+  FileText, Copy, Check, Globe, Hash,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { connectWallet, checkConnection, isMerchant, getMerchantPayments } from '../utils/contract';
-import { CHAIN_ID, CHAIN_NAME, RPC_URL, CONTRACT_ADDRESS, BLOCK_EXPLORER } from '../utils/constants';
+import { CHAIN_ID, CHAIN_NAME, RPC_URL, CONTRACT_ADDRESS, EXPLORER_URL } from '../utils/constants';
 import { exportPaymentsCSV } from '../utils/export';
 import { downloadInvoice } from '../utils/invoice';
 
@@ -79,10 +79,8 @@ export default function Settings() {
         return;
       }
 
-      // Download each invoice
       for (const payment of paidPayments) {
         downloadInvoice(payment, wallet.address);
-        // Small delay between downloads to avoid browser blocking
         await new Promise((r) => setTimeout(r, 300));
       }
 
@@ -101,139 +99,181 @@ export default function Settings() {
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const truncateAddress = (addr) => addr ? `${addr.slice(0, 8)}...${addr.slice(-6)}` : '-';
+  const truncateAddress = (addr) => addr ? `${addr.slice(0, 8)}...${addr.slice(-6)}` : '—';
 
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="p-6 lg:p-8"
+    >
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Settings</h1>
+        <h1 className="text-2xl font-bold text-slate-50">Settings</h1>
         <p className="text-slate-400 text-sm mt-1">Account information and platform settings</p>
       </div>
 
-      <div className="space-y-6 max-w-2xl">
-        {/* Account */}
-        <div className="glass p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <User size={20} className="text-purple-400" />
-            <h2 className="text-lg font-semibold text-white">Account</h2>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-5xl">
+        {/* Merchant Info Card */}
+        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-9 h-9 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+              <User size={18} className="text-emerald-500" />
+            </div>
+            <h2 className="text-lg font-semibold text-slate-50">Merchant Info</h2>
           </div>
 
           {loading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 size={20} className="animate-spin text-purple-400" />
+              <Loader2 size={20} className="animate-spin text-emerald-500" />
             </div>
           ) : wallet ? (
             <div className="space-y-4">
-              <div className="glass-light p-4">
-                <div className="flex items-center justify-between mb-1">
-                  <p className="text-xs text-slate-500">Wallet Address</p>
+              <div>
+                <label className="text-slate-400 text-sm mb-1.5 block">Wallet Address</label>
+                <div className="flex items-center gap-2 bg-slate-900 rounded-lg px-4 py-2.5 border border-slate-700">
+                  <span className="text-sm text-slate-50 font-mono break-all flex-1">
+                    {wallet.address}
+                  </span>
                   <button
                     onClick={() => handleCopy(wallet.address, 'wallet')}
-                    className="p-1 rounded hover:bg-white/5 transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-slate-700 transition-colors flex-shrink-0"
                   >
-                    {copied === 'wallet' ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} className="text-slate-500" />}
+                    {copied === 'wallet'
+                      ? <Check size={14} className="text-emerald-400" />
+                      : <Copy size={14} className="text-slate-500" />
+                    }
                   </button>
                 </div>
-                <p className="text-sm text-white font-mono break-all">{wallet.address}</p>
               </div>
-              <div className="glass-light p-4">
-                <p className="text-xs text-slate-500 mb-1">Balance</p>
-                <p className="text-sm text-white">{parseFloat(wallet.balance).toFixed(4)} QIE</p>
+
+              <div className="flex items-center justify-between py-3 border-b border-slate-700">
+                <span className="text-sm text-slate-400">Balance</span>
+                <span className="text-sm text-slate-50 font-medium">
+                  {parseFloat(wallet.balance).toFixed(4)} QIE
+                </span>
               </div>
-              <div className="glass-light p-4">
-                <p className="text-xs text-slate-500 mb-1">Merchant Status</p>
+
+              <div className="flex items-center justify-between py-3">
+                <span className="text-sm text-slate-400">Merchant Status</span>
                 <div className="flex items-center gap-2">
                   <span className={`w-2 h-2 rounded-full ${registered ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-                  <span className={`text-sm ${registered ? 'text-emerald-400' : 'text-amber-400'}`}>
-                    {registered ? 'Registered Merchant' : 'Not Registered'}
+                  <span className={`text-sm font-medium ${registered ? 'text-emerald-400' : 'text-amber-400'}`}>
+                    {registered ? 'Registered' : 'Not Registered'}
                   </span>
                 </div>
               </div>
-              <a href={`${BLOCK_EXPLORER}/address/${wallet.address}`} target="_blank" rel="noopener noreferrer" className="btn-ghost flex items-center gap-2 text-sm text-purple-400">
-                View on Explorer <ExternalLink size={14} />
+
+              <a
+                href={`${EXPLORER_URL}/address/${wallet.address}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-sky-400 hover:text-sky-300 transition-colors"
+              >
+                View on Explorer <ExternalLink size={13} />
               </a>
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-slate-400 mb-4">Connect your wallet to view account settings</p>
-              <button onClick={handleConnect} className="btn-primary">Connect Wallet</button>
+              <p className="text-slate-400 mb-4 text-sm">Connect your wallet to view account settings</p>
+              <button
+                onClick={handleConnect}
+                className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-lg px-5 py-2.5 text-sm transition-colors"
+              >
+                Connect Wallet
+              </button>
             </div>
           )}
         </div>
 
-        {/* Platform */}
-        <div className="glass p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <Info size={20} className="text-cyan-400" />
-            <h2 className="text-lg font-semibold text-white">Platform Info</h2>
+        {/* Platform Info Card */}
+        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-9 h-9 bg-sky-500/10 rounded-lg flex items-center justify-center">
+              <Info size={18} className="text-sky-500" />
+            </div>
+            <h2 className="text-lg font-semibold text-slate-50">Platform Info</h2>
           </div>
-          <div className="space-y-3">
+
+          <div className="space-y-0">
             <InfoRow label="Platform Fee" value="2.5%" />
             <InfoRow label="Settlement" value="Manual (merchant settles)" />
             <InfoRow label="Min Payment" value="0.001 QIE" />
-          </div>
-        </div>
-
-        {/* Network */}
-        <div className="glass p-6">
-          <div className="flex items-center gap-3 mb-4">
-            <Network size={20} className="text-emerald-400" />
-            <h2 className="text-lg font-semibold text-white">Network</h2>
-          </div>
-          <div className="space-y-3">
             <InfoRow label="Network" value={CHAIN_NAME} />
             <InfoRow label="Chain ID" value={CHAIN_ID.toString()} />
             <InfoRow label="RPC URL" value={RPC_URL} mono />
-            <div className="flex items-center justify-between py-2 border-b border-white/5">
+            <div className="flex items-center justify-between py-3 border-b border-slate-700 last:border-0">
               <span className="text-sm text-slate-400">Contract</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-white font-mono">{truncateAddress(CONTRACT_ADDRESS)}</span>
+                <span className="text-sm text-slate-50 font-mono">
+                  {truncateAddress(CONTRACT_ADDRESS)}
+                </span>
                 <button
                   onClick={() => handleCopy(CONTRACT_ADDRESS, 'contract')}
-                  className="p-1 rounded hover:bg-white/5 transition-colors"
+                  className="p-1 rounded hover:bg-slate-700 transition-colors"
                 >
-                  {copied === 'contract' ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} className="text-slate-500" />}
+                  {copied === 'contract'
+                    ? <Check size={12} className="text-emerald-400" />
+                    : <Copy size={12} className="text-slate-500" />
+                  }
                 </button>
               </div>
             </div>
-            <a href={`${BLOCK_EXPLORER}/address/${CONTRACT_ADDRESS}`} target="_blank" rel="noopener noreferrer" className="btn-ghost flex items-center gap-2 text-sm text-purple-400">
-              View Contract on Explorer <ExternalLink size={14} />
-            </a>
           </div>
+
+          <a
+            href={`${EXPLORER_URL}/address/${CONTRACT_ADDRESS}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm text-sky-400 hover:text-sky-300 transition-colors mt-4"
+          >
+            View Contract on Explorer <ExternalLink size={13} />
+          </a>
         </div>
 
-        {/* Export Transactions */}
-        <div className="glass p-6">
+        {/* Export CSV Card */}
+        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-4">
-            <Download size={20} className="text-amber-400" />
-            <h2 className="text-lg font-semibold text-white">Export Data</h2>
+            <div className="w-9 h-9 bg-amber-500/10 rounded-lg flex items-center justify-center">
+              <Download size={18} className="text-amber-500" />
+            </div>
+            <h2 className="text-lg font-semibold text-slate-50">Export Data</h2>
           </div>
-          <p className="text-sm text-slate-400 mb-4">Download all your payment history as a CSV file</p>
-          <button onClick={handleExport} disabled={exporting || !wallet} className="btn-secondary flex items-center gap-2 text-sm">
-            {exporting ? <><Loader2 size={14} className="animate-spin" /> Exporting...</> : <><Download size={14} /> Export Transactions (CSV)</>}
+          <p className="text-sm text-slate-400 mb-4">
+            Download all your payment history as a CSV file for accounting and record-keeping.
+          </p>
+          <button
+            onClick={handleExport}
+            disabled={exporting || !wallet}
+            className="inline-flex items-center gap-2 border border-slate-600 hover:border-slate-500 text-slate-200 font-medium rounded-lg px-4 py-2.5 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {exporting
+              ? <><Loader2 size={14} className="animate-spin" /> Exporting...</>
+              : <><Download size={14} /> Export Transactions (CSV)</>
+            }
           </button>
         </div>
 
-        {/* Export Invoices */}
-        <div className="glass p-6">
+        {/* Export Invoices Card */}
+        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
           <div className="flex items-center gap-3 mb-4">
-            <FileText size={20} className="text-purple-400" />
-            <h2 className="text-lg font-semibold text-white">Export Invoices</h2>
+            <div className="w-9 h-9 bg-blue-500/10 rounded-lg flex items-center justify-center">
+              <FileText size={18} className="text-blue-500" />
+            </div>
+            <h2 className="text-lg font-semibold text-slate-50">Export Invoices</h2>
           </div>
           <p className="text-sm text-slate-400 mb-4">
-            Download HTML invoices for all paid and settled transactions.
-            Each invoice includes merchant details, amounts, and QIE Testnet transaction info.
+            Download HTML invoices for all paid and settled transactions. Each invoice includes merchant details, amounts, and transaction info.
           </p>
           <button
             onClick={handleExportInvoices}
             disabled={exportingInvoices || !wallet}
-            className="btn-secondary flex items-center gap-2 text-sm"
+            className="inline-flex items-center gap-2 border border-slate-600 hover:border-slate-500 text-slate-200 font-medium rounded-lg px-4 py-2.5 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {exportingInvoices ? (
-              <><Loader2 size={14} className="animate-spin" /> Generating Invoices...</>
-            ) : (
-              <><FileText size={14} /> Download All Invoices</>
-            )}
+            {exportingInvoices
+              ? <><Loader2 size={14} className="animate-spin" /> Generating Invoices...</>
+              : <><FileText size={14} /> Download All Invoices</>
+            }
           </button>
         </div>
       </div>
@@ -243,9 +283,9 @@ export default function Settings() {
 
 function InfoRow({ label, value, mono }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+    <div className="flex items-center justify-between py-3 border-b border-slate-700 last:border-0">
       <span className="text-sm text-slate-400">{label}</span>
-      <span className={`text-sm text-white ${mono ? 'font-mono' : ''}`}>{value}</span>
+      <span className={`text-sm text-slate-50 ${mono ? 'font-mono' : ''}`}>{value}</span>
     </div>
   );
 }

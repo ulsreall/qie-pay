@@ -16,50 +16,41 @@ import {
   getMerchantPayments, getMerchantEarnings, settlePayment
 } from '../utils/contract';
 import { formatQIEAmount, formatUSD, qieToUSD } from '../utils/currency';
-import { BLOCK_EXPLORER } from '../utils/constants';
-
-const stagger = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
-};
-const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
+import { EXPLORER_URL } from '../utils/constants';
 
 /* ─── Skeleton ─── */
 function SkeletonCard() {
   return (
-    <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-5 animate-pulse">
+    <div className="bg-slate-800 border border-slate-700 rounded-xl p-5 animate-pulse">
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-10 h-10 rounded-xl bg-white/10" />
-        <div className="h-3 w-20 bg-white/10 rounded" />
+        <div className="w-10 h-10 rounded-lg bg-slate-700" />
+        <div className="h-3 w-20 bg-slate-700 rounded" />
       </div>
-      <div className="h-7 w-28 bg-white/10 rounded mb-2" />
-      <div className="h-3 w-16 bg-white/10 rounded" />
+      <div className="h-7 w-28 bg-slate-700 rounded mb-2" />
+      <div className="h-3 w-16 bg-slate-700 rounded" />
     </div>
   );
 }
 
 function SkeletonChart() {
   return (
-    <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 animate-pulse">
-      <div className="h-5 w-32 bg-white/10 rounded mb-6" />
-      <div className="h-64 bg-white/5 rounded-xl" />
+    <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 animate-pulse">
+      <div className="h-5 w-32 bg-slate-700 rounded mb-6" />
+      <div className="h-64 bg-slate-700 rounded-xl" />
     </div>
   );
 }
 
 function SkeletonTable() {
   return (
-    <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 animate-pulse">
-      <div className="h-5 w-40 bg-white/10 rounded mb-6" />
+    <div className="bg-slate-800 border border-slate-700 rounded-xl p-6 animate-pulse">
+      <div className="h-5 w-40 bg-slate-700 rounded mb-6" />
       {[...Array(5)].map((_, i) => (
-        <div key={i} className="flex items-center gap-4 py-3 border-b border-white/5">
-          <div className="h-4 w-8 bg-white/10 rounded" />
-          <div className="h-4 w-32 bg-white/10 rounded flex-1" />
-          <div className="h-4 w-20 bg-white/10 rounded" />
-          <div className="h-4 w-16 bg-white/10 rounded" />
+        <div key={i} className="flex items-center gap-4 py-3 border-b border-slate-700/50">
+          <div className="h-4 w-8 bg-slate-700 rounded" />
+          <div className="h-4 w-32 bg-slate-700 rounded flex-1" />
+          <div className="h-4 w-20 bg-slate-700 rounded" />
+          <div className="h-4 w-16 bg-slate-700 rounded" />
         </div>
       ))}
     </div>
@@ -84,11 +75,9 @@ export default function Dashboard() {
       if (!silent) setRefreshing(true);
       const conn = await checkConnection();
       if (!conn) {
-        // Try connecting
         try {
           const wallet = await connectWallet();
           setAddress(wallet.address);
-          // Ensure merchant
           const registered = await isMerchant(wallet.address);
           if (!registered) {
             await registerMerchant();
@@ -122,9 +111,8 @@ export default function Dashboard() {
       getMerchantPayments(addr),
       getMerchantEarnings(addr),
     ]);
-    // Check for new payments
     if (prevPaymentCount.current > 0 && pmts.length > prevPaymentCount.current) {
-      toast.success('New payment received! 🎉', { icon: '💰', duration: 5000 });
+      toast.success('New payment received!', { icon: '💰', duration: 5000 });
     }
     prevPaymentCount.current = pmts.length;
     setPayments(pmts.sort((a, b) => b.createdAt - a.createdAt));
@@ -191,19 +179,19 @@ export default function Dashboard() {
   const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="backdrop-blur-xl bg-gray-900/90 border border-white/10 rounded-xl px-4 py-3 shadow-xl">
-        <p className="text-xs text-gray-400 mb-1">{label}</p>
-        <p className="text-sm font-semibold text-white">{payload[0].value} QIE</p>
-        <p className="text-xs text-gray-500">{formatUSD(payload[0].value)}</p>
+      <div className="bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 shadow-xl">
+        <p className="text-xs text-slate-400 mb-1">{label}</p>
+        <p className="text-sm font-semibold text-slate-50">{payload[0].value} QIE</p>
+        <p className="text-xs text-slate-500">{formatUSD(payload[0].value)}</p>
       </div>
     );
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 p-6 lg:p-8">
+      <div className="min-h-screen bg-slate-900 p-6 lg:p-8">
         <div className="max-w-7xl mx-auto space-y-6">
-          <div className="h-8 w-64 bg-white/5 rounded animate-pulse" />
+          <div className="h-8 w-64 bg-slate-800 rounded animate-pulse" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
           </div>
@@ -215,116 +203,103 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 p-6 lg:p-8">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="min-h-screen bg-slate-900 p-6 lg:p-8"
+    >
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-white">Welcome back</h1>
-            <p className="text-gray-500 text-sm mt-1 font-mono">{truncateAddr(address)}</p>
+            <h1 className="text-2xl font-bold text-slate-50">Welcome back</h1>
+            <p className="text-slate-500 text-sm mt-1 font-mono">{truncateAddr(address)}</p>
           </div>
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-gray-300 hover:bg-white/10 transition-all disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2.5 border border-slate-600 hover:border-slate-500 rounded-lg text-sm text-slate-200 transition-colors disabled:opacity-50"
           >
             <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
             Refresh
           </button>
-        </motion.div>
+        </div>
 
         {/* Stats Cards */}
-        <motion.div variants={stagger} initial="hidden" animate="show" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <motion.div variants={fadeUp}>
-            <StatsCard
-              icon={DollarSign}
-              label="Total Earnings"
-              value={parseFloat(earnings).toFixed(2)}
-              subValue={formatUSD(earnings)}
-              color="purple"
-            />
-          </motion.div>
-          <motion.div variants={fadeUp}>
-            <StatsCard
-              icon={TrendingUp}
-              label="Total Volume"
-              value={totalVolume.toFixed(2)}
-              subValue={formatUSD(totalVolume)}
-              color="cyan"
-            />
-          </motion.div>
-          <motion.div variants={fadeUp}>
-            <StatsCard
-              icon={CreditCard}
-              label="Total Payments"
-              value={totalPayments}
-              color="blue"
-            />
-          </motion.div>
-          <motion.div variants={fadeUp}>
-            <StatsCard
-              icon={CheckCircle2}
-              label="Success Rate"
-              value={`${successRate}%`}
-              color="green"
-            />
-          </motion.div>
-        </motion.div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <StatsCard
+            icon={DollarSign}
+            label="Total Earnings"
+            value={parseFloat(earnings).toFixed(2)}
+            subValue={formatUSD(earnings)}
+            color="emerald"
+          />
+          <StatsCard
+            icon={TrendingUp}
+            label="Total Volume"
+            value={totalVolume.toFixed(2)}
+            subValue={formatUSD(totalVolume)}
+            color="emerald"
+          />
+          <StatsCard
+            icon={CreditCard}
+            label="Total Payments"
+            value={totalPayments}
+            color="emerald"
+          />
+          <StatsCard
+            icon={CheckCircle2}
+            label="Success Rate"
+            value={`${successRate}%`}
+            color="emerald"
+          />
+        </div>
 
         {/* Revenue Chart */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl p-6"
-        >
-          <h2 className="text-lg font-semibold text-white mb-6">Revenue — Last 7 Days</h2>
+        <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
+          <h2 className="text-lg font-semibold text-slate-50 mb-6">Revenue — Last 7 Days</h2>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData}>
                 <defs>
-                  <linearGradient id="purpleGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#a855f7" stopOpacity={0.4} />
-                    <stop offset="100%" stopColor="#a855f7" stopOpacity={0} />
+                  <linearGradient id="emeraldGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#10B981" stopOpacity={0.3} />
+                    <stop offset="100%" stopColor="#10B981" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="date" tick={{ fill: '#6b7280', fontSize: 12 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} axisLine={false} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+                <XAxis dataKey="date" tick={{ fill: '#94A3B8', fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: '#94A3B8', fontSize: 12 }} axisLine={false} tickLine={false} />
                 <Tooltip content={<CustomTooltip />} />
                 <Area
                   type="monotone"
                   dataKey="revenue"
-                  stroke="#a855f7"
+                  stroke="#10B981"
                   strokeWidth={2}
-                  fill="url(#purpleGradient)"
+                  fill="url(#emeraldGradient)"
                 />
               </AreaChart>
             </ResponsiveContainer>
           </div>
-        </motion.div>
+        </div>
 
         {/* Recent Payments + Quick Actions */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Recent Payments */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="lg:col-span-2 backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl p-6"
-          >
+          <div className="lg:col-span-2 bg-slate-800 border border-slate-700 rounded-xl p-6">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg font-semibold text-white">Recent Payments</h2>
-              <Link to="/dashboard" className="text-sm text-purple-400 hover:text-purple-300 transition-colors flex items-center gap-1">
+              <h2 className="text-lg font-semibold text-slate-50">Recent Payments</h2>
+              <Link to="/analytics" className="text-sm text-emerald-500 hover:text-emerald-400 transition-colors flex items-center gap-1">
                 View All <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
 
             {recentPayments.length === 0 ? (
               <div className="text-center py-12">
-                <CreditCard className="w-10 h-10 text-gray-600 mx-auto mb-3" />
-                <p className="text-gray-400">No payments yet</p>
-                <Link to="/create" className="text-sm text-purple-400 hover:text-purple-300 mt-2 inline-block">
+                <CreditCard className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+                <p className="text-slate-400">No payments yet</p>
+                <Link to="/create" className="text-sm text-emerald-500 hover:text-emerald-400 mt-2 inline-block">
                   Create your first payment →
                 </Link>
               </div>
@@ -333,29 +308,29 @@ export default function Dashboard() {
                 {recentPayments.map((p) => (
                   <div
                     key={p.id}
-                    className="flex items-center justify-between py-3 px-3 rounded-xl hover:bg-white/5 transition-colors group"
+                    className="flex items-center justify-between py-3 px-3 rounded-lg hover:bg-slate-800/50 transition-colors"
                   >
                     <div className="flex items-center gap-3 min-w-0 flex-1">
-                      <div className="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0">
-                        <span className="text-xs font-bold text-purple-400">#{p.id}</span>
+                      <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0">
+                        <span className="text-xs font-bold text-emerald-500">#{p.id}</span>
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm text-white truncate">{p.description || 'No description'}</p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-sm text-slate-50 truncate">{p.description || 'No description'}</p>
+                        <p className="text-xs text-slate-500">
                           {p.createdAt ? format(new Date(p.createdAt * 1000), 'MMM d, HH:mm') : '—'}
                         </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3 shrink-0 ml-3">
                       <div className="text-right">
-                        <p className="text-sm font-medium text-white">{formatQIEAmount(p.amount)} QIE</p>
-                        <p className="text-xs text-gray-500">{formatUSD(p.amount)}</p>
+                        <p className="text-sm font-medium text-slate-50">{formatQIEAmount(p.amount)} QIE</p>
+                        <p className="text-xs text-slate-500">{formatUSD(p.amount)}</p>
                       </div>
                       <StatusBadge status={p.status} />
                       {p.status === 1 && (
                         <button
                           onClick={() => handleSettle(p.id)}
-                          className="px-3 py-1 bg-green-500/10 hover:bg-green-500/20 text-green-400 text-xs rounded-lg transition-all"
+                          className="px-3 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs rounded-lg transition-colors"
                         >
                           Settle
                         </button>
@@ -365,42 +340,33 @@ export default function Dashboard() {
                 ))}
               </div>
             )}
-          </motion.div>
+          </div>
 
           {/* Quick Actions */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
-            className="backdrop-blur-xl bg-white/[0.03] border border-white/10 rounded-2xl p-6"
-          >
-            <h2 className="text-lg font-semibold text-white mb-5">Quick Actions</h2>
+          <div className="bg-slate-800 border border-slate-700 rounded-xl p-6">
+            <h2 className="text-lg font-semibold text-slate-50 mb-5">Quick Actions</h2>
             <div className="space-y-3">
               {[
-                { icon: Plus, label: 'Create Payment', to: '/create', color: 'purple' },
-                { icon: Layers, label: 'Batch Payments', to: '/create', color: 'cyan' },
-                { icon: BarChart3, label: 'View Analytics', to: '/dashboard', color: 'green' },
+                { icon: Plus, label: 'Create Payment', to: '/create' },
+                { icon: Layers, label: 'Batch Payments', to: '/batch' },
+                { icon: BarChart3, label: 'View Analytics', to: '/analytics' },
               ].map((action) => (
                 <Link
                   key={action.label}
                   to={action.to}
-                  className="flex items-center gap-3 p-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 transition-all group"
+                  className="flex items-center gap-3 p-3.5 rounded-lg border border-slate-700 hover:border-slate-600 transition-colors group"
                 >
-                  <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-                    action.color === 'purple' ? 'bg-purple-500/20 text-purple-400' :
-                    action.color === 'cyan' ? 'bg-cyan-500/20 text-cyan-400' :
-                    'bg-green-500/20 text-green-400'
-                  }`}>
-                    <action.icon className="w-4 h-4" />
+                  <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                    <action.icon className="w-4 h-4 text-emerald-500" />
                   </div>
-                  <span className="text-sm text-gray-300 group-hover:text-white transition-colors flex-1">{action.label}</span>
-                  <ArrowRight className="w-4 h-4 text-gray-600 group-hover:text-gray-400 transition-colors" />
+                  <span className="text-sm text-slate-300 group-hover:text-slate-50 transition-colors flex-1">{action.label}</span>
+                  <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-slate-400 transition-colors" />
                 </Link>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

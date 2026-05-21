@@ -1,22 +1,21 @@
 import { useEffect, useState, useRef } from 'react';
-import { motion } from 'framer-motion';
 
-export default function StatsCard({ icon: Icon, label, value, subValue, trend, color = 'purple' }) {
+export default function StatsCard({ icon: Icon, label, value, subValue, trend, color = 'emerald' }) {
   const [displayValue, setDisplayValue] = useState(0);
   const [hasAnimated, setHasAnimated] = useState(false);
   const ref = useRef(null);
 
   const colorMap = {
-    purple: { bg: 'bg-purple-500/20', text: 'text-purple-400', ring: 'ring-purple-500/30' },
-    cyan: { bg: 'bg-cyan-500/20', text: 'text-cyan-400', ring: 'ring-cyan-500/30' },
-    green: { bg: 'bg-green-500/20', text: 'text-green-400', ring: 'ring-green-500/30' },
-    yellow: { bg: 'bg-yellow-500/20', text: 'text-yellow-400', ring: 'ring-yellow-500/30' },
-    blue: { bg: 'bg-blue-500/20', text: 'text-blue-400', ring: 'ring-blue-500/30' },
-    orange: { bg: 'bg-orange-500/20', text: 'text-orange-400', ring: 'ring-orange-500/30' },
-    red: { bg: 'bg-red-500/20', text: 'text-red-400', ring: 'ring-red-500/30' },
+    emerald: { bg: 'bg-emerald-500/10', text: 'text-emerald-400' },
+    sky: { bg: 'bg-sky-500/10', text: 'text-sky-400' },
+    amber: { bg: 'bg-amber-500/10', text: 'text-amber-400' },
+    blue: { bg: 'bg-blue-500/10', text: 'text-blue-400' },
+    red: { bg: 'bg-red-500/10', text: 'text-red-400' },
+    purple: { bg: 'bg-purple-500/10', text: 'text-purple-400' },
+    cyan: { bg: 'bg-cyan-500/10', text: 'text-cyan-400' },
   };
 
-  const colors = colorMap[color] || colorMap.purple;
+  const colors = colorMap[color] || colorMap.emerald;
 
   // Animated counter
   useEffect(() => {
@@ -69,35 +68,28 @@ export default function StatsCard({ icon: Icon, label, value, subValue, trend, c
   };
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      whileHover={{ scale: 1.02, y: -2 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-      className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-5 relative overflow-hidden group"
+      className="card-hover group"
     >
-      {/* Glow effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-      <div className="relative z-10">
-        <div className="flex items-center justify-between mb-3">
-          <div className={`p-2.5 rounded-xl ${colors.bg} ring-1 ${colors.ring}`}>
-            {Icon && <Icon className={`w-5 h-5 ${colors.text}`} />}
-          </div>
-          {trend !== undefined && trend !== null && (
-            <span className={`text-xs font-medium px-2 py-1 rounded-full ${
-              trend >= 0 ? 'text-green-400 bg-green-400/10' : 'text-red-400 bg-red-400/10'
-            }`}>
-              {trend >= 0 ? '↑' : '↓'} {Math.abs(trend)}%
-            </span>
-          )}
+      <div className="flex items-center justify-between mb-3">
+        <div className={`p-2.5 rounded-lg ${colors.bg}`}>
+          {Icon && <Icon className={`w-5 h-5 ${colors.text}`} />}
         </div>
-
-        <p className="text-sm text-gray-400 mb-1">{label}</p>
-        <p className="text-2xl font-bold text-white">{formatDisplayValue()}</p>
-        {subValue && (
-          <p className="text-sm text-gray-500 mt-1">{subValue}</p>
+        {trend !== undefined && trend !== null && (
+          <span className={`text-xs font-medium px-2 py-1 rounded-full ${
+            trend >= 0 ? 'text-emerald-400 bg-emerald-400/10' : 'text-red-400 bg-red-400/10'
+          }`}>
+            {trend >= 0 ? '↑' : '↓'} {Math.abs(trend)}%
+          </span>
         )}
       </div>
-    </motion.div>
+
+      <p className="text-sm text-slate-400 mb-1">{label}</p>
+      <p className="text-2xl font-bold text-slate-50">{formatDisplayValue()}</p>
+      {subValue && (
+        <p className="text-sm text-slate-500 mt-1">{subValue}</p>
+      )}
+    </div>
   );
 }

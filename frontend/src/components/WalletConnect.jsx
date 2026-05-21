@@ -113,10 +113,10 @@ export default function WalletConnect({ compact = false }) {
         {/* Address row */}
         <button
           onClick={copyAddress}
-          className="w-full flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/30 transition-colors group"
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-slate-600 transition-colors group"
         >
-          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-          <span className="text-sm font-medium text-white truncate flex-1 text-left">
+          <div className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
+          <span className="text-sm font-medium text-slate-300 truncate flex-1 text-left">
             {truncateAddress(wallet.address)}
           </span>
           {copied ? (
@@ -133,7 +133,7 @@ export default function WalletConnect({ compact = false }) {
         <div className="flex items-center justify-between px-3 py-1.5">
           <div>
             <p className="text-xs text-slate-500">Balance</p>
-            <p className="text-sm font-semibold text-white">
+            <p className="text-sm font-semibold text-emerald-400">
               {parseFloat(wallet.balance).toFixed(4)}{' '}
               <span className="text-slate-400 font-normal">QIE</span>
             </p>
@@ -142,7 +142,7 @@ export default function WalletConnect({ compact = false }) {
           <button
             onClick={refreshBalance}
             disabled={refreshing}
-            className="p-1.5 rounded-lg text-slate-500 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-slate-800 transition-colors"
             title="Refresh balance"
           >
             <RefreshCw
@@ -155,7 +155,7 @@ export default function WalletConnect({ compact = false }) {
         {/* Disconnect */}
         <button
           onClick={handleDisconnect}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
         >
           <LogOut size={14} />
           Disconnect
@@ -168,9 +168,9 @@ export default function WalletConnect({ compact = false }) {
   return (
     <div className="flex items-center gap-3">
       {/* Balance pill */}
-      <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10">
-        <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-        <span className="text-sm text-slate-300 font-medium">
+      <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700">
+        <div className="w-2 h-2 rounded-full bg-emerald-400" />
+        <span className="text-sm text-emerald-400 font-medium">
           {parseFloat(wallet.balance).toFixed(4)} QIE
         </span>
         <span className="text-xs text-slate-500">(${usdValue})</span>
@@ -179,15 +179,15 @@ export default function WalletConnect({ compact = false }) {
       {/* Address with copy */}
       <button
         onClick={copyAddress}
-        className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/30 transition-colors"
+        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-slate-600 transition-colors"
       >
-        <span className="text-sm font-medium text-white">
+        <span className="text-sm font-medium text-slate-300 font-mono">
           {truncateAddress(wallet.address)}
         </span>
         {copied ? (
           <Check size={14} className="text-emerald-400" />
         ) : (
-          <Copy size={14} className="text-slate-400" />
+          <Copy size={14} className="text-slate-400 hover:text-slate-200" />
         )}
       </button>
 
@@ -195,7 +195,7 @@ export default function WalletConnect({ compact = false }) {
       <button
         onClick={refreshBalance}
         disabled={refreshing}
-        className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+        className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
         title="Refresh balance"
       >
         <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />

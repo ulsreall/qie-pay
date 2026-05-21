@@ -20,29 +20,30 @@ export default function PaymentQRCode({ value, size = 200 }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
+      initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="flex flex-col items-center gap-3"
+      transition={{ duration: 0.2 }}
+      className="flex flex-col items-center gap-4"
     >
-      <div className="bg-white p-4 rounded-2xl shadow-lg shadow-purple-500/10">
+      <div className="bg-white p-4 rounded-xl shadow-lg">
         <QRCodeSVG
           value={value}
           size={size}
           bgColor="#ffffff"
-          fgColor="#7c3aed"
+          fgColor="#10B981"
           level="H"
           includeMargin={false}
         />
       </div>
-      <p className="text-sm text-gray-400 font-medium">Scan to Pay</p>
+      <p className="text-sm text-slate-400 font-medium">Scan to Pay</p>
       <button
         onClick={handleCopy}
-        className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm text-gray-300 transition-all"
+        className="btn-secondary text-sm"
       >
         {copied ? (
           <>
-            <Check className="w-4 h-4 text-green-400" />
-            <span className="text-green-400">Copied!</span>
+            <Check className="w-4 h-4 text-emerald-400" />
+            <span className="text-emerald-400">Copied!</span>
           </>
         ) : (
           <>

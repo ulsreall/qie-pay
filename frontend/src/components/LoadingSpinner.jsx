@@ -17,12 +17,10 @@ export default function LoadingSpinner({ size = 'md', text = '', className = '' 
         className={`
           ${sizeMap[size]}
           rounded-full
-          border-purple-500/20 border-t-purple-500
-          border-r-purple-400/40
+          border-slate-700 border-t-emerald-500
         `}
         animate={{ rotate: 360 }}
-        transition={{ duration: 0.9, repeat: Infinity, ease: 'linear' }}
-        style={{ borderTopColor: '#8b5cf6' }}
+        transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
       />
       {text && (
         <motion.p
@@ -43,8 +41,8 @@ export default function LoadingSpinner({ size = 'md', text = '', className = '' 
  */
 export function LoadingOverlay({ text = 'Loading…' }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="glass p-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+      <div className="bg-slate-800 border border-slate-700 rounded-xl p-8">
         <LoadingSpinner size="lg" text={text} />
       </div>
     </div>
@@ -57,7 +55,7 @@ export function LoadingOverlay({ text = 'Loading…' }) {
 export function Skeleton({ className = '' }) {
   return (
     <div
-      className={`animate-shimmer rounded-lg bg-white/5 ${className}`}
+      className={`rounded-lg bg-slate-800 border border-slate-700 animate-pulse ${className}`}
     />
   );
 }
