@@ -1,6 +1,5 @@
 import { NavLink, Link } from 'react-router-dom';
 import {
-  Zap,
   LayoutDashboard,
   BarChart3,
   PlusCircle,
@@ -46,6 +45,22 @@ const navSections = [
   },
 ];
 
+/* ─── Inline SVG Logo (ring + bolt) ─── */
+function LogoIcon({ size = 36 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sidebar-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#A855F7"/>
+          <stop offset="100%" stopColor="#22D3EE"/>
+        </linearGradient>
+      </defs>
+      <circle cx="256" cy="256" r="170" stroke="url(#sidebar-grad)" strokeWidth="38" fill="none"/>
+      <path d="M292 108L175 302H248L220 410L342 220H266L292 108Z" fill="url(#sidebar-grad)"/>
+    </svg>
+  );
+}
+
 function SidebarContent({ onNavClick }) {
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
@@ -63,16 +78,14 @@ function SidebarContent({ onNavClick }) {
           className="flex items-center gap-3 group"
           onClick={onNavClick}
         >
-          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20 group-hover:shadow-purple-500/40 transition-shadow">
-            <Zap size={20} className="text-white" />
-          </div>
+          <LogoIcon size={38} />
           <div>
             <span className="text-lg font-bold">
-              <span className="text-gradient">QIE</span>
-              <span className="text-white">Pay</span>
+              <span className="text-white">QIE</span>
+              <span className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">Pay</span>
             </span>
-            <p className="text-[10px] text-slate-500 -mt-0.5 leading-tight">
-              Payment Gateway
+            <p className="text-[10px] text-slate-500 -mt-0.5 leading-tight tracking-wider">
+              PAYMENT GATEWAY
             </p>
           </div>
         </Link>

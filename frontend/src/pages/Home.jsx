@@ -344,10 +344,12 @@ export default function Home() {
       <footer className="border-t border-white/5 py-8 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center">
-              <span className="text-sm font-bold text-white">Q</span>
-            </div>
-            <span className="font-semibold text-white">QIE Pay</span>
+            <svg width="32" height="32" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs><linearGradient id="fgrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#A855F7"/><stop offset="100%" stopColor="#22D3EE"/></linearGradient></defs>
+              <circle cx="256" cy="256" r="170" stroke="url(#fgrad)" strokeWidth="38" fill="none"/>
+              <path d="M292 108L175 302H248L220 410L342 220H266L292 108Z" fill="url(#fgrad)"/>
+            </svg>
+            <span className="font-semibold text-white">QIE<span className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">Pay</span></span>
           </div>
           <p className="text-sm text-gray-500">
             Built for QIE Blockchain Hackathon 2026
