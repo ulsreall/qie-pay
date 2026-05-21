@@ -38,11 +38,11 @@ function CodeBlock({ code }) {
     <div className="relative group">
       <button
         onClick={handleCopy}
-        className="absolute top-2 right-2 p-1 rounded-md bg-slate-700 hover:bg-slate-600 transition-colors z-10"
+        className="absolute top-2 right-2 p-1 rounded-md bg-[#18181B] hover:bg-[#27272A] transition-colors z-10"
       >
-        {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} className="text-slate-400" />}
+        {copied ? <Check size={12} className="text-[#34D399]" /> : <Copy size={12} className="text-[#A1A1AA]" />}
       </button>
-      <pre className="bg-slate-900 rounded-md p-3 overflow-x-auto text-xs font-mono text-slate-300">
+      <pre className="bg-[#09090B] rounded-md p-3 overflow-x-auto text-xs font-mono text-[#A1A1AA]">
         <code>{formatted}</code>
       </pre>
     </div>
@@ -141,11 +141,11 @@ export default function Webhooks() {
       <div className="max-w-4xl mx-auto space-y-4">
         {/* Header */}
         <div>
-          <h1 className="text-lg font-semibold text-slate-50 flex items-center gap-2 tracking-tight">
-            <Webhook size={16} className="text-emerald-400" />
+          <h1 className="text-lg font-semibold text-[#FAFAFA] flex items-center gap-2 tracking-tight">
+            <Webhook size={16} className="text-[#34D399]" />
             Webhook Integration
           </h1>
-          <p className="text-xs text-slate-500 mt-0.5 ml-6">
+          <p className="text-xs text-[#71717A] mt-0.5 ml-6">
             Get notified when payments are received. Configure your webhook endpoint to receive real-time events.
           </p>
         </div>
@@ -159,43 +159,43 @@ export default function Webhooks() {
         </div>
 
         {/* Configure Endpoint */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 space-y-3">
-          <h2 className="text-sm font-semibold text-slate-300 flex items-center gap-1.5">
-            <Bell size={14} className="text-emerald-400" /> Configure Endpoint
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 space-y-3">
+          <h2 className="text-sm font-semibold text-[#A1A1AA] flex items-center gap-1.5">
+            <Bell size={14} className="text-[#34D399]" /> Configure Endpoint
           </h2>
 
           <div>
-            <label className="block text-xs text-slate-400 mb-1">Webhook URL</label>
+            <label className="block text-xs text-[#A1A1AA] mb-1">Webhook URL</label>
             <input
               type="url"
               value={webhookUrl}
               onChange={e => setWebhookUrl(e.target.value)}
               placeholder="https://your-server.com/webhook"
-              className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-slate-50 text-xs focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 outline-none transition-all"
+              className="w-full bg-[#09090B] border border-[#27272A] rounded-md px-3 py-2 text-[#FAFAFA] text-xs focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/20 outline-none transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs text-slate-400 mb-1">Events to Listen</label>
+            <label className="block text-xs text-[#A1A1AA] mb-1">Events to Listen</label>
             <div className="relative">
               <button
                 onClick={() => setEventsOpen(!eventsOpen)}
-                className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-xs text-slate-300 flex items-center justify-between text-left"
+                className="w-full bg-[#09090B] border border-[#27272A] rounded-md px-3 py-2 text-xs text-[#A1A1AA] flex items-center justify-between text-left"
               >
                 <span>{selectedEvents.length ? `${selectedEvents.length} event(s) selected` : 'Select events...'}</span>
-                <ChevronDown size={14} className={`text-slate-400 transition-transform ${eventsOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown size={14} className={`text-[#A1A1AA] transition-transform ${eventsOpen ? 'rotate-180' : ''}`} />
               </button>
               {eventsOpen && (
-                <div className="absolute z-20 top-full mt-1 w-full bg-slate-800 border border-slate-700 rounded-md p-1.5 space-y-0.5 shadow-lg">
+                <div className="absolute z-20 top-full mt-1 w-full bg-[#111113] border border-[#27272A] rounded-md p-1.5 space-y-0.5 shadow-lg">
                   {EVENTS.map(ev => (
-                    <label key={ev} className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-slate-700/50 cursor-pointer">
+                    <label key={ev} className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-[#18181B]/50 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={selectedEvents.includes(ev)}
                         onChange={() => toggleEvent(ev)}
-                        className="accent-emerald-500"
+                        className="accent-[#10B981]"
                       />
-                      <span className="text-xs text-slate-300">{ev}</span>
+                      <span className="text-xs text-[#A1A1AA]">{ev}</span>
                     </label>
                   ))}
                 </div>
@@ -204,10 +204,10 @@ export default function Webhooks() {
           </div>
 
           <div className="flex items-center justify-between py-1">
-            <span className="text-xs text-slate-400">Enable Webhook</span>
+            <span className="text-xs text-[#A1A1AA]">Enable Webhook</span>
             <button
               onClick={() => setEnabled(!enabled)}
-              className={`w-10 h-5 rounded-full transition-colors relative ${enabled ? 'bg-emerald-500' : 'bg-slate-700'}`}
+              className={`w-10 h-5 rounded-full transition-colors relative ${enabled ? 'bg-[#10B981]' : 'bg-[#18181B]'}`}
             >
               <div className={`w-4 h-4 rounded-full bg-white absolute top-0.5 transition-all ${enabled ? 'left-5' : 'left-0.5'}`} />
             </button>
@@ -215,38 +215,38 @@ export default function Webhooks() {
 
           <button
             onClick={saveConfig}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md px-3 py-1.5 text-xs transition-colors"
+            className="bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-3 py-1.5 text-xs transition-colors"
           >
             Save Configuration
           </button>
         </div>
 
         {/* Payload Format */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 space-y-3">
-          <h2 className="text-sm font-semibold text-slate-300 flex items-center gap-1.5">
-            <LinkIcon size={14} className="text-emerald-400" /> Webhook Payload Format
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 space-y-3">
+          <h2 className="text-sm font-semibold text-[#A1A1AA] flex items-center gap-1.5">
+            <LinkIcon size={14} className="text-[#34D399]" /> Webhook Payload Format
           </h2>
-          <p className="text-xs text-slate-400">Your endpoint will receive a POST request with this JSON body:</p>
+          <p className="text-xs text-[#A1A1AA]">Your endpoint will receive a POST request with this JSON body:</p>
           <CodeBlock code={EXAMPLE_PAYLOAD} />
         </div>
 
         {/* Test Webhook */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 space-y-3">
-          <h2 className="text-sm font-semibold text-slate-300 flex items-center gap-1.5">
-            <Send size={14} className="text-emerald-400" /> Test Webhook
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 space-y-3">
+          <h2 className="text-sm font-semibold text-[#A1A1AA] flex items-center gap-1.5">
+            <Send size={14} className="text-[#34D399]" /> Test Webhook
           </h2>
-          <p className="text-xs text-slate-400">Send a test event to verify your endpoint is working.</p>
+          <p className="text-xs text-[#A1A1AA]">Send a test event to verify your endpoint is working.</p>
           <button
             onClick={testWebhook}
             disabled={testing}
-            className="inline-flex items-center gap-1.5 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-3 py-1.5 text-xs transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md px-3 py-1.5 text-xs transition-colors disabled:opacity-50"
           >
             <Send size={12} /> {testing ? 'Sending...' : 'Send Test Event'}
           </button>
           {testResult && (
             <div className={`rounded-md p-3 text-xs ${
               testResult.status === 'sent'
-                ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-300'
+                ? 'bg-[rgba(16,185,129,0.1)] border border-[rgba(16,185,129,0.2)] text-[#6EE7B7]'
                 : 'bg-red-500/10 border border-red-500/20 text-red-300'
             }`}>
               <p className="font-medium mb-0.5">Status: {testResult.status} ({testResult.code})</p>
@@ -256,15 +256,15 @@ export default function Webhooks() {
         </div>
 
         {/* Event Log */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 space-y-3">
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-slate-300 flex items-center gap-1.5">
-              <Clock size={14} className="text-emerald-400" /> Event Log
+            <h2 className="text-sm font-semibold text-[#A1A1AA] flex items-center gap-1.5">
+              <Clock size={14} className="text-[#34D399]" /> Event Log
             </h2>
             {eventLog.length > 0 && (
               <button
                 onClick={clearLogs}
-                className="inline-flex items-center gap-1 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-2 py-1 text-xs transition-colors"
+                className="inline-flex items-center gap-1 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md px-2 py-1 text-xs transition-colors"
               >
                 <Trash2 size={11} /> Clear
               </button>
@@ -272,7 +272,7 @@ export default function Webhooks() {
           </div>
 
           {eventLog.length === 0 ? (
-            <div className="text-center py-6 text-slate-500">
+            <div className="text-center py-6 text-[#71717A]">
               <Webhook size={24} className="mx-auto mb-1.5 opacity-40" />
               <p className="text-xs">No webhook events yet.</p>
             </div>
@@ -280,33 +280,33 @@ export default function Webhooks() {
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="text-left border-b border-slate-700">
-                    <th className="pb-1.5 pr-3 text-xs font-medium text-slate-400 uppercase tracking-wider">Time</th>
-                    <th className="pb-1.5 pr-3 text-xs font-medium text-slate-400 uppercase tracking-wider">Event</th>
-                    <th className="pb-1.5 pr-3 text-xs font-medium text-slate-400 uppercase tracking-wider">Payment ID</th>
-                    <th className="pb-1.5 pr-3 text-xs font-medium text-slate-400 uppercase tracking-wider">Status</th>
-                    <th className="pb-1.5 text-xs font-medium text-slate-400 uppercase tracking-wider">Code</th>
+                  <tr className="text-left border-b border-[#27272A]">
+                    <th className="pb-1.5 pr-3 text-xs font-medium text-[#A1A1AA] uppercase tracking-wider">Time</th>
+                    <th className="pb-1.5 pr-3 text-xs font-medium text-[#A1A1AA] uppercase tracking-wider">Event</th>
+                    <th className="pb-1.5 pr-3 text-xs font-medium text-[#A1A1AA] uppercase tracking-wider">Payment ID</th>
+                    <th className="pb-1.5 pr-3 text-xs font-medium text-[#A1A1AA] uppercase tracking-wider">Status</th>
+                    <th className="pb-1.5 text-xs font-medium text-[#A1A1AA] uppercase tracking-wider">Code</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-700/50">
+                <tbody className="divide-y divide-[rgba(39,39,42,0.5)]">
                   {eventLog.map((log, i) => (
-                    <tr key={i} className="hover:bg-slate-800/50 transition-colors">
-                      <td className="py-2 pr-3 text-xs text-slate-500">
+                    <tr key={i} className="hover:bg-[#111113]/50 transition-colors">
+                      <td className="py-2 pr-3 text-xs text-[#71717A]">
                         {new Date(log.time).toLocaleString()}
                       </td>
                       <td className="py-2 pr-3">
-                        <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 text-xs">
+                        <span className="px-1.5 py-0.5 rounded bg-[rgba(16,185,129,0.1)] text-[#34D399] text-xs">
                           {log.event}
                         </span>
                       </td>
-                      <td className="py-2 pr-3 font-mono text-xs text-slate-300">{log.paymentId}</td>
+                      <td className="py-2 pr-3 font-mono text-xs text-[#A1A1AA]">{log.paymentId}</td>
                       <td className="py-2 pr-3">
                         {log.status === 'sent' || log.status === 'success'
-                          ? <Check size={12} className="text-emerald-400" />
+                          ? <Check size={12} className="text-[#34D399]" />
                           : <X size={12} className="text-red-400" />
                         }
                       </td>
-                      <td className="py-2 font-mono text-xs text-slate-400">{log.code}</td>
+                      <td className="py-2 font-mono text-xs text-[#A1A1AA]">{log.code}</td>
                     </tr>
                   ))}
                 </tbody>

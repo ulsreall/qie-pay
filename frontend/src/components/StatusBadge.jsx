@@ -1,7 +1,7 @@
 const dotColors = {
   0: 'bg-sky-400',
   1: 'bg-amber-400',
-  2: 'bg-emerald-400',
+  2: 'bg-[#34D399]',
   3: 'bg-blue-400',
   4: 'bg-red-400',
 };
@@ -20,7 +20,7 @@ export default function StatusBadge({ status }) {
   return (
     <span className="inline-flex items-center gap-1.5">
       <span className={`w-1.5 h-1.5 rounded-full ${dotColors[status] || dotColors[0]}`} />
-      <span className="text-xs text-slate-400">{config.label}</span>
+      <span className="text-xs text-[#A1A1AA]">{config.label}</span>
     </span>
   );
 }

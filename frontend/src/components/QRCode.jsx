@@ -35,15 +35,15 @@ export default function PaymentQRCode({ value, size = 160 }) {
           includeMargin={false}
         />
       </div>
-      <p className="text-sm text-slate-400 font-medium">Scan to Pay</p>
+      <p className="text-sm text-[#A1A1AA] font-medium">Scan to Pay</p>
       <button
         onClick={handleCopy}
         className="btn-secondary text-sm"
       >
         {copied ? (
           <>
-            <Check className="w-4 h-4 text-emerald-400" />
-            <span className="text-emerald-400">Copied!</span>
+            <Check className="w-4 h-4 text-[#34D399]" />
+            <span className="text-[#34D399]">Copied!</span>
           </>
         ) : (
           <>

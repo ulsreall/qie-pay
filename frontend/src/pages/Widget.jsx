@@ -95,18 +95,18 @@ export default function Widget() {
 
   if (!merchantAddress) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-900 p-4">
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-6 text-center max-w-xs">
+      <div className="min-h-screen flex items-center justify-center bg-[#09090B] p-4">
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-6 text-center max-w-xs">
           <AlertCircle size={32} className="text-red-400 mx-auto mb-2" />
-          <h2 className="text-base font-bold text-slate-50 mb-1">Invalid Widget</h2>
-          <p className="text-slate-400 text-xs">No merchant address specified.</p>
+          <h2 className="text-base font-bold text-[#FAFAFA] mb-1">Invalid Widget</h2>
+          <p className="text-[#A1A1AA] text-xs">No merchant address specified.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#09090B] p-4">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -114,15 +114,15 @@ export default function Widget() {
         className="w-full max-w-xs"
       >
         {/* Widget Card */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
           {/* Header */}
-          <div className="flex items-center gap-2.5 mb-4 pb-3 border-b border-slate-700">
-            <div className="w-7 h-7 bg-emerald-500 rounded-md flex items-center justify-center">
+          <div className="flex items-center gap-2.5 mb-4 pb-3 border-b border-[#27272A]">
+            <div className="w-7 h-7 bg-[#10B981] rounded-md flex items-center justify-center">
               <Zap size={14} className="text-white" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-slate-50">QIEPay</h2>
-              <p className="text-[10px] text-slate-500 font-mono truncate max-w-[180px]">
+              <h2 className="text-sm font-bold text-[#FAFAFA]">QIEPay</h2>
+              <p className="text-[10px] text-[#71717A] font-mono truncate max-w-[180px]">
                 {merchantAddress}
               </p>
             </div>
@@ -132,7 +132,7 @@ export default function Widget() {
             <form onSubmit={handlePay} className="space-y-3">
               {/* Amount */}
               <div>
-                <label className="block text-xs text-slate-400 uppercase tracking-wider mb-1">
+                <label className="block text-xs text-[#A1A1AA] uppercase tracking-wider mb-1">
                   Amount (QIE)
                 </label>
                 <input
@@ -142,11 +142,11 @@ export default function Widget() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
-                  className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-slate-50 text-base font-semibold focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 outline-none transition-all"
+                  className="w-full bg-[#09090B] border border-[#27272A] rounded-md px-3 py-2 text-[#FAFAFA] text-base font-semibold focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/20 outline-none transition-all"
                   required
                 />
                 {amount && parseFloat(amount) > 0 && (
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-[#71717A] mt-1">
                     ≈ {formatUSD(amount)} · Rate: ${QIE_USD_PRICE}/QIE
                   </p>
                 )}
@@ -154,7 +154,7 @@ export default function Widget() {
 
               {/* Description */}
               <div>
-                <label className="block text-xs text-slate-400 uppercase tracking-wider mb-1">
+                <label className="block text-xs text-[#A1A1AA] uppercase tracking-wider mb-1">
                   Description
                 </label>
                 <input
@@ -162,7 +162,7 @@ export default function Widget() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Payment for..."
-                  className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-slate-50 text-xs focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 outline-none transition-all"
+                  className="w-full bg-[#09090B] border border-[#27272A] rounded-md px-3 py-2 text-[#FAFAFA] text-xs focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/20 outline-none transition-all"
                 />
               </div>
 
@@ -170,7 +170,7 @@ export default function Widget() {
               <button
                 type="submit"
                 disabled={paying || !amount}
-                className="w-full h-10 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md flex items-center justify-center gap-2 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full h-10 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md flex items-center justify-center gap-2 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {paying ? (
                   <>
@@ -194,22 +194,22 @@ export default function Widget() {
             >
               {result.success ? (
                 <>
-                  <Check size={28} className="text-emerald-400 mx-auto mb-2" />
-                  <h3 className="text-sm font-bold text-slate-50 mb-0.5">Payment Successful</h3>
-                  <p className="text-xs text-slate-400 mb-3">{result.amount} QIE</p>
+                  <Check size={28} className="text-[#34D399] mx-auto mb-2" />
+                  <h3 className="text-sm font-bold text-[#FAFAFA] mb-0.5">Payment Successful</h3>
+                  <p className="text-xs text-[#A1A1AA] mb-3">{result.amount} QIE</p>
                   {result.txHash && (
                     <a
                       href={`${EXPLORER_URL}/tx/${result.txHash}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-emerald-500 hover:text-emerald-400 flex items-center justify-center gap-1 mb-3"
+                      className="text-xs text-[#10B981] hover:text-[#34D399] flex items-center justify-center gap-1 mb-3"
                     >
                       View Transaction <ExternalLink size={11} />
                     </a>
                   )}
                   <button
                     onClick={() => setResult(null)}
-                    className="w-full border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-3 py-2 text-xs transition-colors"
+                    className="w-full border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md px-3 py-2 text-xs transition-colors"
                   >
                     Make Another Payment
                   </button>
@@ -217,11 +217,11 @@ export default function Widget() {
               ) : (
                 <>
                   <AlertCircle size={28} className="text-red-400 mx-auto mb-2" />
-                  <h3 className="text-sm font-bold text-slate-50 mb-0.5">Payment Failed</h3>
+                  <h3 className="text-sm font-bold text-[#FAFAFA] mb-0.5">Payment Failed</h3>
                   <p className="text-xs text-red-400 mb-3">{result.error}</p>
                   <button
                     onClick={() => setResult(null)}
-                    className="w-full border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-3 py-2 text-xs transition-colors"
+                    className="w-full border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md px-3 py-2 text-xs transition-colors"
                   >
                     Try Again
                   </button>
@@ -231,8 +231,8 @@ export default function Widget() {
           )}
 
           {/* Footer */}
-          <div className="mt-3 pt-2 border-t border-slate-700 text-center">
-            <p className="text-[10px] text-slate-600">
+          <div className="mt-3 pt-2 border-t border-[#27272A] text-center">
+            <p className="text-[10px] text-[#52525B]">
               Powered by QIEPay · QIE Testnet
             </p>
           </div>
@@ -240,21 +240,21 @@ export default function Widget() {
 
         {/* Embed Code Section */}
         {window.self === window.top && (
-          <div className="mt-3 bg-slate-800 border border-slate-700 rounded-lg p-3">
-            <p className="text-xs text-slate-400 mb-1.5 font-medium">Embed this widget</p>
+          <div className="mt-3 bg-[#111113] border border-[#27272A] rounded-lg p-3">
+            <p className="text-xs text-[#A1A1AA] mb-1.5 font-medium">Embed this widget</p>
             <div className="flex items-center gap-2">
-              <code className="flex-1 text-[10px] text-slate-500 bg-slate-900 rounded-md p-2 overflow-hidden text-ellipsis whitespace-nowrap font-mono">
+              <code className="flex-1 text-[10px] text-[#71717A] bg-[#09090B] rounded-md p-2 overflow-hidden text-ellipsis whitespace-nowrap font-mono">
                 {embedCode}
               </code>
               <button
                 onClick={handleCopyEmbed}
-                className="p-1.5 rounded-md bg-slate-700 hover:bg-slate-600 transition-colors flex-shrink-0"
+                className="p-1.5 rounded-md bg-[#18181B] hover:bg-[#27272A] transition-colors flex-shrink-0"
                 title="Copy embed code"
               >
                 {copied ? (
-                  <Check size={12} className="text-emerald-400" />
+                  <Check size={12} className="text-[#34D399]" />
                 ) : (
-                  <Copy size={12} className="text-slate-300" />
+                  <Copy size={12} className="text-[#A1A1AA]" />
                 )}
               </button>
             </div>

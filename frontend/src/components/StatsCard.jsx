@@ -6,7 +6,7 @@ export default function StatsCard({ icon: Icon, label, value, subValue, trend, c
   const ref = useRef(null);
 
   const colorMap = {
-    emerald: { bg: 'bg-emerald-500/10', text: 'text-emerald-400' },
+    emerald: { bg: 'bg-[rgba(16,185,129,0.1)]', text: 'text-[#34D399]' },
     sky: { bg: 'bg-sky-500/10', text: 'text-sky-400' },
     amber: { bg: 'bg-amber-500/10', text: 'text-amber-400' },
     blue: { bg: 'bg-blue-500/10', text: 'text-blue-400' },
@@ -78,17 +78,17 @@ export default function StatsCard({ icon: Icon, label, value, subValue, trend, c
         </div>
         {trend !== undefined && trend !== null && (
           <span className={`text-xs font-medium px-1.5 py-0.5 rounded-full ${
-            trend >= 0 ? 'text-emerald-400 bg-emerald-400/10' : 'text-red-400 bg-red-400/10'
+            trend >= 0 ? 'text-[#34D399] bg-[#34D399]/10' : 'text-red-400 bg-red-400/10'
           }`}>
             {trend >= 0 ? '↑' : '↓'} {Math.abs(trend)}%
           </span>
         )}
       </div>
 
-      <p className="text-xs text-slate-500 mb-1">{label}</p>
-      <p className="text-xl font-bold text-slate-50 tabular-nums tracking-tight">{formatDisplayValue()}</p>
+      <p className="text-xs text-[#71717A] mb-1">{label}</p>
+      <p className="text-xl font-bold text-[#FAFAFA] tabular-nums tracking-tight">{formatDisplayValue()}</p>
       {subValue && (
-        <p className="text-xs text-slate-600 mt-1">{subValue}</p>
+        <p className="text-xs text-[#52525B] mt-1">{subValue}</p>
       )}
     </div>
   );

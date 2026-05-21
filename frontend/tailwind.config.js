@@ -5,6 +5,26 @@ export default {
   theme: {
     extend: {
       colors: {
+        // True gray design system (no blue undertones)
+        brand: {
+          bg: '#09090B',
+          surface: '#111113',
+          'surface-hover': '#18181B',
+          elevated: '#1C1C1F',
+          border: '#27272A',
+          'border-subtle': '#1E1E21',
+          'border-hover': '#3F3F46',
+          text: '#FAFAFA',
+          'text-secondary': '#A1A1AA',
+          'text-tertiary': '#71717A',
+          'text-ghost': '#52525B',
+        },
+        accent: {
+          DEFAULT: '#10B981',
+          hover: '#059669',
+          muted: 'rgba(16, 185, 129, 0.1)',
+        },
+        // Keep primary/dark for backward compatibility with existing page files
         primary: {
           50: '#f5f3ff',
           100: '#ede9fe',

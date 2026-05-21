@@ -18,7 +18,7 @@ import Developers from './pages/Developers';
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-[#0F172A] text-slate-50">
+    <div className="min-h-screen bg-[#0F172A] text-[#FAFAFA]">
       <Toaster
         position="top-right"
         toastOptions={{

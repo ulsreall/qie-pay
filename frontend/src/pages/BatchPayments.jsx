@@ -97,23 +97,23 @@ export default function BatchPayments() {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15 }}>
       <div className="mb-6">
-        <h1 className="text-lg font-semibold text-slate-50 tracking-tight">Batch Payments</h1>
-        <p className="text-xs text-slate-500 mt-0.5">Create multiple payment requests at once</p>
+        <h1 className="text-lg font-semibold text-[#FAFAFA] tracking-tight">Batch Payments</h1>
+        <p className="text-xs text-[#71717A] mt-0.5">Create multiple payment requests at once</p>
       </div>
 
       {!results ? (
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
           {/* Items */}
           <div className="space-y-3 mb-4">
             {items.map((item, i) => (
               <div
                 key={i}
-                className="bg-slate-900 border border-slate-700 rounded-md p-3"
+                className="bg-[#09090B] border border-[#27272A] rounded-md p-3"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-medium text-slate-400">Payment #{i + 1}</span>
+                  <span className="text-xs font-medium text-[#A1A1AA]">Payment #{i + 1}</span>
                   {items.length > 1 && (
-                    <button onClick={() => removeItem(i)} className="p-0.5 text-slate-500 hover:text-red-400 transition-colors">
+                    <button onClick={() => removeItem(i)} className="p-0.5 text-[#71717A] hover:text-red-400 transition-colors">
                       <Trash2 size={12} />
                     </button>
                   )}
@@ -124,7 +124,7 @@ export default function BatchPayments() {
                     placeholder="Description *"
                     value={item.description}
                     onChange={(e) => updateItem(i, 'description', e.target.value)}
-                    className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-md text-slate-50 text-xs placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                    className="px-3 py-1.5 bg-[#111113] border border-[#27272A] rounded-md text-[#FAFAFA] text-xs placeholder-[#71717A] focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/20 transition-all"
                   />
                   <input
                     type="number"
@@ -133,18 +133,18 @@ export default function BatchPayments() {
                     min="0.001"
                     value={item.amount}
                     onChange={(e) => updateItem(i, 'amount', e.target.value)}
-                    className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-md text-slate-50 text-xs placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                    className="px-3 py-1.5 bg-[#111113] border border-[#27272A] rounded-md text-[#FAFAFA] text-xs placeholder-[#71717A] focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/20 transition-all"
                   />
                   <input
                     type="text"
                     placeholder="Order ID (optional)"
                     value={item.orderId}
                     onChange={(e) => updateItem(i, 'orderId', e.target.value)}
-                    className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-md text-slate-50 text-xs placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                    className="px-3 py-1.5 bg-[#111113] border border-[#27272A] rounded-md text-[#FAFAFA] text-xs placeholder-[#71717A] focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/20 transition-all"
                   />
                 </div>
                 {item.amount && (
-                  <p className="text-xs text-slate-500 mt-1">≈ {formatUSD(item.amount)}</p>
+                  <p className="text-xs text-[#71717A] mt-1">≈ {formatUSD(item.amount)}</p>
                 )}
               </div>
             ))}
@@ -154,7 +154,7 @@ export default function BatchPayments() {
           <div className="flex items-center gap-2">
             <button
               onClick={addItem}
-              className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md text-xs transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md text-xs transition-colors"
             >
               <Plus size={14} /> Add Payment
             </button>
@@ -162,7 +162,7 @@ export default function BatchPayments() {
             <button
               onClick={handleCreateAll}
               disabled={creating}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md text-xs transition-colors disabled:opacity-60"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md text-xs transition-colors disabled:opacity-60"
             >
               {creating ? (
                 <><Loader2 size={14} className="animate-spin" /> {progress.current}/{progress.total}...</>
@@ -175,9 +175,9 @@ export default function BatchPayments() {
           {/* Progress bar (thin) */}
           {creating && (
             <div className="mt-3">
-              <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+              <div className="h-1.5 bg-[#18181B] rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full bg-emerald-500 rounded-full"
+                  className="h-full bg-[#10B981] rounded-full"
                   initial={{ width: 0 }}
                   animate={{ width: `${(progress.current / progress.total) * 100}%` }}
                   transition={{ duration: 0.15 }}
@@ -188,12 +188,12 @@ export default function BatchPayments() {
         </div>
       ) : (
         /* Results */
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-slate-300">Batch Results</h2>
+            <h2 className="text-sm font-semibold text-[#A1A1AA]">Batch Results</h2>
             <button
               onClick={copyAllLinks}
-              className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md text-xs transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md text-xs transition-colors"
             >
               <Copy size={12} /> Copy All Links
             </button>
@@ -202,21 +202,21 @@ export default function BatchPayments() {
           <table className="w-full text-sm mb-4">
             <tbody>
               {results.map((r, i) => (
-                <tr key={i} className={`h-10 ${i % 2 === 0 ? '' : 'bg-slate-800/50'}`}>
+                <tr key={i} className={`h-10 ${i % 2 === 0 ? '' : 'bg-[#111113]/50'}`}>
                   <td className="w-5">
-                    {r.success ? <CheckCircle size={14} className="text-emerald-400" /> : <XCircle size={14} className="text-red-400" />}
+                    {r.success ? <CheckCircle size={14} className="text-[#34D399]" /> : <XCircle size={14} className="text-red-400" />}
                   </td>
                   <td className="pl-2">
-                    <p className="text-sm text-slate-200">{r.description}</p>
+                    <p className="text-sm text-[#D4D4D8]">{r.description}</p>
                     {r.success ? (
-                      <p className="text-xs text-slate-500">#{r.paymentId} · {r.amount} QIE</p>
+                      <p className="text-xs text-[#71717A]">#{r.paymentId} · {r.amount} QIE</p>
                     ) : (
                       <p className="text-xs text-red-400">{r.error}</p>
                     )}
                   </td>
                   {r.success && (
                     <td className="text-right">
-                      <a href={`/pay/${r.paymentId}`} target="_blank" rel="noopener noreferrer" className="text-emerald-500 hover:text-emerald-400 text-xs">
+                      <a href={`/pay/${r.paymentId}`} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:text-[#34D399] text-xs">
                         View →
                       </a>
                     </td>
@@ -228,7 +228,7 @@ export default function BatchPayments() {
 
           <button
             onClick={() => { setResults(null); setItems([{ description: '', amount: '', orderId: '' }]); }}
-            className="w-full px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md text-sm transition-colors"
+            className="w-full px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md text-sm transition-colors"
           >
             Create Another Batch
           </button>

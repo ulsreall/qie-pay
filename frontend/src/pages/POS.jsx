@@ -13,7 +13,7 @@ import { EXPLORER_URL } from '../utils/constants';
 
 const DEMO_PRODUCTS = [
   { id: 'coffee',   name: 'Coffee',    price: 0.05, color: 'from-amber-500 to-amber-700' },
-  { id: 'tea',      name: 'Tea',       price: 0.03, color: 'from-emerald-500 to-emerald-700' },
+  { id: 'tea',      name: 'Tea',       price: 0.03, color: 'from-[#10B981] to-[#047857]' },
   { id: 'sandwich', name: 'Sandwich',  price: 0.08, color: 'from-orange-500 to-orange-700' },
   { id: 'cake',     name: 'Cake',      price: 0.06, color: 'from-pink-500 to-pink-700' },
   { id: 'juice',    name: 'Juice',     price: 0.04, color: 'from-sky-500 to-sky-700' },
@@ -162,18 +162,18 @@ export default function POS() {
   // ── Success modal ──
   if (result) {
     return (
-      <div className="min-h-screen bg-slate-900 text-slate-50">
+      <div className="min-h-screen bg-[#09090B] text-[#FAFAFA]">
         {/* Top bar */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-700">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-[#27272A]">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-emerald-500 rounded-md flex items-center justify-center">
+            <div className="w-7 h-7 bg-[#10B981] rounded-md flex items-center justify-center">
               <CreditCard className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="text-sm font-bold text-slate-50">QIEPay POS</span>
+            <span className="text-sm font-bold text-[#FAFAFA]">QIEPay POS</span>
           </div>
           <Link
             to="/dashboard"
-            className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+            className="flex items-center gap-1 text-xs text-[#A1A1AA] hover:text-[#D4D4D8] transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Exit POS
           </Link>
@@ -185,21 +185,21 @@ export default function POS() {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.15 }}
           >
-            <CheckCircle2 className="w-14 h-14 text-emerald-400" />
+            <CheckCircle2 className="w-14 h-14 text-[#34D399]" />
           </motion.div>
 
           <h2 className="text-lg font-bold text-center">Payment Created!</h2>
-          <p className="text-slate-400 text-xs text-center">{result.description}</p>
+          <p className="text-[#A1A1AA] text-xs text-center">{result.description}</p>
 
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 w-full flex flex-col items-center gap-3">
-            <p className="text-xs text-slate-400">Scan QR to pay</p>
+          <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 w-full flex flex-col items-center gap-3">
+            <p className="text-xs text-[#A1A1AA]">Scan QR to pay</p>
             <div className="bg-white p-2.5 rounded-lg">
               <QRCodeSVG value={result.url} size={160} />
             </div>
-            <p className="text-xl font-bold text-emerald-400 tabular-nums">
+            <p className="text-xl font-bold text-[#34D399] tabular-nums">
               {result.total.toFixed(4)} QIE
             </p>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[#71717A]">
               (~{formatUSD(result.total)})
             </p>
           </div>
@@ -207,7 +207,7 @@ export default function POS() {
           <div className="flex gap-2 w-full">
             <button
               onClick={copyUrl}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-3 py-2.5 text-xs transition-colors"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md px-3 py-2.5 text-xs transition-colors"
             >
               <Copy className="w-3.5 h-3.5" /> Copy Link
             </button>
@@ -215,7 +215,7 @@ export default function POS() {
               href={`${EXPLORER_URL}/tx/${result.paymentId}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 inline-flex items-center justify-center gap-1.5 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-3 py-2.5 text-xs transition-colors"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md px-3 py-2.5 text-xs transition-colors"
             >
               <ExternalLink className="w-3.5 h-3.5" /> Explorer
             </a>
@@ -223,7 +223,7 @@ export default function POS() {
 
           <button
             onClick={newSale}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md px-4 py-3 text-sm flex items-center justify-center gap-2 transition-colors"
+            className="w-full bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-4 py-3 text-sm flex items-center justify-center gap-2 transition-colors"
           >
             <RotateCcw className="w-4 h-4" /> New Sale
           </button>
@@ -234,31 +234,31 @@ export default function POS() {
 
   // ── Main POS view ──
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-50 flex flex-col">
+    <div className="min-h-screen bg-[#09090B] text-[#FAFAFA] flex flex-col">
       {/* Top bar */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-slate-700 bg-slate-900 sticky top-0 z-40">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#27272A] bg-[#09090B] sticky top-0 z-40">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-emerald-500 rounded-md flex items-center justify-center">
+          <div className="w-7 h-7 bg-[#10B981] rounded-md flex items-center justify-center">
             <CreditCard className="w-3.5 h-3.5 text-white" />
           </div>
-          <span className="text-sm font-bold text-slate-50">QIEPay POS</span>
+          <span className="text-sm font-bold text-[#FAFAFA]">QIEPay POS</span>
         </div>
         <div className="flex items-center gap-3">
           {wallet ? (
-            <span className="text-xs text-slate-500 hidden sm:inline font-mono">
+            <span className="text-xs text-[#71717A] hidden sm:inline font-mono">
               {wallet.address.slice(0, 6)}…{wallet.address.slice(-4)}
             </span>
           ) : (
             <button
               onClick={handleConnect}
-              className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md px-3 py-1.5 text-xs transition-colors"
+              className="bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-3 py-1.5 text-xs transition-colors"
             >
               Connect Wallet
             </button>
           )}
           <Link
             to="/dashboard"
-            className="flex items-center gap-1 text-slate-400 hover:text-slate-200 transition-colors text-xs"
+            className="flex items-center gap-1 text-[#A1A1AA] hover:text-[#D4D4D8] transition-colors text-xs"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Exit POS</span>
@@ -270,24 +270,24 @@ export default function POS() {
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* LEFT — Product grid */}
         <div className="lg:w-[60%] p-4 overflow-y-auto">
-          <h2 className="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-1.5">
-            <Package className="w-4 h-4 text-emerald-400" /> Products
+          <h2 className="text-sm font-semibold text-[#A1A1AA] mb-3 flex items-center gap-1.5">
+            <Package className="w-4 h-4 text-[#34D399]" /> Products
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {DEMO_PRODUCTS.map((product) => (
               <button
                 key={product.id}
                 onClick={() => addToCart(product)}
-                className="bg-slate-800 border border-slate-700 rounded-lg p-3 flex flex-col items-center gap-2 cursor-pointer
-                           hover:border-emerald-500/40 transition-colors text-left"
+                className="bg-[#111113] border border-[#27272A] rounded-lg p-3 flex flex-col items-center gap-2 cursor-pointer
+                           hover:border-[#10B981]/40 transition-colors text-left"
               >
                 <div className={`w-10 h-10 rounded-md bg-gradient-to-br ${product.color} flex items-center justify-center text-sm font-bold text-white/90`}>
                   {product.name[0]}
                 </div>
-                <span className="font-medium text-xs text-center text-slate-200">{product.name}</span>
+                <span className="font-medium text-xs text-center text-[#D4D4D8]">{product.name}</span>
                 <div className="text-center">
-                  <span className="text-emerald-400 font-bold text-xs">{product.price.toFixed(2)} QIE</span>
-                  <span className="text-slate-500 text-[10px] block">~{formatUSD(product.price)}</span>
+                  <span className="text-[#34D399] font-bold text-xs">{product.price.toFixed(2)} QIE</span>
+                  <span className="text-[#71717A] text-[10px] block">~{formatUSD(product.price)}</span>
                 </div>
               </button>
             ))}
@@ -295,14 +295,14 @@ export default function POS() {
         </div>
 
         {/* RIGHT — Cart panel */}
-        <div className="lg:w-[40%] border-t lg:border-t-0 lg:border-l border-slate-700 flex flex-col bg-slate-800/50">
+        <div className="lg:w-[40%] border-t lg:border-t-0 lg:border-l border-[#27272A] flex flex-col bg-[#111113]/50">
           <div className="p-4 flex-1 overflow-y-auto">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm font-semibold text-slate-300 flex items-center gap-1.5">
-                <ShoppingCart className="w-4 h-4 text-emerald-400" />
+              <h2 className="text-sm font-semibold text-[#A1A1AA] flex items-center gap-1.5">
+                <ShoppingCart className="w-4 h-4 text-[#34D399]" />
                 Cart
                 {cart.length > 0 && (
-                  <span className="ml-1 bg-emerald-500/10 text-emerald-400 text-xs px-1.5 py-0.5 rounded-full">
+                  <span className="ml-1 bg-[rgba(16,185,129,0.1)] text-[#34D399] text-xs px-1.5 py-0.5 rounded-full">
                     {cart.reduce((s, i) => s + i.qty, 0)}
                   </span>
                 )}
@@ -315,7 +315,7 @@ export default function POS() {
             </div>
 
             {cart.length === 0 ? (
-              <div className="text-center text-slate-500 py-10">
+              <div className="text-center text-[#71717A] py-10">
                 <ShoppingCart className="w-10 h-10 mx-auto mb-2 opacity-30" />
                 <p className="text-xs">Tap products to add to cart</p>
               </div>
@@ -328,31 +328,31 @@ export default function POS() {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
-                      className="bg-slate-800 border border-slate-700 rounded-md p-2.5 flex items-center gap-2.5"
+                      className="bg-[#111113] border border-[#27272A] rounded-md p-2.5 flex items-center gap-2.5"
                     >
                       <div className={`w-8 h-8 rounded-md bg-gradient-to-br ${item.color} flex items-center justify-center text-xs font-bold flex-shrink-0 text-white`}>
                         {item.name[0]}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-xs truncate text-slate-200">{item.name}</p>
-                        <p className="text-emerald-400 text-[10px]">{item.price.toFixed(2)} QIE ea</p>
+                        <p className="font-medium text-xs truncate text-[#D4D4D8]">{item.name}</p>
+                        <p className="text-[#34D399] text-[10px]">{item.price.toFixed(2)} QIE ea</p>
                       </div>
                       <div className="flex items-center gap-0.5">
                         <button
                           onClick={() => updateQty(item.id, -1)}
-                          className="w-6 h-6 rounded-md bg-slate-700 hover:bg-slate-600 flex items-center justify-center transition-colors"
+                          className="w-6 h-6 rounded-md bg-[#18181B] hover:bg-[#27272A] flex items-center justify-center transition-colors"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
                         <span className="w-6 text-center text-xs font-bold">{item.qty}</span>
                         <button
                           onClick={() => updateQty(item.id, 1)}
-                          className="w-6 h-6 rounded-md bg-slate-700 hover:bg-slate-600 flex items-center justify-center transition-colors"
+                          className="w-6 h-6 rounded-md bg-[#18181B] hover:bg-[#27272A] flex items-center justify-center transition-colors"
                         >
                           <Plus className="w-3 h-3" />
                         </button>
                       </div>
-                      <span className="text-xs font-bold w-14 text-right text-slate-300 tabular-nums">
+                      <span className="text-xs font-bold w-14 text-right text-[#A1A1AA] tabular-nums">
                         {(item.price * item.qty).toFixed(4)}
                       </span>
                       <button
@@ -369,15 +369,15 @@ export default function POS() {
 
             {/* Add custom item */}
             {showCustom ? (
-              <div className="bg-slate-800 border border-slate-700 rounded-md p-3 mb-3">
-                <p className="text-xs font-medium text-slate-300 mb-2">Custom Item</p>
+              <div className="bg-[#111113] border border-[#27272A] rounded-md p-3 mb-3">
+                <p className="text-xs font-medium text-[#A1A1AA] mb-2">Custom Item</p>
                 <div className="flex flex-col gap-1.5">
                   <input
                     type="text"
                     placeholder="Item name"
                     value={customName}
                     onChange={e => setCustomName(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-1.5 text-slate-50 text-xs focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 outline-none transition-all"
+                    className="w-full bg-[#09090B] border border-[#27272A] rounded-md px-3 py-1.5 text-[#FAFAFA] text-xs focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/20 outline-none transition-all"
                   />
                   <input
                     type="number"
@@ -386,18 +386,18 @@ export default function POS() {
                     onChange={e => setCustomPrice(e.target.value)}
                     step="0.01"
                     min="0"
-                    className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-1.5 text-slate-50 text-xs focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 outline-none transition-all"
+                    className="w-full bg-[#09090B] border border-[#27272A] rounded-md px-3 py-1.5 text-[#FAFAFA] text-xs focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/20 outline-none transition-all"
                   />
                   <div className="flex gap-1.5">
                     <button
                       onClick={addCustomItem}
-                      className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md px-3 py-1.5 text-xs transition-colors"
+                      className="flex-1 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-3 py-1.5 text-xs transition-colors"
                     >
                       Add
                     </button>
                     <button
                       onClick={() => setShowCustom(false)}
-                      className="flex-1 border border-slate-600 hover:border-slate-500 text-slate-300 font-medium rounded-md px-3 py-1.5 text-xs transition-colors"
+                      className="flex-1 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] font-medium rounded-md px-3 py-1.5 text-xs transition-colors"
                     >
                       Cancel
                     </button>
@@ -407,8 +407,8 @@ export default function POS() {
             ) : (
               <button
                 onClick={() => setShowCustom(true)}
-                className="w-full mb-3 py-2 rounded-md border border-dashed border-slate-600 text-slate-400
-                           hover:border-emerald-500/40 hover:text-emerald-400 transition-colors text-xs flex items-center justify-center gap-1.5"
+                className="w-full mb-3 py-2 rounded-md border border-dashed border-[#3F3F46] text-[#A1A1AA]
+                           hover:border-[#10B981]/40 hover:text-[#34D399] transition-colors text-xs flex items-center justify-center gap-1.5"
               >
                 <Plus className="w-3.5 h-3.5" /> Add Custom Item
               </button>
@@ -417,27 +417,27 @@ export default function POS() {
 
           {/* Totals & Generate */}
           {cart.length > 0 && (
-            <div className="border-t border-slate-700 p-4 space-y-1.5 bg-slate-900">
-              <div className="flex justify-between text-xs text-slate-400">
+            <div className="border-t border-[#27272A] p-4 space-y-1.5 bg-[#09090B]">
+              <div className="flex justify-between text-xs text-[#A1A1AA]">
                 <span>Subtotal</span>
                 <span className="tabular-nums">{subtotal.toFixed(4)} QIE</span>
               </div>
-              <div className="flex justify-between text-xs text-slate-400">
+              <div className="flex justify-between text-xs text-[#A1A1AA]">
                 <span>Platform Fee ({PLATFORM_FEE_PERCENT}%)</span>
                 <span className="tabular-nums">{fee.toFixed(4)} QIE</span>
               </div>
-              <div className="flex justify-between text-sm font-bold border-t border-slate-700 pt-1.5">
-                <span className="text-slate-300">Total</span>
+              <div className="flex justify-between text-sm font-bold border-t border-[#27272A] pt-1.5">
+                <span className="text-[#A1A1AA]">Total</span>
                 <div className="text-right">
-                  <span className="text-emerald-400 tabular-nums">{total.toFixed(4)} QIE</span>
-                  <span className="text-slate-500 text-[10px] block">~{formatUSD(total)}</span>
+                  <span className="text-[#34D399] tabular-nums">{total.toFixed(4)} QIE</span>
+                  <span className="text-[#71717A] text-[10px] block">~{formatUSD(total)}</span>
                 </div>
               </div>
 
               <button
                 onClick={handleGenerate}
                 disabled={generating || !wallet}
-                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md px-4 py-3 text-sm flex items-center justify-center gap-2 mt-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-4 py-3 text-sm flex items-center justify-center gap-2 mt-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {generating ? (
                   <>

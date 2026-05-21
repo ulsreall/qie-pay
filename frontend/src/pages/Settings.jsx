@@ -109,54 +109,54 @@ export default function Settings() {
       className="p-6 lg:p-8"
     >
       <div className="mb-6">
-        <h1 className="text-lg font-semibold text-slate-50 tracking-tight">Settings</h1>
-        <p className="text-xs text-slate-500 mt-0.5">Account information and platform settings</p>
+        <h1 className="text-lg font-semibold text-[#FAFAFA] tracking-tight">Settings</h1>
+        <p className="text-xs text-[#71717A] mt-0.5">Account information and platform settings</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-5xl">
         {/* Merchant Info Card */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
           <div className="flex items-center gap-2 mb-4">
-            <User size={14} className="text-emerald-400" />
-            <h2 className="text-sm font-semibold text-slate-300">Merchant Info</h2>
+            <User size={14} className="text-[#34D399]" />
+            <h2 className="text-sm font-semibold text-[#A1A1AA]">Merchant Info</h2>
           </div>
 
           {loading ? (
             <div className="flex items-center justify-center py-6">
-              <Loader2 size={18} className="animate-spin text-emerald-500" />
+              <Loader2 size={18} className="animate-spin text-[#10B981]" />
             </div>
           ) : wallet ? (
             <div className="space-y-3">
               <div>
-                <label className="text-xs text-slate-500 mb-1 block">Wallet Address</label>
-                <div className="flex items-center gap-2 bg-slate-900 rounded-md px-3 py-2 border border-slate-700">
-                  <span className="text-xs text-slate-300 font-mono break-all flex-1">
+                <label className="text-xs text-[#71717A] mb-1 block">Wallet Address</label>
+                <div className="flex items-center gap-2 bg-[#09090B] rounded-md px-3 py-2 border border-[#27272A]">
+                  <span className="text-xs text-[#A1A1AA] font-mono break-all flex-1">
                     {wallet.address}
                   </span>
                   <button
                     onClick={() => handleCopy(wallet.address, 'wallet')}
-                    className="p-1 rounded hover:bg-slate-700 transition-colors flex-shrink-0"
+                    className="p-1 rounded hover:bg-[#18181B] transition-colors flex-shrink-0"
                   >
                     {copied === 'wallet'
-                      ? <Check size={12} className="text-emerald-400" />
-                      : <Copy size={12} className="text-slate-500" />
+                      ? <Check size={12} className="text-[#34D399]" />
+                      : <Copy size={12} className="text-[#71717A]" />
                     }
                   </button>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between py-2 border-b border-slate-700/50">
-                <span className="text-xs text-slate-400">Balance</span>
-                <span className="text-xs text-slate-300 font-medium tabular-nums">
+              <div className="flex items-center justify-between py-2 border-b border-[#27272A]/50">
+                <span className="text-xs text-[#A1A1AA]">Balance</span>
+                <span className="text-xs text-[#A1A1AA] font-medium tabular-nums">
                   {parseFloat(wallet.balance).toFixed(4)} QIE
                 </span>
               </div>
 
               <div className="flex items-center justify-between py-2">
-                <span className="text-xs text-slate-400">Merchant Status</span>
+                <span className="text-xs text-[#A1A1AA]">Merchant Status</span>
                 <div className="flex items-center gap-1.5">
-                  <span className={`w-1.5 h-1.5 rounded-full ${registered ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-                  <span className={`text-xs font-medium ${registered ? 'text-emerald-400' : 'text-amber-400'}`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${registered ? 'bg-[#34D399]' : 'bg-amber-400'}`} />
+                  <span className={`text-xs font-medium ${registered ? 'text-[#34D399]' : 'text-amber-400'}`}>
                     {registered ? 'Registered' : 'Not Registered'}
                   </span>
                 </div>
@@ -166,17 +166,17 @@ export default function Settings() {
                 href={`${EXPLORER_URL}/address/${wallet.address}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs text-emerald-500 hover:text-emerald-400 transition-colors"
+                className="inline-flex items-center gap-1 text-xs text-[#10B981] hover:text-[#34D399] transition-colors"
               >
                 View on Explorer <ExternalLink size={11} />
               </a>
             </div>
           ) : (
             <div className="text-center py-6">
-              <p className="text-slate-400 text-xs mb-3">Connect your wallet to view account settings</p>
+              <p className="text-[#A1A1AA] text-xs mb-3">Connect your wallet to view account settings</p>
               <button
                 onClick={handleConnect}
-                className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md px-4 py-2 text-xs transition-colors"
+                className="bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-4 py-2 text-xs transition-colors"
               >
                 Connect Wallet
               </button>
@@ -185,10 +185,10 @@ export default function Settings() {
         </div>
 
         {/* Platform Info Card */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
           <div className="flex items-center gap-2 mb-4">
-            <Info size={14} className="text-emerald-400" />
-            <h2 className="text-sm font-semibold text-slate-300">Platform Info</h2>
+            <Info size={14} className="text-[#34D399]" />
+            <h2 className="text-sm font-semibold text-[#A1A1AA]">Platform Info</h2>
           </div>
 
           <div>
@@ -198,19 +198,19 @@ export default function Settings() {
             <InfoRow label="Network" value={CHAIN_NAME} />
             <InfoRow label="Chain ID" value={CHAIN_ID.toString()} />
             <InfoRow label="RPC URL" value={RPC_URL} mono />
-            <div className="flex items-center justify-between py-2 border-b border-slate-700/50 last:border-0">
-              <span className="text-xs text-slate-400">Contract</span>
+            <div className="flex items-center justify-between py-2 border-b border-[#27272A]/50 last:border-0">
+              <span className="text-xs text-[#A1A1AA]">Contract</span>
               <div className="flex items-center gap-1.5">
-                <span className="text-xs text-slate-300 font-mono">
+                <span className="text-xs text-[#A1A1AA] font-mono">
                   {truncateAddress(CONTRACT_ADDRESS)}
                 </span>
                 <button
                   onClick={() => handleCopy(CONTRACT_ADDRESS, 'contract')}
-                  className="p-0.5 rounded hover:bg-slate-700 transition-colors"
+                  className="p-0.5 rounded hover:bg-[#18181B] transition-colors"
                 >
                   {copied === 'contract'
-                    ? <Check size={11} className="text-emerald-400" />
-                    : <Copy size={11} className="text-slate-500" />
+                    ? <Check size={11} className="text-[#34D399]" />
+                    : <Copy size={11} className="text-[#71717A]" />
                   }
                 </button>
               </div>
@@ -221,25 +221,25 @@ export default function Settings() {
             href={`${EXPLORER_URL}/address/${CONTRACT_ADDRESS}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-emerald-500 hover:text-emerald-400 transition-colors mt-3"
+            className="inline-flex items-center gap-1 text-xs text-[#10B981] hover:text-[#34D399] transition-colors mt-3"
           >
             View Contract on Explorer <ExternalLink size={11} />
           </a>
         </div>
 
         {/* Export CSV Card */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
           <div className="flex items-center gap-2 mb-3">
-            <Download size={14} className="text-emerald-400" />
-            <h2 className="text-sm font-semibold text-slate-300">Export Data</h2>
+            <Download size={14} className="text-[#34D399]" />
+            <h2 className="text-sm font-semibold text-[#A1A1AA]">Export Data</h2>
           </div>
-          <p className="text-xs text-slate-400 mb-3">
+          <p className="text-xs text-[#A1A1AA] mb-3">
             Download all your payment history as CSV for accounting.
           </p>
           <button
             onClick={handleExport}
             disabled={exporting || !wallet}
-            className="inline-flex items-center gap-1.5 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-3 py-1.5 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md px-3 py-1.5 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {exporting
               ? <><Loader2 size={12} className="animate-spin" /> Exporting...</>
@@ -249,18 +249,18 @@ export default function Settings() {
         </div>
 
         {/* Export Invoices Card */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
           <div className="flex items-center gap-2 mb-3">
-            <FileText size={14} className="text-emerald-400" />
-            <h2 className="text-sm font-semibold text-slate-300">Export Invoices</h2>
+            <FileText size={14} className="text-[#34D399]" />
+            <h2 className="text-sm font-semibold text-[#A1A1AA]">Export Invoices</h2>
           </div>
-          <p className="text-xs text-slate-400 mb-3">
+          <p className="text-xs text-[#A1A1AA] mb-3">
             Download HTML invoices for all paid and settled transactions.
           </p>
           <button
             onClick={handleExportInvoices}
             disabled={exportingInvoices || !wallet}
-            className="inline-flex items-center gap-1.5 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-3 py-1.5 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md px-3 py-1.5 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {exportingInvoices
               ? <><Loader2 size={12} className="animate-spin" /> Generating...</>
@@ -275,9 +275,9 @@ export default function Settings() {
 
 function InfoRow({ label, value, mono }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-slate-700/50 last:border-0">
-      <span className="text-xs text-slate-400">{label}</span>
-      <span className={`text-xs text-slate-300 ${mono ? 'font-mono' : ''}`}>{value}</span>
+    <div className="flex items-center justify-between py-2 border-b border-[#27272A]/50 last:border-0">
+      <span className="text-xs text-[#A1A1AA]">{label}</span>
+      <span className={`text-xs text-[#A1A1AA] ${mono ? 'font-mono' : ''}`}>{value}</span>
     </div>
   );
 }

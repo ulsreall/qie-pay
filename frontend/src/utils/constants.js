@@ -58,7 +58,7 @@ export const STATUS_MAP = {
 export const STATUS_COLORS = {
   0: 'text-sky-400 bg-sky-400/10',
   1: 'text-amber-400 bg-amber-400/10',
-  2: 'text-emerald-400 bg-emerald-400/10',
+  2: 'text-[#34D399] bg-[#34D399]/10',
   3: 'text-blue-400 bg-blue-400/10',
   4: 'text-red-400 bg-red-400/10',
 };

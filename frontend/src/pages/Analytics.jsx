@@ -69,13 +69,13 @@ export default function Analytics() {
   if (!wallet && !loading) {
     return (
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-md mx-auto py-20 text-center">
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-8">
-          <BarChart3 size={36} className="text-emerald-500 mx-auto mb-3" />
-          <h2 className="text-lg font-bold text-slate-50 mb-2">Analytics</h2>
-          <p className="text-slate-400 text-sm mb-4">Connect your wallet to view analytics</p>
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-8">
+          <BarChart3 size={36} className="text-[#10B981] mx-auto mb-3" />
+          <h2 className="text-lg font-bold text-[#FAFAFA] mb-2">Analytics</h2>
+          <p className="text-[#A1A1AA] text-sm mb-4">Connect your wallet to view analytics</p>
           <button
             onClick={() => connectWallet().then(init).catch((e) => toast.error(e.message))}
-            className="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md text-sm transition-colors"
+            className="px-5 py-2 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md text-sm transition-colors"
           >
             Connect Wallet
           </button>
@@ -87,7 +87,7 @@ export default function Analytics() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-32">
-        <Loader2 size={28} className="animate-spin text-emerald-500" />
+        <Loader2 size={28} className="animate-spin text-[#10B981]" />
       </div>
     );
   }
@@ -97,8 +97,8 @@ export default function Analytics() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-3">
         <div>
-          <h1 className="text-lg font-semibold text-slate-50 tracking-tight">Analytics</h1>
-          <p className="text-xs text-slate-500 mt-0.5">Revenue insights and payment metrics</p>
+          <h1 className="text-lg font-semibold text-[#FAFAFA] tracking-tight">Analytics</h1>
+          <p className="text-xs text-[#71717A] mt-0.5">Revenue insights and payment metrics</p>
         </div>
         <div className="flex items-center gap-3">
           {['all', 'day', 'week', 'month'].map((p) => (
@@ -106,7 +106,7 @@ export default function Analytics() {
               key={p}
               onClick={() => setPeriod(p)}
               className={`text-xs font-medium transition-colors ${
-                period === p ? 'text-emerald-400 border-b border-emerald-400' : 'text-slate-500 hover:text-slate-300'
+                period === p ? 'text-[#34D399] border-b border-[#34D399]' : 'text-[#71717A] hover:text-[#A1A1AA]'
               }`}
             >
               {p === 'all' ? 'All Time' : p === 'day' ? '24h' : p === 'week' ? '7d' : '30d'}
@@ -117,35 +117,35 @@ export default function Analytics() {
 
       {/* Stats — 3 cards */}
       <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <DollarSign size={14} className="text-emerald-400" />
-            <span className="text-xs text-slate-400">Total Revenue</span>
+            <DollarSign size={14} className="text-[#34D399]" />
+            <span className="text-xs text-[#A1A1AA]">Total Revenue</span>
           </div>
-          <p className="text-lg font-semibold text-slate-50 tabular-nums">{formatQIEAmount(totalVolume.toString())} QIE</p>
-          <p className="text-xs text-slate-500 mt-0.5">{formatUSD(totalVolume.toString())}</p>
+          <p className="text-lg font-semibold text-[#FAFAFA] tabular-nums">{formatQIEAmount(totalVolume.toString())} QIE</p>
+          <p className="text-xs text-[#71717A] mt-0.5">{formatUSD(totalVolume.toString())}</p>
         </div>
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp size={14} className="text-emerald-400" />
-            <span className="text-xs text-slate-400">Avg Payment</span>
+            <TrendingUp size={14} className="text-[#34D399]" />
+            <span className="text-xs text-[#A1A1AA]">Avg Payment</span>
           </div>
-          <p className="text-lg font-semibold text-slate-50 tabular-nums">{avgSize.toFixed(4)} QIE</p>
-          <p className="text-xs text-slate-500 mt-0.5">{formatUSD(avgSize.toString())}</p>
+          <p className="text-lg font-semibold text-[#FAFAFA] tabular-nums">{avgSize.toFixed(4)} QIE</p>
+          <p className="text-xs text-[#71717A] mt-0.5">{formatUSD(avgSize.toString())}</p>
         </div>
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
-            <CreditCard size={14} className="text-emerald-400" />
-            <span className="text-xs text-slate-400">Payments</span>
+            <CreditCard size={14} className="text-[#34D399]" />
+            <span className="text-xs text-[#A1A1AA]">Payments</span>
           </div>
-          <p className="text-lg font-semibold text-slate-50 tabular-nums">{paidCount}</p>
-          <p className="text-xs text-slate-500 mt-0.5">of {createdCount} created</p>
+          <p className="text-lg font-semibold text-[#FAFAFA] tabular-nums">{paidCount}</p>
+          <p className="text-xs text-[#71717A] mt-0.5">of {createdCount} created</p>
         </div>
       </div>
 
       {/* Revenue Chart (same style as Dashboard) */}
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 mb-6">
-        <h3 className="text-sm font-semibold text-slate-300 mb-4 tracking-tight">Revenue Over Time</h3>
+      <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 mb-6">
+        <h3 className="text-sm font-semibold text-[#A1A1AA] mb-4 tracking-tight">Revenue Over Time</h3>
         {revenueData.length > 0 ? (
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={revenueData}>
@@ -164,35 +164,35 @@ export default function Analytics() {
             </AreaChart>
           </ResponsiveContainer>
         ) : (
-          <div className="h-[200px] flex items-center justify-center text-slate-500 text-xs">No revenue data</div>
+          <div className="h-[200px] flex items-center justify-center text-[#71717A] text-xs">No revenue data</div>
         )}
       </div>
 
       {/* Top Payments */}
-      <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
-        <h3 className="text-sm font-semibold text-slate-300 mb-3 tracking-tight">Top Payments by Amount</h3>
+      <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
+        <h3 className="text-sm font-semibold text-[#A1A1AA] mb-3 tracking-tight">Top Payments by Amount</h3>
         {(() => {
           const topPayments = [...filteredPayments].sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount)).slice(0, 5);
           return topPayments.length > 0 ? (
             <table className="w-full text-sm">
               <tbody>
                 {topPayments.map((p, i) => (
-                  <tr key={p.id} className={`h-10 ${i % 2 === 0 ? '' : 'bg-slate-800/50'}`}>
-                    <td className="text-xs text-slate-500 w-6 pl-1">#{i + 1}</td>
+                  <tr key={p.id} className={`h-10 ${i % 2 === 0 ? '' : 'bg-[#111113]/50'}`}>
+                    <td className="text-xs text-[#71717A] w-6 pl-1">#{i + 1}</td>
                     <td>
-                      <p className="text-sm text-slate-200 truncate max-w-[200px]">{p.description || 'Untitled'}</p>
-                      <p className="text-xs text-slate-500">ID: {p.id}</p>
+                      <p className="text-sm text-[#D4D4D8] truncate max-w-[200px]">{p.description || 'Untitled'}</p>
+                      <p className="text-xs text-[#71717A]">ID: {p.id}</p>
                     </td>
                     <td className="text-right pr-1">
-                      <p className="text-sm font-medium text-slate-50 tabular-nums">{formatQIEAmount(p.amount)} QIE</p>
-                      <p className="text-xs text-slate-500">{formatUSD(p.amount)}</p>
+                      <p className="text-sm font-medium text-[#FAFAFA] tabular-nums">{formatQIEAmount(p.amount)} QIE</p>
+                      <p className="text-xs text-[#71717A]">{formatUSD(p.amount)}</p>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           ) : (
-            <p className="text-center text-slate-500 text-xs py-6">No payments yet</p>
+            <p className="text-center text-[#71717A] text-xs py-6">No payments yet</p>
           );
         })()}
       </div>

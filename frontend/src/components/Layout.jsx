@@ -16,7 +16,7 @@ export default function Layout({ children }) {
       {/* Mobile hamburger */}
       <button
         onClick={toggleSidebar}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2.5 bg-slate-800 border border-slate-700 rounded-xl text-slate-400 hover:text-slate-200 transition-colors"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2.5 bg-[#111113] border border-[#27272A] rounded-xl text-[#A1A1AA] hover:text-[#D4D4D8] transition-colors"
         aria-label="Toggle navigation"
       >
         <Menu size={20} />

@@ -79,7 +79,7 @@ export default function PaymentTable({ payments = [], showActions = false, onSet
       {/* Controls */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#71717A]" />
           <input
             type="text"
             placeholder="Search by description, order ID, or payment ID..."
@@ -91,18 +91,18 @@ export default function PaymentTable({ payments = [], showActions = false, onSet
 
         <div className="flex gap-2">
           <div className="relative">
-            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#71717A]" />
             <select
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
               className="input-field pl-10 pr-8 appearance-none cursor-pointer"
             >
-              <option value="all" className="bg-slate-800">All Statuses</option>
-              <option value="0" className="bg-slate-800">Created</option>
-              <option value="1" className="bg-slate-800">Paid</option>
-              <option value="2" className="bg-slate-800">Settled</option>
-              <option value="3" className="bg-slate-800">Refunded</option>
-              <option value="4" className="bg-slate-800">Cancelled</option>
+              <option value="all" className="bg-[#111113]">All Statuses</option>
+              <option value="0" className="bg-[#111113]">Created</option>
+              <option value="1" className="bg-[#111113]">Paid</option>
+              <option value="2" className="bg-[#111113]">Settled</option>
+              <option value="3" className="bg-[#111113]">Refunded</option>
+              <option value="4" className="bg-[#111113]">Cancelled</option>
             </select>
           </div>
 
@@ -119,11 +119,11 @@ export default function PaymentTable({ payments = [], showActions = false, onSet
       {/* Table */}
       {paginated.length === 0 ? (
         <div className="text-center py-16">
-          <div className="w-12 h-12 mx-auto mb-3 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center">
-            <FileText className="w-6 h-6 text-slate-500" />
+          <div className="w-12 h-12 mx-auto mb-3 rounded-lg bg-[#111113] border border-[#27272A] flex items-center justify-center">
+            <FileText className="w-6 h-6 text-[#71717A]" />
           </div>
-          <p className="text-slate-400 text-sm font-medium">No payments found</p>
-          <p className="text-slate-500 text-sm mt-1">
+          <p className="text-[#A1A1AA] text-sm font-medium">No payments found</p>
+          <p className="text-[#71717A] text-sm mt-1">
             {search || statusFilter !== 'all' ? 'Try adjusting your filters' : 'Payments will appear here'}
           </p>
         </div>
@@ -131,17 +131,17 @@ export default function PaymentTable({ payments = [], showActions = false, onSet
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-slate-800">
-                <th className="text-left py-3 px-4 text-xs font-medium text-slate-500 uppercase tracking-wider">ID</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-slate-500 uppercase tracking-wider">Description</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-slate-500 uppercase tracking-wider">Order</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-slate-500 uppercase tracking-wider">Amount</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-                <th className="text-left py-3 px-4 text-xs font-medium text-slate-500 uppercase tracking-wider">Date</th>
-                {showActions && <th className="text-right py-3 px-4 text-xs font-medium text-slate-500 uppercase tracking-wider">Actions</th>}
+              <tr className="border-b border-[#1E1E21]">
+                <th className="text-left py-3 px-4 text-xs font-medium text-[#71717A] uppercase tracking-wider">ID</th>
+                <th className="text-left py-3 px-4 text-xs font-medium text-[#71717A] uppercase tracking-wider">Description</th>
+                <th className="text-left py-3 px-4 text-xs font-medium text-[#71717A] uppercase tracking-wider">Order</th>
+                <th className="text-left py-3 px-4 text-xs font-medium text-[#71717A] uppercase tracking-wider">Amount</th>
+                <th className="text-left py-3 px-4 text-xs font-medium text-[#71717A] uppercase tracking-wider">Status</th>
+                <th className="text-left py-3 px-4 text-xs font-medium text-[#71717A] uppercase tracking-wider">Date</th>
+                {showActions && <th className="text-right py-3 px-4 text-xs font-medium text-[#71717A] uppercase tracking-wider">Actions</th>}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-[#1E1E21]">
               <AnimatePresence mode="popLayout">
                 {paginated.map((payment, i) => (
                   <motion.tr
@@ -150,35 +150,35 @@ export default function PaymentTable({ payments = [], showActions = false, onSet
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ delay: i * 0.03 }}
-                    className={i % 2 === 1 ? 'bg-slate-800/30' : ''}
+                    className={i % 2 === 1 ? 'bg-[#111113]/30' : ''}
                   >
                     <td className="py-2 px-4 h-10">
-                      <span className="text-xs text-emerald-400 font-mono tabular-nums">#{payment.id}</span>
+                      <span className="text-xs text-[#34D399] font-mono tabular-nums">#{payment.id}</span>
                     </td>
                     <td className="py-2 px-4 h-10">
-                      <span className="text-sm text-slate-200 truncate max-w-[200px] block">{payment.description || '—'}</span>
+                      <span className="text-sm text-[#D4D4D8] truncate max-w-[200px] block">{payment.description || '—'}</span>
                     </td>
                     <td className="py-2 px-4 h-10">
-                      <span className="text-xs text-slate-400">{payment.orderId || '—'}</span>
+                      <span className="text-xs text-[#A1A1AA]">{payment.orderId || '—'}</span>
                     </td>
                     <td className="py-2 px-4 h-10">
                       <div>
-                        <span className="text-sm text-slate-50 font-medium tabular-nums">{formatQIEAmount(payment.amount)} QIE</span>
-                        <span className="block text-xs text-slate-500">{formatUSD(payment.amount)}</span>
+                        <span className="text-sm text-[#FAFAFA] font-medium tabular-nums">{formatQIEAmount(payment.amount)} QIE</span>
+                        <span className="block text-xs text-[#71717A]">{formatUSD(payment.amount)}</span>
                       </div>
                     </td>
                     <td className="py-2 px-4 h-10">
                       <StatusBadge status={payment.status} />
                     </td>
                     <td className="py-2 px-4 h-10">
-                      <span className="text-xs text-slate-400 tabular-nums">{formatDate(payment.createdAt)}</span>
+                      <span className="text-xs text-[#A1A1AA] tabular-nums">{formatDate(payment.createdAt)}</span>
                     </td>
                     {showActions && (
                       <td className="py-2 px-4 h-10">
                         <div className="flex items-center justify-end gap-1">
                           <Link
                             to={`/pay/${payment.id}`}
-                            className="p-1 rounded-md text-slate-400 hover:text-emerald-400 transition-colors"
+                            className="p-1 rounded-md text-[#A1A1AA] hover:text-[#34D399] transition-colors"
                             title="View"
                           >
                             <ExternalLink className="w-4 h-4" />
@@ -186,7 +186,7 @@ export default function PaymentTable({ payments = [], showActions = false, onSet
                           {payment.status === 1 && onSettle && (
                             <button
                               onClick={() => onSettle(payment.id)}
-                              className="p-1 rounded-md text-emerald-400 hover:bg-emerald-500/10 transition-colors"
+                              className="p-1 rounded-md text-[#34D399] hover:bg-[rgba(16,185,129,0.1)] transition-colors"
                               title="Settle"
                             >
                               <CheckCircle className="w-4 h-4" />
@@ -203,7 +203,7 @@ export default function PaymentTable({ payments = [], showActions = false, onSet
                           )}
                           <Link
                             to={`/pay/${payment.id}`}
-                            className="p-1 rounded-md text-slate-400 hover:text-sky-400 transition-colors"
+                            className="p-1 rounded-md text-[#A1A1AA] hover:text-sky-400 transition-colors"
                             title="Invoice"
                           >
                             <FileText className="w-4 h-4" />
@@ -222,24 +222,24 @@ export default function PaymentTable({ payments = [], showActions = false, onSet
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between pt-2">
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-[#71717A]">
             Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length}
           </p>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="p-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-slate-600 disabled:opacity-30 disabled:cursor-not-allowed text-slate-400 transition-colors"
+              className="p-2 rounded-lg bg-[#111113] border border-[#27272A] hover:border-[#3F3F46] disabled:opacity-30 disabled:cursor-not-allowed text-[#A1A1AA] transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-sm text-slate-400 px-2">
+            <span className="text-sm text-[#A1A1AA] px-2">
               {page} / {totalPages}
             </span>
             <button
               onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="p-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-slate-600 disabled:opacity-30 disabled:cursor-not-allowed text-slate-400 transition-colors"
+              className="p-2 rounded-lg bg-[#111113] border border-[#27272A] hover:border-[#3F3F46] disabled:opacity-30 disabled:cursor-not-allowed text-[#A1A1AA] transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

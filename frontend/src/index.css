@@ -3,6 +3,41 @@
 @tailwind utilities;
 
 /* ============================================================
+   CSS CUSTOM PROPERTIES — True Gray Design System
+   Inspired by Linear, Vercel, Resend
+   ============================================================ */
+:root {
+  /* Background — near-black, NOT navy */
+  --bg-base: #09090B;
+  --bg-surface: #111113;
+  --bg-surface-hover: #18181B;
+  --bg-elevated: #1C1C1F;
+
+  /* Borders — very subtle true gray */
+  --border-default: #27272A;
+  --border-subtle: #1E1E21;
+  --border-hover: #3F3F46;
+
+  /* Text — warm white, not blue-white */
+  --text-primary: #FAFAFA;
+  --text-secondary: #A1A1AA;
+  --text-tertiary: #71717A;
+  --text-ghost: #52525B;
+
+  /* Accent — emerald */
+  --accent: #10B981;
+  --accent-hover: #059669;
+  --accent-muted: rgba(16, 185, 129, 0.1);
+
+  /* Status */
+  --status-success: #22C55E;
+  --status-warning: #F59E0B;
+  --status-error: #EF4444;
+  --status-info: #3B82F6;
+  --status-created: #38BDF8;
+}
+
+/* ============================================================
    BASE LAYER — global resets, scrollbar, selection, body
    ============================================================ */
 @layer base {
@@ -20,8 +55,8 @@
   }
 
   body {
-    background: #0F172A;
-    color: #F8FAFC;
+    background: var(--bg-base);
+    color: var(--text-primary);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
       Roboto, Oxygen, Ubuntu, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -38,10 +73,10 @@
     flex-direction: column;
   }
 
-  /* Custom scrollbar — slate toned */
+  /* Custom scrollbar — true gray */
   * {
     scrollbar-width: thin;
-    scrollbar-color: #334155 transparent;
+    scrollbar-color: var(--border-default) transparent;
   }
 
   *::-webkit-scrollbar {
@@ -50,27 +85,27 @@
   }
 
   *::-webkit-scrollbar-track {
-    background: transparent;
+    background: var(--bg-surface);
   }
 
   *::-webkit-scrollbar-thumb {
-    background: #334155;
+    background: var(--border-default);
     border-radius: 3px;
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background: #475569;
+    background: var(--border-hover);
   }
 
   /* Selection */
   ::selection {
-    background: rgba(16, 185, 129, 0.25);
-    color: #F8FAFC;
+    background: var(--accent-muted);
+    color: var(--text-primary);
   }
 
   ::-moz-selection {
-    background: rgba(16, 185, 129, 0.25);
-    color: #F8FAFC;
+    background: var(--accent-muted);
+    color: var(--text-primary);
   }
 
   /* Focus ring for keyboard users */
@@ -101,24 +136,25 @@
 @layer components {
   /* ---- Cards ---- */
   .card {
-    background: #1E293B;
-    border: 1px solid #334155;
-    border-radius: 0.5rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
     padding: 1.25rem;
     box-shadow: none;
   }
 
   .card-hover {
-    background: #1E293B;
-    border: 1px solid #334155;
-    border-radius: 0.5rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
     padding: 1.25rem;
     box-shadow: none;
-    transition: border-color 0.15s ease;
+    transition: border-color 0.15s ease, background 0.15s ease;
   }
 
   .card-hover:hover {
-    border-color: #475569;
+    background: var(--bg-surface-hover);
+    border-color: var(--border-hover);
   }
 
   /* ---- Buttons ---- */
@@ -127,12 +163,12 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    background: #10B981;
+    background: var(--accent);
     color: #ffffff;
     font-weight: 500;
     font-size: 0.875rem;
     padding: 0.625rem 1rem;
-    border-radius: 0.375rem;
+    border-radius: 6px;
     border: none;
     box-shadow: none;
     cursor: pointer;
@@ -142,7 +178,7 @@
   }
 
   .btn-primary:hover {
-    background: #059669;
+    background: var(--accent-hover);
   }
 
   .btn-primary:active {
@@ -160,12 +196,12 @@
     justify-content: center;
     gap: 0.5rem;
     background: transparent;
-    color: #E2E8F0;
+    color: var(--text-secondary);
     font-weight: 500;
     font-size: 0.875rem;
     padding: 0.625rem 1rem;
-    border-radius: 0.375rem;
-    border: 1px solid #475569;
+    border-radius: 6px;
+    border: 1px solid var(--border-default);
     cursor: pointer;
     transition: all 0.15s ease;
     user-select: none;
@@ -173,8 +209,9 @@
   }
 
   .btn-secondary:hover {
-    border-color: #64748B;
-    background: rgba(51, 65, 85, 0.3);
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+    background: rgba(63, 63, 70, 0.15);
   }
 
   .btn-secondary:disabled {
@@ -192,7 +229,7 @@
     font-weight: 500;
     font-size: 0.875rem;
     padding: 0.625rem 1rem;
-    border-radius: 0.375rem;
+    border-radius: 6px;
     border: 1px solid rgba(239, 68, 68, 0.2);
     cursor: pointer;
     transition: all 0.15s ease;
@@ -212,11 +249,11 @@
   /* ---- Input fields ---- */
   .input-field {
     width: 100%;
-    background: #1E293B;
-    border: 1px solid #334155;
-    border-radius: 0.375rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
     padding: 0.625rem 1rem;
-    color: #F8FAFC;
+    color: var(--text-primary);
     font-size: 0.875rem;
     font-family: inherit;
     transition: all 0.15s ease;
@@ -224,16 +261,16 @@
   }
 
   .input-field::placeholder {
-    color: #64748B;
+    color: var(--text-ghost);
   }
 
   .input-field:hover {
-    border-color: #475569;
+    border-color: var(--border-hover);
   }
 
   .input-field:focus {
-    border-color: #10B981;
-    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-muted);
   }
 
   .input-field:disabled {
@@ -253,27 +290,27 @@
   }
 
   .badge-created {
-    color: #38BDF8;
+    color: var(--status-created);
     background: rgba(56, 189, 248, 0.1);
   }
 
   .badge-warning {
-    color: #FBBF24;
+    color: var(--status-warning);
     background: rgba(245, 158, 11, 0.1);
   }
 
   .badge-success {
-    color: #34D399;
-    background: rgba(16, 185, 129, 0.1);
+    color: var(--status-success);
+    background: rgba(34, 197, 94, 0.1);
   }
 
   .badge-info {
-    color: #60A5FA;
+    color: var(--status-info);
     background: rgba(59, 130, 246, 0.1);
   }
 
   .badge-danger {
-    color: #F87171;
+    color: var(--status-error);
     background: rgba(239, 68, 68, 0.1);
   }
 
@@ -290,7 +327,7 @@
   }
 
   .tracking-tight {
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
 
   /* ---- Data table ---- */
@@ -306,13 +343,13 @@
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: #64748B;
-    border-bottom: 1px solid #334155;
+    color: var(--text-tertiary);
+    border-bottom: 1px solid var(--border-default);
   }
 
   .data-table td {
     padding: 0.5rem 1rem;
-    border-bottom: 1px solid #1E293B;
+    border-bottom: 1px solid var(--border-subtle);
     vertical-align: middle;
     height: 2.5rem;
     transition: background 0.15s ease;
@@ -332,11 +369,11 @@
    ============================================================ */
 @layer utilities {
   .animate-fade-in {
-    animation: fadeIn 0.3s ease-out forwards;
+    animation: fadeIn 0.2s ease-out forwards;
   }
 
   .animate-slide-up {
-    animation: slideUp 0.3s ease-out forwards;
+    animation: slideUp 0.2s ease-out forwards;
   }
 }
 
@@ -375,11 +412,11 @@
   .card,
   .card-hover {
     background: #ffffff !important;
-    border: 1px solid #e2e8f0 !important;
+    border: 1px solid #e5e5e5 !important;
     box-shadow: none !important;
   }
 
   .badge {
-    border: 1px solid #e2e8f0 !important;
+    border: 1px solid #e5e5e5 !important;
   }
 }

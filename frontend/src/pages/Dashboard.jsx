@@ -21,46 +21,46 @@ function StatusDot({ status }) {
   const colors = {
     0: 'bg-sky-400',
     1: 'bg-amber-400',
-    2: 'bg-emerald-400',
+    2: 'bg-[#34D399]',
     3: 'bg-amber-400',
     4: 'bg-red-400',
   };
-  return <span className={`inline-block w-2 h-2 rounded-full ${colors[status] || 'bg-slate-500'}`} />;
+  return <span className={`inline-block w-2 h-2 rounded-full ${colors[status] || 'bg-[#3F3F46]'}`} />;
 }
 
 /* ─── Skeleton ─── */
 function SkeletonCard() {
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-lg p-4 animate-pulse">
+    <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4 animate-pulse">
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-8 h-8 rounded-md bg-slate-700" />
-        <div className="h-3 w-20 bg-slate-700 rounded" />
+        <div className="w-8 h-8 rounded-md bg-[#18181B]" />
+        <div className="h-3 w-20 bg-[#18181B] rounded" />
       </div>
-      <div className="h-6 w-28 bg-slate-700 rounded mb-2" />
-      <div className="h-3 w-16 bg-slate-700 rounded" />
+      <div className="h-6 w-28 bg-[#18181B] rounded mb-2" />
+      <div className="h-3 w-16 bg-[#18181B] rounded" />
     </div>
   );
 }
 
 function SkeletonChart() {
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 animate-pulse">
-      <div className="h-5 w-32 bg-slate-700 rounded mb-4" />
-      <div className="h-[200px] bg-slate-700 rounded-md" />
+    <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 animate-pulse">
+      <div className="h-5 w-32 bg-[#18181B] rounded mb-4" />
+      <div className="h-[200px] bg-[#18181B] rounded-md" />
     </div>
   );
 }
 
 function SkeletonTable() {
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 animate-pulse">
-      <div className="h-5 w-40 bg-slate-700 rounded mb-4" />
+    <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 animate-pulse">
+      <div className="h-5 w-40 bg-[#18181B] rounded mb-4" />
       {[...Array(5)].map((_, i) => (
-        <div key={i} className="flex items-center gap-4 py-2.5 border-b border-slate-700/50">
-          <div className="h-4 w-8 bg-slate-700 rounded" />
-          <div className="h-4 w-32 bg-slate-700 rounded flex-1" />
-          <div className="h-4 w-20 bg-slate-700 rounded" />
-          <div className="h-4 w-16 bg-slate-700 rounded" />
+        <div key={i} className="flex items-center gap-4 py-2.5 border-b border-[#27272A]/50">
+          <div className="h-4 w-8 bg-[#18181B] rounded" />
+          <div className="h-4 w-32 bg-[#18181B] rounded flex-1" />
+          <div className="h-4 w-20 bg-[#18181B] rounded" />
+          <div className="h-4 w-16 bg-[#18181B] rounded" />
         </div>
       ))}
     </div>
@@ -184,10 +184,10 @@ export default function Dashboard() {
   const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="bg-slate-800 border border-slate-700 rounded-md px-3 py-2 shadow-lg">
-        <p className="text-xs text-slate-400 mb-0.5">{label}</p>
-        <p className="text-sm font-semibold text-slate-50 tabular-nums">{payload[0].value} QIE</p>
-        <p className="text-xs text-slate-500">{formatUSD(payload[0].value)}</p>
+      <div className="bg-[#111113] border border-[#27272A] rounded-md px-3 py-2 shadow-lg">
+        <p className="text-xs text-[#A1A1AA] mb-0.5">{label}</p>
+        <p className="text-sm font-semibold text-[#FAFAFA] tabular-nums">{payload[0].value} QIE</p>
+        <p className="text-xs text-[#71717A]">{formatUSD(payload[0].value)}</p>
       </div>
     );
   };
@@ -203,9 +203,9 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 p-6 lg:p-8">
+      <div className="min-h-screen bg-[#09090B] p-6 lg:p-8">
         <div className="max-w-7xl mx-auto space-y-5">
-          <div className="h-6 w-48 bg-slate-800 rounded animate-pulse" />
+          <div className="h-6 w-48 bg-[#111113] rounded animate-pulse" />
           <div className="grid grid-cols-3 gap-4">
             <div className="col-span-2"><SkeletonCard /></div>
             <SkeletonCard />
@@ -222,19 +222,19 @@ export default function Dashboard() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.15 }}
-      className="min-h-screen bg-slate-900 p-6 lg:p-8"
+      className="min-h-screen bg-[#09090B] p-6 lg:p-8"
     >
       <div className="max-w-7xl mx-auto space-y-5">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold text-slate-50 tracking-tight">Dashboard</h1>
-            <p className="text-xs text-slate-500 font-mono mt-0.5">{truncateAddr(address)}</p>
+            <h1 className="text-lg font-semibold text-[#FAFAFA] tracking-tight">Dashboard</h1>
+            <p className="text-xs text-[#71717A] font-mono mt-0.5">{truncateAddr(address)}</p>
           </div>
           <button
             onClick={handleRefresh}
             disabled={refreshing}
-            className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-700 hover:border-slate-600 rounded-md text-xs text-slate-400 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 px-3 py-1.5 border border-[#27272A] hover:border-[#3F3F46] rounded-md text-xs text-[#A1A1AA] transition-colors disabled:opacity-50"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
             Refresh
@@ -244,13 +244,13 @@ export default function Dashboard() {
         {/* Stats Cards — asymmetric layout */}
         <div className="grid grid-cols-3 gap-4">
           {/* Earnings — wider */}
-          <div className="col-span-2 bg-slate-800 border border-slate-700 rounded-lg p-4">
+          <div className="col-span-2 bg-[#111113] border border-[#27272A] rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-md bg-emerald-500/10 flex items-center justify-center">
-                  <DollarSign className="w-4 h-4 text-emerald-400" />
+                <div className="w-8 h-8 rounded-md bg-[rgba(16,185,129,0.1)] flex items-center justify-center">
+                  <DollarSign className="w-4 h-4 text-[#34D399]" />
                 </div>
-                <span className="text-xs text-slate-400">Total Earnings</span>
+                <span className="text-xs text-[#A1A1AA]">Total Earnings</span>
               </div>
               {/* Sparkline */}
               <div className="w-20 h-8">
@@ -261,38 +261,38 @@ export default function Dashboard() {
                 </ResponsiveContainer>
               </div>
             </div>
-            <p className="text-xl font-semibold text-slate-50 tabular-nums">{parseFloat(earnings).toFixed(2)} QIE</p>
-            <p className="text-xs text-slate-500 mt-0.5">{formatUSD(earnings)}</p>
+            <p className="text-xl font-semibold text-[#FAFAFA] tabular-nums">{parseFloat(earnings).toFixed(2)} QIE</p>
+            <p className="text-xs text-[#71717A] mt-0.5">{formatUSD(earnings)}</p>
           </div>
 
           {/* Volume */}
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+          <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-md bg-emerald-500/10 flex items-center justify-center">
-                <TrendingUp className="w-4 h-4 text-emerald-400" />
+              <div className="w-8 h-8 rounded-md bg-[rgba(16,185,129,0.1)] flex items-center justify-center">
+                <TrendingUp className="w-4 h-4 text-[#34D399]" />
               </div>
-              <span className="text-xs text-slate-400">Volume</span>
+              <span className="text-xs text-[#A1A1AA]">Volume</span>
             </div>
-            <p className="text-xl font-semibold text-slate-50 tabular-nums">{totalVolume.toFixed(2)} QIE</p>
-            <p className="text-xs text-slate-500 mt-0.5">{formatUSD(totalVolume)}</p>
+            <p className="text-xl font-semibold text-[#FAFAFA] tabular-nums">{totalVolume.toFixed(2)} QIE</p>
+            <p className="text-xs text-[#71717A] mt-0.5">{formatUSD(totalVolume)}</p>
           </div>
 
           {/* Payments count — below volume on mobile, same row on desktop */}
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+          <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-md bg-emerald-500/10 flex items-center justify-center">
-                <CreditCard className="w-4 h-4 text-emerald-400" />
+              <div className="w-8 h-8 rounded-md bg-[rgba(16,185,129,0.1)] flex items-center justify-center">
+                <CreditCard className="w-4 h-4 text-[#34D399]" />
               </div>
-              <span className="text-xs text-slate-400">Payments</span>
+              <span className="text-xs text-[#A1A1AA]">Payments</span>
             </div>
-            <p className="text-xl font-semibold text-slate-50 tabular-nums">{totalPayments}</p>
-            <p className="text-xs text-slate-500 mt-0.5">total</p>
+            <p className="text-xl font-semibold text-[#FAFAFA] tabular-nums">{totalPayments}</p>
+            <p className="text-xs text-[#71717A] mt-0.5">total</p>
           </div>
         </div>
 
         {/* Revenue Chart */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
-          <h2 className="text-sm font-semibold text-slate-300 mb-4 tracking-tight">Revenue — Last 7 Days</h2>
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
+          <h2 className="text-sm font-semibold text-[#A1A1AA] mb-4 tracking-tight">Revenue — Last 7 Days</h2>
           <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData}>
@@ -317,19 +317,19 @@ export default function Dashboard() {
         </div>
 
         {/* Recent Payments */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-slate-300 tracking-tight">Recent Payments</h2>
-            <Link to="/analytics" className="text-xs text-emerald-500 hover:text-emerald-400 transition-colors flex items-center gap-1">
+            <h2 className="text-sm font-semibold text-[#A1A1AA] tracking-tight">Recent Payments</h2>
+            <Link to="/analytics" className="text-xs text-[#10B981] hover:text-[#34D399] transition-colors flex items-center gap-1">
               View All <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
           {recentPayments.length === 0 ? (
             <div className="text-center py-10">
-              <CreditCard className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-              <p className="text-sm text-slate-500">No payments yet</p>
-              <Link to="/create" className="text-xs text-emerald-500 hover:text-emerald-400 mt-1.5 inline-block">
+              <CreditCard className="w-8 h-8 text-[#52525B] mx-auto mb-2" />
+              <p className="text-sm text-[#71717A]">No payments yet</p>
+              <Link to="/create" className="text-xs text-[#10B981] hover:text-[#34D399] mt-1.5 inline-block">
                 Create your first payment →
               </Link>
             </div>
@@ -339,25 +339,25 @@ export default function Dashboard() {
                 {recentPayments.map((p, i) => (
                   <tr
                     key={p.id}
-                    className={`h-10 ${i % 2 === 0 ? '' : 'bg-slate-800/50'} hover:bg-slate-700/30 transition-colors`}
+                    className={`h-10 ${i % 2 === 0 ? '' : 'bg-[#111113]/50'} hover:bg-[#18181B]/30 transition-colors`}
                   >
                     <td className="pl-2 pr-3">
                       <StatusDot status={p.status} />
                     </td>
                     <td className="pr-3">
-                      <p className="text-sm text-slate-200 truncate max-w-[200px]">{p.description || 'No description'}</p>
+                      <p className="text-sm text-[#D4D4D8] truncate max-w-[200px]">{p.description || 'No description'}</p>
                     </td>
-                    <td className="text-xs text-slate-500 pr-3 whitespace-nowrap">
+                    <td className="text-xs text-[#71717A] pr-3 whitespace-nowrap">
                       {relativeTime(p.createdAt)}
                     </td>
                     <td className="text-right pr-2">
-                      <span className="text-sm text-slate-50 font-medium tabular-nums">{formatQIEAmount(p.amount)} QIE</span>
+                      <span className="text-sm text-[#FAFAFA] font-medium tabular-nums">{formatQIEAmount(p.amount)} QIE</span>
                     </td>
                     {p.status === 1 && (
                       <td className="pl-2">
                         <button
                           onClick={() => handleSettle(p.id)}
-                          className="px-2 py-0.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs rounded transition-colors"
+                          className="px-2 py-0.5 bg-[rgba(16,185,129,0.1)] hover:bg-[rgba(16,185,129,0.2)] text-[#34D399] text-xs rounded transition-colors"
                         >
                           Settle
                         </button>
@@ -370,14 +370,14 @@ export default function Dashboard() {
           )}
 
           {/* Inline quick links */}
-          <div className="flex items-center gap-4 mt-4 pt-3 border-t border-slate-700/50">
-            <Link to="/create" className="text-xs text-emerald-500 hover:text-emerald-400 transition-colors flex items-center gap-1">
+          <div className="flex items-center gap-4 mt-4 pt-3 border-t border-[#27272A]/50">
+            <Link to="/create" className="text-xs text-[#10B981] hover:text-[#34D399] transition-colors flex items-center gap-1">
               <Plus className="w-3 h-3" /> Create Payment
             </Link>
-            <Link to="/batch" className="text-xs text-emerald-500 hover:text-emerald-400 transition-colors flex items-center gap-1">
+            <Link to="/batch" className="text-xs text-[#10B981] hover:text-[#34D399] transition-colors flex items-center gap-1">
               <Layers className="w-3 h-3" /> Batch Payments
             </Link>
-            <Link to="/analytics" className="text-xs text-emerald-500 hover:text-emerald-400 transition-colors flex items-center gap-1">
+            <Link to="/analytics" className="text-xs text-[#10B981] hover:text-[#34D399] transition-colors flex items-center gap-1">
               <BarChart3 className="w-3 h-3" /> Analytics
             </Link>
           </div>

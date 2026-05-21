@@ -50,7 +50,7 @@ export default function Modal({
 
           {/* Modal card */}
           <motion.div
-            className={`relative ${maxWidth} w-full bg-slate-800 border border-slate-700 rounded-lg p-5`}
+            className={`relative ${maxWidth} w-full bg-[#111113] border border-[#27272A] rounded-lg p-5`}
             variants={modalVariants}
             initial="hidden"
             animate="visible"
@@ -59,10 +59,10 @@ export default function Modal({
             {/* Header */}
             {title && (
               <div className="flex items-center justify-between mb-5">
-                <h3 className="text-lg font-semibold text-slate-50">{title}</h3>
+                <h3 className="text-lg font-semibold text-[#FAFAFA]">{title}</h3>
                 <button
                   onClick={onClose}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-700 transition-colors"
+                  className="p-1.5 rounded-lg text-[#A1A1AA] hover:text-[#D4D4D8] hover:bg-[#18181B] transition-colors"
                   aria-label="Close modal"
                 >
                   <X size={18} />
@@ -74,7 +74,7 @@ export default function Modal({
             {!title && (
               <button
                 onClick={onClose}
-                className="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-700 transition-colors z-10"
+                className="absolute top-4 right-4 p-1.5 rounded-lg text-[#A1A1AA] hover:text-[#D4D4D8] hover:bg-[#18181B] transition-colors z-10"
                 aria-label="Close modal"
               >
                 <X size={18} />

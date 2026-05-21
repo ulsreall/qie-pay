@@ -113,18 +113,18 @@ export default function WalletConnect({ compact = false }) {
         {/* Address row */}
         <button
           onClick={copyAddress}
-          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-slate-600 transition-colors group"
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-[#111113] border border-[#27272A] hover:border-[#3F3F46] transition-colors group"
         >
-          <div className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-          <span className="text-xs font-medium text-slate-300 truncate flex-1 text-left font-mono tabular-nums">
+          <div className="w-2 h-2 rounded-full bg-[#34D399] shrink-0" />
+          <span className="text-xs font-medium text-[#A1A1AA] truncate flex-1 text-left font-mono tabular-nums">
             {truncateAddress(wallet.address)}
           </span>
           {copied ? (
-            <Check size={12} className="text-emerald-400 shrink-0" />
+            <Check size={12} className="text-[#34D399] shrink-0" />
           ) : (
             <Copy
               size={12}
-              className="text-slate-500 group-hover:text-slate-300 shrink-0 transition-colors"
+              className="text-[#71717A] group-hover:text-[#A1A1AA] shrink-0 transition-colors"
             />
           )}
         </button>
@@ -132,17 +132,17 @@ export default function WalletConnect({ compact = false }) {
         {/* Balance row */}
         <div className="flex items-center justify-between px-3 py-1.5">
           <div>
-            <p className="text-xs text-slate-500">Balance</p>
-            <p className="text-sm font-semibold text-emerald-400 tabular-nums">
+            <p className="text-xs text-[#71717A]">Balance</p>
+            <p className="text-sm font-semibold text-[#34D399] tabular-nums">
               {parseFloat(wallet.balance).toFixed(4)}{' '}
-              <span className="text-slate-400 font-normal">QIE</span>
+              <span className="text-[#A1A1AA] font-normal">QIE</span>
             </p>
-            <p className="text-[11px] text-slate-500">≈ ${usdValue} USD</p>
+            <p className="text-[11px] text-[#71717A]">≈ ${usdValue} USD</p>
           </div>
           <button
             onClick={refreshBalance}
             disabled={refreshing}
-            className="p-1.5 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-[#71717A] hover:text-[#D4D4D8] hover:bg-[#111113] transition-colors"
             title="Refresh balance"
           >
             <RefreshCw
@@ -155,7 +155,7 @@ export default function WalletConnect({ compact = false }) {
         {/* Disconnect */}
         <button
           onClick={handleDisconnect}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm text-[#A1A1AA] hover:text-red-400 hover:bg-red-500/10 transition-colors"
         >
           <LogOut size={14} />
           Disconnect
@@ -168,26 +168,26 @@ export default function WalletConnect({ compact = false }) {
   return (
     <div className="flex items-center gap-3">
       {/* Balance pill */}
-      <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700">
-        <div className="w-2 h-2 rounded-full bg-emerald-400" />
-        <span className="text-sm text-emerald-400 font-medium tabular-nums">
+      <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg bg-[#111113] border border-[#27272A]">
+        <div className="w-2 h-2 rounded-full bg-[#34D399]" />
+        <span className="text-sm text-[#34D399] font-medium tabular-nums">
           {parseFloat(wallet.balance).toFixed(4)} QIE
         </span>
-        <span className="text-xs text-slate-500">(${usdValue})</span>
+        <span className="text-xs text-[#71717A]">(${usdValue})</span>
       </div>
 
       {/* Address with copy */}
       <button
         onClick={copyAddress}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800 border border-slate-700 hover:border-slate-600 transition-colors"
+        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[#111113] border border-[#27272A] hover:border-[#3F3F46] transition-colors"
       >
-        <span className="text-xs font-medium text-slate-300 font-mono tabular-nums">
+        <span className="text-xs font-medium text-[#A1A1AA] font-mono tabular-nums">
           {truncateAddress(wallet.address)}
         </span>
         {copied ? (
-          <Check size={14} className="text-emerald-400" />
+          <Check size={14} className="text-[#34D399]" />
         ) : (
-          <Copy size={14} className="text-slate-400 hover:text-slate-200" />
+          <Copy size={14} className="text-[#A1A1AA] hover:text-[#D4D4D8]" />
         )}
       </button>
 
@@ -195,7 +195,7 @@ export default function WalletConnect({ compact = false }) {
       <button
         onClick={refreshBalance}
         disabled={refreshing}
-        className="p-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 transition-colors"
+        className="p-2 rounded-lg text-[#A1A1AA] hover:text-[#D4D4D8] hover:bg-[#111113] transition-colors"
         title="Refresh balance"
       >
         <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
@@ -204,7 +204,7 @@ export default function WalletConnect({ compact = false }) {
       {/* Disconnect */}
       <button
         onClick={handleDisconnect}
-        className="p-2 text-slate-400 hover:text-red-400 transition-colors"
+        className="p-2 text-[#A1A1AA] hover:text-red-400 transition-colors"
         title="Disconnect"
       >
         <LogOut size={18} />

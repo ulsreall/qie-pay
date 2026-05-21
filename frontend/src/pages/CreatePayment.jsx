@@ -121,9 +121,9 @@ export default function CreatePayment() {
         return (
           <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
             <div className={`w-full h-1.5 rounded-full transition-all ${
-              done ? 'bg-emerald-500' : active ? 'bg-emerald-500/40' : 'bg-slate-700'
+              done ? 'bg-[#10B981]' : active ? 'bg-[#10B981]/40' : 'bg-[#18181B]'
             }`} />
-            <span className={`text-xs ${active ? 'text-slate-300' : 'text-slate-600'}`}>{label}</span>
+            <span className={`text-xs ${active ? 'text-[#A1A1AA]' : 'text-[#52525B]'}`}>{label}</span>
           </div>
         );
       })}
@@ -135,29 +135,29 @@ export default function CreatePayment() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.15 }}
-      className="min-h-screen bg-slate-900 flex items-center justify-center p-4"
+      className="min-h-screen bg-[#09090B] flex items-center justify-center p-4"
     >
       <div className="w-full max-w-md">
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-6">
-          <h1 className="text-lg font-semibold text-slate-50 text-center mb-1 tracking-tight">Create Payment</h1>
-          <p className="text-slate-500 text-center text-xs mb-5">Set up a new crypto payment request</p>
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-6">
+          <h1 className="text-lg font-semibold text-[#FAFAFA] text-center mb-1 tracking-tight">Create Payment</h1>
+          <p className="text-[#71717A] text-center text-xs mb-5">Set up a new crypto payment request</p>
 
           <StepIndicator />
 
           {/* ─── STEP 0: Connect ─── */}
           {step === 0 && (
             <div className="text-center">
-              <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                <Wallet className="w-7 h-7 text-emerald-500" />
+              <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-[rgba(16,185,129,0.1)] flex items-center justify-center">
+                <Wallet className="w-7 h-7 text-[#10B981]" />
               </div>
-              <h2 className="text-base font-semibold text-slate-50 mb-1">Connect Your Wallet</h2>
-              <p className="text-slate-400 text-xs mb-5 max-w-xs mx-auto">
+              <h2 className="text-base font-semibold text-[#FAFAFA] mb-1">Connect Your Wallet</h2>
+              <p className="text-[#A1A1AA] text-xs mb-5 max-w-xs mx-auto">
                 Connect your wallet to the QIE Blockchain to start creating payments.
               </p>
               <button
                 onClick={handleConnect}
                 disabled={connecting}
-                className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md text-sm transition-colors disabled:opacity-60"
+                className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md text-sm transition-colors disabled:opacity-60"
               >
                 {connecting ? (
                   <><Loader2 className="w-4 h-4 animate-spin" /> Connecting...</>
@@ -176,26 +176,26 @@ export default function CreatePayment() {
           {/* ─── STEP 1: Register ─── */}
           {step === 1 && (
             <div className="text-center">
-              <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                <UserPlus className="w-7 h-7 text-emerald-500" />
+              <div className="w-14 h-14 mx-auto mb-4 rounded-lg bg-[rgba(16,185,129,0.1)] flex items-center justify-center">
+                <UserPlus className="w-7 h-7 text-[#10B981]" />
               </div>
-              <h2 className="text-base font-semibold text-slate-50 mb-1">Register as Merchant</h2>
-              <p className="text-slate-400 text-xs mb-1.5 max-w-xs mx-auto">
+              <h2 className="text-base font-semibold text-[#FAFAFA] mb-1">Register as Merchant</h2>
+              <p className="text-[#A1A1AA] text-xs mb-1.5 max-w-xs mx-auto">
                 Register your wallet address on the QIE Pay smart contract to receive payments.
               </p>
               {address && (
-                <p className="text-xs text-slate-500 font-mono mb-4">{address}</p>
+                <p className="text-xs text-[#71717A] font-mono mb-4">{address}</p>
               )}
               {isRegistered ? (
                 <div className="space-y-3">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 rounded-md">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                    <span className="text-xs text-emerald-400">Already registered</span>
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[rgba(16,185,129,0.1)] border border-[rgba(16,185,129,0.2)] rounded-md">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#10B981]" />
+                    <span className="text-xs text-[#34D399]">Already registered</span>
                   </div>
                   <div>
                     <button
                       onClick={() => setStep(2)}
-                      className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md text-sm transition-colors"
+                      className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md text-sm transition-colors"
                     >
                       Continue <ArrowRight className="w-4 h-4" />
                     </button>
@@ -206,7 +206,7 @@ export default function CreatePayment() {
                   <button
                     onClick={handleRegister}
                     disabled={registering}
-                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md text-sm transition-colors disabled:opacity-60"
+                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md text-sm transition-colors disabled:opacity-60"
                   >
                     {registering ? (
                       <><Loader2 className="w-4 h-4 animate-spin" /> Registering...</>
@@ -216,7 +216,7 @@ export default function CreatePayment() {
                   </button>
                   <button
                     onClick={() => setStep(0)}
-                    className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-300 mx-auto transition-colors"
+                    className="flex items-center gap-1 text-xs text-[#71717A] hover:text-[#A1A1AA] mx-auto transition-colors"
                   >
                     <ArrowLeft className="w-3 h-3" /> Back
                   </button>
@@ -229,19 +229,19 @@ export default function CreatePayment() {
           {step === 2 && !result && (
             <form onSubmit={handleCreate} className="space-y-4">
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Description *</label>
+                <label className="block text-xs text-[#A1A1AA] mb-1">Description *</label>
                 <input
                   type="text"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="e.g., Premium subscription"
-                  className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-md text-sm text-slate-50 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                  className="w-full px-3 py-2 bg-[#09090B] border border-[#27272A] rounded-md text-sm text-[#FAFAFA] placeholder-[#71717A] focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/20 transition-all"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Amount (QIE) *</label>
+                <label className="block text-xs text-[#A1A1AA] mb-1">Amount (QIE) *</label>
                 <input
                   type="number"
                   step="0.0001"
@@ -249,24 +249,24 @@ export default function CreatePayment() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
-                  className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-md text-sm text-slate-50 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                  className="w-full px-3 py-2 bg-[#09090B] border border-[#27272A] rounded-md text-sm text-[#FAFAFA] placeholder-[#71717A] focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/20 transition-all"
                   required
                 />
                 {amount && parseFloat(amount) > 0 && (
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-[#71717A] mt-1">
                     ≈ {formatUSD(parseFloat(amount))} (at ${getQIEPrice()}/QIE)
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-xs text-slate-400 mb-1">Order ID (optional)</label>
+                <label className="block text-xs text-[#A1A1AA] mb-1">Order ID (optional)</label>
                 <input
                   type="text"
                   value={orderId}
                   onChange={(e) => setOrderId(e.target.value)}
                   placeholder="e.g., ORD-12345"
-                  className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-md text-sm text-slate-50 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+                  className="w-full px-3 py-2 bg-[#09090B] border border-[#27272A] rounded-md text-sm text-[#FAFAFA] placeholder-[#71717A] focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/20 transition-all"
                 />
               </div>
 
@@ -274,14 +274,14 @@ export default function CreatePayment() {
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="px-3 py-2 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md transition-colors"
+                  className="px-3 py-2 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md text-sm transition-colors disabled:opacity-60"
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md text-sm transition-colors disabled:opacity-60"
                 >
                   {creating ? (
                     <><Loader2 className="w-4 h-4 animate-spin" /> Creating...</>
@@ -296,12 +296,12 @@ export default function CreatePayment() {
           {/* ─── Success Result (simplified) ─── */}
           {step === 2 && result && (
             <div className="text-center space-y-4">
-              <div className="w-14 h-14 mx-auto rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                <CheckCircle2 className="w-7 h-7 text-emerald-500" />
+              <div className="w-14 h-14 mx-auto rounded-lg bg-[rgba(16,185,129,0.1)] flex items-center justify-center">
+                <CheckCircle2 className="w-7 h-7 text-[#10B981]" />
               </div>
               <div>
-                <h2 className="text-base font-semibold text-slate-50 mb-0.5">Payment Created</h2>
-                <p className="text-xs text-slate-400">Payment #{result.paymentId}</p>
+                <h2 className="text-base font-semibold text-[#FAFAFA] mb-0.5">Payment Created</h2>
+                <p className="text-xs text-[#A1A1AA]">Payment #{result.paymentId}</p>
               </div>
 
               <div className="flex justify-center">
@@ -320,13 +320,13 @@ export default function CreatePayment() {
               <div className="flex gap-2 justify-center">
                 <button
                   onClick={copyLink}
-                  className="flex items-center gap-1.5 px-3 py-2 border border-slate-600 hover:border-slate-500 rounded-md text-xs text-slate-300 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-2 border border-[#3F3F46] hover:border-[#52525B] rounded-md text-xs text-[#A1A1AA] transition-colors"
                 >
                   <Copy className="w-3.5 h-3.5" /> Copy Link
                 </button>
                 <Link
                   to={`/pay/${result.paymentId}`}
-                  className="flex items-center gap-1.5 px-3 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-md text-xs text-emerald-400 hover:bg-emerald-500/20 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-2 bg-[rgba(16,185,129,0.1)] border border-[rgba(16,185,129,0.2)] rounded-md text-xs text-[#34D399] hover:bg-[rgba(16,185,129,0.2)] transition-colors"
                 >
                   <ExternalLink className="w-3.5 h-3.5" /> View Invoice
                 </Link>
@@ -339,7 +339,7 @@ export default function CreatePayment() {
                   setAmount('');
                   setOrderId('');
                 }}
-                className="text-xs text-slate-500 hover:text-slate-300 transition-colors"
+                className="text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors"
               >
                 + Create another payment
               </button>

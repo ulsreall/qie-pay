@@ -10,7 +10,7 @@ import { connectWallet, checkConnection, isMerchant, getMerchantPayments, getMer
 import { formatUSD } from '../utils/currency';
 
 const GRADIENTS = [
-  'from-emerald-500 to-emerald-700',
+  'from-[#10B981] to-[#047857]',
   'from-sky-500 to-sky-700',
   'from-amber-500 to-amber-700',
   'from-pink-500 to-pink-700',
@@ -205,8 +205,8 @@ export default function Storefront() {
   // Loading
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <Loader2 className="w-6 h-6 text-emerald-500 animate-spin" />
+      <div className="min-h-screen bg-[#09090B] flex items-center justify-center">
+        <Loader2 className="w-6 h-6 text-[#10B981] animate-spin" />
       </div>
     );
   }
@@ -214,46 +214,46 @@ export default function Storefront() {
   // Not a merchant
   if (!merchantExists) {
     return (
-      <div className="min-h-screen bg-slate-900 text-slate-50 flex flex-col items-center justify-center px-4 text-center">
-        <Store className="w-12 h-12 text-slate-700 mb-3" />
+      <div className="min-h-screen bg-[#09090B] text-[#FAFAFA] flex flex-col items-center justify-center px-4 text-center">
+        <Store className="w-12 h-12 text-[#3F3F46] mb-3" />
         <h2 className="text-lg font-bold mb-1">Merchant Not Found</h2>
-        <p className="text-slate-400 text-xs">
-          The address <code className="text-emerald-400">{truncAddr}</code> is not registered as a merchant.
+        <p className="text-[#A1A1AA] text-xs">
+          The address <code className="text-[#34D399]">{truncAddr}</code> is not registered as a merchant.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-50">
+    <div className="min-h-screen bg-[#09090B] text-[#FAFAFA]">
       {/* Hero banner */}
-      <div className="bg-slate-800 border-b border-slate-700">
+      <div className="bg-[#111113] border-b border-[#27272A]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
               <div className="flex items-center gap-2.5 mb-2">
-                <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                  <Store className="w-5 h-5 text-emerald-500" />
+                <div className="w-10 h-10 rounded-lg bg-[rgba(16,185,129,0.1)] border border-[rgba(16,185,129,0.2)] flex items-center justify-center">
+                  <Store className="w-5 h-5 text-[#10B981]" />
                 </div>
                 <div>
-                  <h1 className="text-lg font-bold flex items-center gap-1.5 text-slate-50 tracking-tight">
+                  <h1 className="text-lg font-bold flex items-center gap-1.5 text-[#FAFAFA] tracking-tight">
                     {truncAddr}
-                    <BadgeCheck className="w-4 h-4 text-emerald-400" />
+                    <BadgeCheck className="w-4 h-4 text-[#34D399]" />
                   </h1>
-                  <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 rounded-full">
+                  <span className="text-[10px] bg-[rgba(16,185,129,0.1)] text-[#34D399] px-1.5 py-0.5 rounded-full">
                     Verified Merchant
                   </span>
                 </div>
               </div>
 
               <div className="flex gap-4 mt-3">
-                <div className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2">
-                  <p className="text-[10px] text-slate-500">Payments</p>
-                  <p className="text-sm font-bold text-slate-300 tabular-nums">{stats.payments}</p>
+                <div className="bg-[#09090B] border border-[#27272A] rounded-md px-3 py-2">
+                  <p className="text-[10px] text-[#71717A]">Payments</p>
+                  <p className="text-sm font-bold text-[#A1A1AA] tabular-nums">{stats.payments}</p>
                 </div>
-                <div className="bg-slate-900 border border-slate-700 rounded-md px-3 py-2">
-                  <p className="text-[10px] text-slate-500">Earnings</p>
-                  <p className="text-sm font-bold text-emerald-400 tabular-nums">{stats.earnings} QIE</p>
+                <div className="bg-[#09090B] border border-[#27272A] rounded-md px-3 py-2">
+                  <p className="text-[10px] text-[#71717A]">Earnings</p>
+                  <p className="text-sm font-bold text-[#34D399] tabular-nums">{stats.earnings} QIE</p>
                 </div>
               </div>
             </div>
@@ -261,18 +261,18 @@ export default function Storefront() {
             <div className="flex gap-2">
               <button
                 onClick={shareUrl}
-                className="inline-flex items-center gap-1.5 border border-slate-600 hover:border-slate-500 text-slate-300 rounded-md px-3 py-2 text-xs transition-colors"
+                className="inline-flex items-center gap-1.5 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md px-3 py-2 text-xs transition-colors"
               >
                 <Share2 className="w-3.5 h-3.5" /> Share
               </button>
               {wallet ? (
-                <span className="inline-flex items-center text-xs text-slate-500 font-mono border border-slate-700 rounded-md px-3 py-2">
+                <span className="inline-flex items-center text-xs text-[#71717A] font-mono border border-[#27272A] rounded-md px-3 py-2">
                   {wallet.address.slice(0, 6)}…{wallet.address.slice(-4)}
                 </span>
               ) : (
                 <button
                   onClick={handleConnect}
-                  className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md px-3 py-2 text-xs transition-colors"
+                  className="bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-3 py-2 text-xs transition-colors"
                 >
                   Connect Wallet
                 </button>
@@ -285,13 +285,13 @@ export default function Storefront() {
       {/* Products section */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-slate-300 flex items-center gap-1.5 tracking-tight">
-            <ShoppingBag className="w-4 h-4 text-emerald-400" /> Products
+          <h2 className="text-sm font-semibold text-[#A1A1AA] flex items-center gap-1.5 tracking-tight">
+            <ShoppingBag className="w-4 h-4 text-[#34D399]" /> Products
           </h2>
           {isOwner && (
             <button
               onClick={openAdd}
-              className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md px-3 py-1.5 text-xs flex items-center gap-1 transition-colors"
+              className="bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-3 py-1.5 text-xs flex items-center gap-1 transition-colors"
             >
               <Plus className="w-3.5 h-3.5" /> Configure Store
             </button>
@@ -300,14 +300,14 @@ export default function Storefront() {
 
         {products.length === 0 ? (
           <div className="text-center py-16">
-            <Store className="w-12 h-12 text-slate-700 mx-auto mb-3" />
-            <h3 className="text-sm font-semibold text-slate-400 mb-1">
+            <Store className="w-12 h-12 text-[#3F3F46] mx-auto mb-3" />
+            <h3 className="text-sm font-semibold text-[#A1A1AA] mb-1">
               This merchant hasn't set up their storefront yet
             </h3>
             {isOwner && (
               <button
                 onClick={openAdd}
-                className="mt-3 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md px-5 py-2 text-xs transition-colors"
+                className="mt-3 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-5 py-2 text-xs transition-colors"
               >
                 <Plus className="w-3.5 h-3.5 inline mr-1" /> Add Your First Product
               </button>
@@ -321,7 +321,7 @@ export default function Storefront() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: index * 0.05, duration: 0.15 }}
-                className="bg-slate-800 border border-slate-700 rounded-lg overflow-hidden group"
+                className="bg-[#111113] border border-[#27272A] rounded-lg overflow-hidden group"
               >
                 {/* Image placeholder */}
                 <div className={`h-28 bg-gradient-to-br ${getGradient(index)} flex items-center justify-center`}>
@@ -330,18 +330,18 @@ export default function Storefront() {
 
                 <div className="p-3">
                   <div className="flex items-start justify-between mb-0.5">
-                    <h3 className="font-semibold text-sm text-slate-50">{product.name}</h3>
+                    <h3 className="font-semibold text-sm text-[#FAFAFA]">{product.name}</h3>
                     {isOwner && (
                       <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={() => openEdit(product)}
-                          className="w-6 h-6 rounded-md hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-slate-200"
+                          className="w-6 h-6 rounded-md hover:bg-[#18181B] flex items-center justify-center text-[#A1A1AA] hover:text-[#D4D4D8]"
                         >
                           <Edit3 className="w-3 h-3" />
                         </button>
                         <button
                           onClick={() => deleteProduct(product.id)}
-                          className="w-6 h-6 rounded-md hover:bg-red-500/10 flex items-center justify-center text-slate-400 hover:text-red-400"
+                          className="w-6 h-6 rounded-md hover:bg-red-500/10 flex items-center justify-center text-[#A1A1AA] hover:text-red-400"
                         >
                           <Trash2 className="w-3 h-3" />
                         </button>
@@ -350,18 +350,18 @@ export default function Storefront() {
                   </div>
 
                   {product.description && (
-                    <p className="text-slate-400 text-xs mb-2 line-clamp-2">{product.description}</p>
+                    <p className="text-[#A1A1AA] text-xs mb-2 line-clamp-2">{product.description}</p>
                   )}
 
                   <div className="flex items-end justify-between mt-2">
                     <div>
-                      <p className="text-emerald-400 font-bold text-sm tabular-nums">{product.price.toFixed(4)} QIE</p>
-                      <p className="text-slate-500 text-[10px]">~{formatUSD(product.price)}</p>
+                      <p className="text-[#34D399] font-bold text-sm tabular-nums">{product.price.toFixed(4)} QIE</p>
+                      <p className="text-[#71717A] text-[10px]">~{formatUSD(product.price)}</p>
                     </div>
                     <button
                       onClick={() => handlePay(product)}
                       disabled={payingId === product.id}
-                      className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md px-3 py-1.5 text-xs flex items-center gap-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-3 py-1.5 text-xs flex items-center gap-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {payingId === product.id ? (
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -393,43 +393,43 @@ export default function Storefront() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               onClick={e => e.stopPropagation()}
-              className="bg-slate-800 border border-slate-700 rounded-lg p-5 w-full max-w-sm"
+              className="bg-[#111113] border border-[#27272A] rounded-lg p-5 w-full max-w-sm"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-bold text-slate-50 tracking-tight">
+                <h3 className="text-sm font-bold text-[#FAFAFA] tracking-tight">
                   {editItem ? 'Edit Product' : 'Add Product'}
                 </h3>
                 <button
                   onClick={() => setShowConfig(false)}
-                  className="w-7 h-7 rounded-md hover:bg-slate-700 flex items-center justify-center transition-colors"
+                  className="w-7 h-7 rounded-md hover:bg-[#18181B] flex items-center justify-center transition-colors"
                 >
-                  <X className="w-3.5 h-3.5 text-slate-400" />
+                  <X className="w-3.5 h-3.5 text-[#A1A1AA]" />
                 </button>
               </div>
 
               <div className="flex flex-col gap-3">
                 <div>
-                  <label className="text-xs text-slate-400 mb-1 block">Product Name</label>
+                  <label className="text-xs text-[#A1A1AA] mb-1 block">Product Name</label>
                   <input
                     type="text"
                     value={formName}
                     onChange={e => setFormName(e.target.value)}
                     placeholder="e.g. Premium Coffee"
-                    className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-slate-50 text-xs focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 outline-none transition-all"
+                    className="w-full bg-[#09090B] border border-[#27272A] rounded-md px-3 py-2 text-[#FAFAFA] text-xs focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/20 outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 mb-1 block">Description</label>
+                  <label className="text-xs text-[#A1A1AA] mb-1 block">Description</label>
                   <input
                     type="text"
                     value={formDesc}
                     onChange={e => setFormDesc(e.target.value)}
                     placeholder="Short description (optional)"
-                    className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-slate-50 text-xs focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 outline-none transition-all"
+                    className="w-full bg-[#09090B] border border-[#27272A] rounded-md px-3 py-2 text-[#FAFAFA] text-xs focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/20 outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="text-xs text-slate-400 mb-1 block">Price (QIE)</label>
+                  <label className="text-xs text-[#A1A1AA] mb-1 block">Price (QIE)</label>
                   <input
                     type="number"
                     value={formPrice}
@@ -437,10 +437,10 @@ export default function Storefront() {
                     placeholder="0.00"
                     step="0.0001"
                     min="0"
-                    className="w-full bg-slate-900 border border-slate-700 rounded-md px-3 py-2 text-slate-50 text-xs focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 outline-none transition-all"
+                    className="w-full bg-[#09090B] border border-[#27272A] rounded-md px-3 py-2 text-[#FAFAFA] text-xs focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981]/20 outline-none transition-all"
                   />
                   {formPrice && !isNaN(parseFloat(formPrice)) && (
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="text-xs text-[#71717A] mt-0.5">
                       ~{formatUSD(parseFloat(formPrice))}
                     </p>
                   )}
@@ -450,13 +450,13 @@ export default function Storefront() {
               <div className="flex gap-2 mt-4">
                 <button
                   onClick={saveProduct}
-                  className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-medium rounded-md px-3 py-2 text-xs transition-colors"
+                  className="flex-1 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-3 py-2 text-xs transition-colors"
                 >
                   {editItem ? 'Update' : 'Add Product'}
                 </button>
                 <button
                   onClick={() => setShowConfig(false)}
-                  className="flex-1 border border-slate-600 hover:border-slate-500 text-slate-300 font-medium rounded-md px-3 py-2 text-xs transition-colors"
+                  className="flex-1 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] font-medium rounded-md px-3 py-2 text-xs transition-colors"
                 >
                   Cancel
                 </button>

@@ -18,9 +18,9 @@ function CopyBtn({ text }) {
   return (
     <button
       onClick={handleCopy}
-      className="p-1 rounded-md bg-slate-700 hover:bg-slate-600 transition-colors"
+      className="p-1 rounded-md bg-[#18181B] hover:bg-[#27272A] transition-colors"
     >
-      {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} className="text-slate-400" />}
+      {copied ? <Check size={12} className="text-[#34D399]" /> : <Copy size={12} className="text-[#A1A1AA]" />}
     </button>
   );
 }
@@ -38,11 +38,11 @@ function CodeBlock({ code }) {
     <div className="relative group">
       <button
         onClick={handleCopy}
-        className="absolute top-2 right-2 p-1 rounded-md bg-slate-700 hover:bg-slate-600 transition-colors z-10"
+        className="absolute top-2 right-2 p-1 rounded-md bg-[#18181B] hover:bg-[#27272A] transition-colors z-10"
       >
-        {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} className="text-slate-400" />}
+        {copied ? <Check size={12} className="text-[#34D399]" /> : <Copy size={12} className="text-[#A1A1AA]" />}
       </button>
-      <pre className="bg-slate-900 rounded-md p-3 overflow-x-auto text-xs font-mono text-slate-300">
+      <pre className="bg-[#09090B] rounded-md p-3 overflow-x-auto text-xs font-mono text-[#A1A1AA]">
         <code>{code}</code>
       </pre>
     </div>
@@ -107,27 +107,27 @@ export default function Developers() {
       <div className="max-w-4xl mx-auto space-y-4">
         {/* Header */}
         <div>
-          <h1 className="text-lg font-semibold text-slate-50 flex items-center gap-2 tracking-tight">
-            <Code2 size={16} className="text-emerald-400" />
+          <h1 className="text-lg font-semibold text-[#FAFAFA] flex items-center gap-2 tracking-tight">
+            <Code2 size={16} className="text-[#34D399]" />
             Developer API
           </h1>
-          <p className="text-xs text-slate-500 mt-0.5 ml-6">
+          <p className="text-xs text-[#71717A] mt-0.5 ml-6">
             Integrate QIE Pay into your application. Follow our guides and use the SDK to start accepting crypto payments.
           </p>
         </div>
 
         {/* Quick Start */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 space-y-4">
-          <h2 className="text-sm font-semibold text-slate-300 flex items-center gap-1.5">
-            <FileCode size={14} className="text-emerald-400" /> Quick Start
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 space-y-4">
+          <h2 className="text-sm font-semibold text-[#A1A1AA] flex items-center gap-1.5">
+            <FileCode size={14} className="text-[#34D399]" /> Quick Start
           </h2>
 
           <div className="space-y-4">
             {/* Step 1 */}
             <div>
               <div className="flex items-center gap-2 mb-1.5">
-                <span className="w-5 h-5 rounded-full bg-emerald-500 text-white text-[10px] flex items-center justify-center font-bold">1</span>
-                <span className="text-xs text-slate-300 font-medium">Install the SDK</span>
+                <span className="w-5 h-5 rounded-full bg-[#10B981] text-white text-[10px] flex items-center justify-center font-bold">1</span>
+                <span className="text-xs text-[#A1A1AA] font-medium">Install the SDK</span>
                 <span className="text-[10px] text-amber-400 bg-amber-500/10 px-1.5 py-0.5 rounded">Conceptual</span>
               </div>
               <CodeBlock code="npm install @qiepay/sdk" />
@@ -136,8 +136,8 @@ export default function Developers() {
             {/* Step 2 */}
             <div>
               <div className="flex items-center gap-2 mb-1.5">
-                <span className="w-5 h-5 rounded-full bg-emerald-500 text-white text-[10px] flex items-center justify-center font-bold">2</span>
-                <span className="text-xs text-slate-300 font-medium">Initialize</span>
+                <span className="w-5 h-5 rounded-full bg-[#10B981] text-white text-[10px] flex items-center justify-center font-bold">2</span>
+                <span className="text-xs text-[#A1A1AA] font-medium">Initialize</span>
               </div>
               <CodeBlock code={`import { QiePay } from '@qiepay/sdk';\n\nconst pay = new QiePay({\n  chainId: ${CHAIN_ID},\n  contract: '${CONTRACT_ADDRESS}'\n});`} />
             </div>
@@ -145,8 +145,8 @@ export default function Developers() {
             {/* Step 3 */}
             <div>
               <div className="flex items-center gap-2 mb-1.5">
-                <span className="w-5 h-5 rounded-full bg-emerald-500 text-white text-[10px] flex items-center justify-center font-bold">3</span>
-                <span className="text-xs text-slate-300 font-medium">Create a Payment</span>
+                <span className="w-5 h-5 rounded-full bg-[#10B981] text-white text-[10px] flex items-center justify-center font-bold">3</span>
+                <span className="text-xs text-[#A1A1AA] font-medium">Create a Payment</span>
               </div>
               <CodeBlock code={`const payment = await pay.create({\n  description: 'Order #123',\n  amount: '0.5', // QIE\n  orderId: 'ORD-123'\n});\n\n// Returns: { paymentId, paymentUrl, qrCode }`} />
             </div>
@@ -154,20 +154,20 @@ export default function Developers() {
         </div>
 
         {/* Smart Contract Interface */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 space-y-3">
-          <h2 className="text-sm font-semibold text-slate-300 flex items-center gap-1.5">
-            <Blocks size={14} className="text-emerald-400" /> Smart Contract Interface
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 space-y-3">
+          <h2 className="text-sm font-semibold text-[#A1A1AA] flex items-center gap-1.5">
+            <Blocks size={14} className="text-[#34D399]" /> Smart Contract Interface
           </h2>
           <div className="space-y-2">
             {CONTRACT_FUNCTIONS.map((fn, i) => (
-              <div key={i} className="bg-slate-900 rounded-md p-3 border border-slate-700">
-                <code className="text-xs font-mono text-emerald-400">{fn.sig}</code>
-                <p className="text-xs text-slate-400 mt-0.5">{fn.desc}</p>
+              <div key={i} className="bg-[#09090B] rounded-md p-3 border border-[#27272A]">
+                <code className="text-xs font-mono text-[#34D399]">{fn.sig}</code>
+                <p className="text-xs text-[#A1A1AA] mt-0.5">{fn.desc}</p>
                 <div className="mt-1 text-xs">
-                  <span className="text-slate-500">Params: <span className="text-slate-400">{fn.params}</span></span>
+                  <span className="text-[#71717A]">Params: <span className="text-[#A1A1AA]">{fn.params}</span></span>
                 </div>
-                <div className="mt-1.5 bg-slate-800 rounded-md px-2.5 py-1.5">
-                  <code className="text-[11px] font-mono text-emerald-400">{fn.example}</code>
+                <div className="mt-1.5 bg-[#111113] rounded-md px-2.5 py-1.5">
+                  <code className="text-[11px] font-mono text-[#34D399]">{fn.example}</code>
                 </div>
               </div>
             ))}
@@ -175,12 +175,12 @@ export default function Developers() {
         </div>
 
         {/* Direct Contract Interaction */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 space-y-3">
-          <h2 className="text-sm font-semibold text-slate-300 flex items-center gap-1.5">
-            <Code2 size={14} className="text-emerald-400" /> Direct Contract Interaction
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 space-y-3">
+          <h2 className="text-sm font-semibold text-[#A1A1AA] flex items-center gap-1.5">
+            <Code2 size={14} className="text-[#34D399]" /> Direct Contract Interaction
           </h2>
-          <p className="text-xs text-slate-400">
-            Interact directly with the smart contract using ethers.js. Use <code className="text-emerald-400 bg-emerald-500/10 px-1 py-0.5 rounded text-[10px]">eth_sendTransaction</code> for QIE Wallet compatibility.
+          <p className="text-xs text-[#A1A1AA]">
+            Interact directly with the smart contract using ethers.js. Use <code className="text-[#34D399] bg-[rgba(16,185,129,0.1)] px-1 py-0.5 rounded text-[10px]">eth_sendTransaction</code> for QIE Wallet compatibility.
           </p>
           <CodeBlock code={`import { ethers } from 'ethers';
 
@@ -204,29 +204,29 @@ await tx.wait();`} />
         </div>
 
         {/* Embed Widget */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 space-y-3">
-          <h2 className="text-sm font-semibold text-slate-300 flex items-center gap-1.5">
-            <Layers size={14} className="text-emerald-400" /> Embed Widget
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 space-y-3">
+          <h2 className="text-sm font-semibold text-[#A1A1AA] flex items-center gap-1.5">
+            <Layers size={14} className="text-[#34D399]" /> Embed Widget
           </h2>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#A1A1AA]">
             Embed the QIE Pay widget directly into your website with an iframe.
           </p>
           <CodeBlock code={`<iframe\n  src="${window.location.origin || 'https://qie-pay.vercel.app'}/widget/YOUR_ADDRESS"\n  width="400"\n  height="600"\n  frameborder="0"\n></iframe>`} />
           <div className="mt-3">
-            <p className="text-xs text-slate-500 mb-1.5">Preview:</p>
-            <div className="bg-slate-900 rounded-md border border-slate-700 p-4 text-center">
-              <div className="w-full max-w-xs mx-auto aspect-[2/3] rounded-lg bg-slate-800 border border-slate-700 flex flex-col items-center justify-center gap-2">
-                <div className="w-8 h-8 rounded-md bg-emerald-500/10 flex items-center justify-center">
-                  <Zap size={16} className="text-emerald-500" />
+            <p className="text-xs text-[#71717A] mb-1.5">Preview:</p>
+            <div className="bg-[#09090B] rounded-md border border-[#27272A] p-4 text-center">
+              <div className="w-full max-w-xs mx-auto aspect-[2/3] rounded-lg bg-[#111113] border border-[#27272A] flex flex-col items-center justify-center gap-2">
+                <div className="w-8 h-8 rounded-md bg-[rgba(16,185,129,0.1)] flex items-center justify-center">
+                  <Zap size={16} className="text-[#10B981]" />
                 </div>
                 <div className="space-y-0.5">
-                  <p className="text-xs text-slate-300 font-medium">QIE Pay Widget</p>
-                  <p className="text-[10px] text-slate-500">Pay 0.2000 QIE</p>
+                  <p className="text-xs text-[#A1A1AA] font-medium">QIE Pay Widget</p>
+                  <p className="text-[10px] text-[#71717A]">Pay 0.2000 QIE</p>
                 </div>
-                <div className="w-20 h-20 rounded-md bg-slate-700 border border-slate-600 flex items-center justify-center">
-                  <span className="text-[10px] text-slate-500">QR Code</span>
+                <div className="w-20 h-20 rounded-md bg-[#18181B] border border-[#3F3F46] flex items-center justify-center">
+                  <span className="text-[10px] text-[#71717A]">QR Code</span>
                 </div>
-                <div className="w-28 h-7 rounded-md bg-emerald-500 flex items-center justify-center">
+                <div className="w-28 h-7 rounded-md bg-[#10B981] flex items-center justify-center">
                   <span className="text-[10px] text-white font-medium">Connect Wallet</span>
                 </div>
               </div>
@@ -235,19 +235,19 @@ await tx.wait();`} />
         </div>
 
         {/* Network Info */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5 space-y-3">
-          <h2 className="text-sm font-semibold text-slate-300 flex items-center gap-1.5">
-            <Network size={14} className="text-emerald-400" /> Network Information
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 space-y-3">
+          <h2 className="text-sm font-semibold text-[#A1A1AA] flex items-center gap-1.5">
+            <Network size={14} className="text-[#34D399]" /> Network Information
           </h2>
           <div className="space-y-1.5">
             {NETWORK_INFO.map((item, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between bg-slate-900 rounded-md px-3 py-2.5 border border-slate-700"
+                className="flex items-center justify-between bg-[#09090B] rounded-md px-3 py-2.5 border border-[#27272A]"
               >
                 <div>
-                  <span className="text-[10px] text-slate-500">{item.label}</span>
-                  <p className="text-xs text-slate-300 font-mono break-all">{item.value}</p>
+                  <span className="text-[10px] text-[#71717A]">{item.label}</span>
+                  <p className="text-xs text-[#A1A1AA] font-mono break-all">{item.value}</p>
                 </div>
                 <CopyBtn text={item.value} />
               </div>

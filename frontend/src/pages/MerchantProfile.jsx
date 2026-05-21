@@ -112,9 +112,9 @@ export default function MerchantProfile() {
   const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload?.length) return null;
     return (
-      <div className="bg-slate-800 border border-slate-700 rounded-md px-3 py-2 shadow-lg">
-        <p className="text-xs text-slate-400 mb-0.5">{label}</p>
-        <p className="text-sm font-semibold text-slate-50 tabular-nums">{payload[0].value} QIE</p>
+      <div className="bg-[#111113] border border-[#27272A] rounded-md px-3 py-2 shadow-lg">
+        <p className="text-xs text-[#A1A1AA] mb-0.5">{label}</p>
+        <p className="text-sm font-semibold text-[#FAFAFA] tabular-nums">{payload[0].value} QIE</p>
       </div>
     );
   };
@@ -124,10 +124,10 @@ export default function MerchantProfile() {
     return (
       <div className="p-6 lg:p-8">
         <div className="max-w-6xl mx-auto space-y-4 animate-pulse">
-          <div className="h-16 bg-slate-700 rounded-lg" />
-          <div className="h-12 bg-slate-700 rounded-lg" />
-          <div className="h-[200px] bg-slate-700 rounded-lg" />
-          <div className="h-48 bg-slate-700 rounded-lg" />
+          <div className="h-16 bg-[#18181B] rounded-lg" />
+          <div className="h-12 bg-[#18181B] rounded-lg" />
+          <div className="h-[200px] bg-[#18181B] rounded-lg" />
+          <div className="h-48 bg-[#18181B] rounded-lg" />
         </div>
       </div>
     );
@@ -139,10 +139,10 @@ export default function MerchantProfile() {
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center">
           <CreditCard className="w-10 h-10 text-red-400 mx-auto mb-3" />
-          <h2 className="text-lg font-bold text-slate-50 mb-1">Merchant Not Found</h2>
-          <p className="text-slate-400 text-xs font-mono mb-3">{truncateAddr(address)}</p>
-          <p className="text-slate-500 text-sm mb-4">This address is not registered as a merchant on QIE Pay.</p>
-          <Link to="/" className="text-xs text-emerald-500 hover:text-emerald-400 transition-colors">
+          <h2 className="text-lg font-bold text-[#FAFAFA] mb-1">Merchant Not Found</h2>
+          <p className="text-[#A1A1AA] text-xs font-mono mb-3">{truncateAddr(address)}</p>
+          <p className="text-[#71717A] text-sm mb-4">This address is not registered as a merchant on QIE Pay.</p>
+          <Link to="/" className="text-xs text-[#10B981] hover:text-[#34D399] transition-colors">
             ← Back to Home
           </Link>
         </div>
@@ -157,24 +157,24 @@ export default function MerchantProfile() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="bg-slate-800 border border-slate-700 rounded-lg p-4"
+          className="bg-[#111113] border border-[#27272A] rounded-lg p-4"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <h1 className="text-base font-semibold text-slate-50 tracking-tight">{truncateAddr(address)}</h1>
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-xs text-emerald-400">
+                <h1 className="text-base font-semibold text-[#FAFAFA] tracking-tight">{truncateAddr(address)}</h1>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[rgba(16,185,129,0.1)] border border-[rgba(16,185,129,0.2)] rounded-full text-xs text-[#34D399]">
                   <BadgeCheck className="w-3 h-3" /> Verified
                 </span>
               </div>
-              <button onClick={copyAddress} className="p-1 rounded hover:bg-slate-700 text-slate-500 hover:text-slate-300 transition-all">
+              <button onClick={copyAddress} className="p-1 rounded hover:bg-[#18181B] text-[#71717A] hover:text-[#A1A1AA] transition-all">
                 <Copy className="w-3.5 h-3.5" />
               </button>
-              <a href={`${EXPLORER_URL}/address/${address}`} target="_blank" rel="noopener noreferrer" className="p-1 rounded hover:bg-slate-700 text-slate-500 hover:text-slate-300 transition-all">
+              <a href={`${EXPLORER_URL}/address/${address}`} target="_blank" rel="noopener noreferrer" className="p-1 rounded hover:bg-[#18181B] text-[#71717A] hover:text-[#A1A1AA] transition-all">
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
-            <Link to="/" className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-300 transition-colors">
+            <Link to="/" className="flex items-center gap-1 text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors">
               <ArrowLeft className="w-3 h-3" /> Back
             </Link>
           </div>
@@ -182,35 +182,35 @@ export default function MerchantProfile() {
 
         {/* Stats — 3 inline */}
         <div className="grid grid-cols-3 gap-4">
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+          <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
             <div className="flex items-center gap-2 mb-1.5">
-              <DollarSign size={14} className="text-emerald-400" />
-              <span className="text-xs text-slate-400">Earnings</span>
+              <DollarSign size={14} className="text-[#34D399]" />
+              <span className="text-xs text-[#A1A1AA]">Earnings</span>
             </div>
-            <p className="text-lg font-semibold text-slate-50 tabular-nums">{parseFloat(earnings).toFixed(2)} QIE</p>
-            <p className="text-xs text-slate-500">{formatUSD(parseFloat(earnings))}</p>
+            <p className="text-lg font-semibold text-[#FAFAFA] tabular-nums">{parseFloat(earnings).toFixed(2)} QIE</p>
+            <p className="text-xs text-[#71717A]">{formatUSD(parseFloat(earnings))}</p>
           </div>
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+          <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
             <div className="flex items-center gap-2 mb-1.5">
-              <CreditCard size={14} className="text-emerald-400" />
-              <span className="text-xs text-slate-400">Payments</span>
+              <CreditCard size={14} className="text-[#34D399]" />
+              <span className="text-xs text-[#A1A1AA]">Payments</span>
             </div>
-            <p className="text-lg font-semibold text-slate-50 tabular-nums">{totalPayments}</p>
-            <p className="text-xs text-slate-500">{totalVolume.toFixed(2)} QIE volume</p>
+            <p className="text-lg font-semibold text-[#FAFAFA] tabular-nums">{totalPayments}</p>
+            <p className="text-xs text-[#71717A]">{totalVolume.toFixed(2)} QIE volume</p>
           </div>
-          <div className="bg-slate-800 border border-slate-700 rounded-lg p-4">
+          <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
             <div className="flex items-center gap-2 mb-1.5">
-              <TrendingUp size={14} className="text-emerald-400" />
-              <span className="text-xs text-slate-400">Volume</span>
+              <TrendingUp size={14} className="text-[#34D399]" />
+              <span className="text-xs text-[#A1A1AA]">Volume</span>
             </div>
-            <p className="text-lg font-semibold text-slate-50 tabular-nums">{totalVolume.toFixed(2)} QIE</p>
-            <p className="text-xs text-slate-500">{formatUSD(totalVolume)}</p>
+            <p className="text-lg font-semibold text-[#FAFAFA] tabular-nums">{totalVolume.toFixed(2)} QIE</p>
+            <p className="text-xs text-[#71717A]">{formatUSD(totalVolume)}</p>
           </div>
         </div>
 
         {/* Revenue Chart */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
-          <h2 className="text-sm font-semibold text-slate-300 mb-4 tracking-tight">Revenue — Last 7 Days</h2>
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
+          <h2 className="text-sm font-semibold text-[#A1A1AA] mb-4 tracking-tight">Revenue — Last 7 Days</h2>
           <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData}>
@@ -235,8 +235,8 @@ export default function MerchantProfile() {
         </div>
 
         {/* Payment History */}
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-5">
-          <h2 className="text-sm font-semibold text-slate-300 mb-4 tracking-tight">Payment History</h2>
+        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
+          <h2 className="text-sm font-semibold text-[#A1A1AA] mb-4 tracking-tight">Payment History</h2>
           <PaymentTable
             payments={payments}
             showActions={true}
