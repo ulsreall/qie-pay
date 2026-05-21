@@ -77,6 +77,36 @@ export default function Home() {
             </div>
           </motion.div>
 
+          {/* Logo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.05 }}
+            className="mb-6"
+          >
+            <div className="inline-flex items-center gap-3">
+              <svg width="48" height="48" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="hero-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#10B981"/>
+                    <stop offset="100%" stopColor="#38BDF8"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="256" cy="256" r="170" stroke="url(#hero-grad)" strokeWidth="36" fill="none"/>
+                <path d="M290 108L175 300H245L220 410L340 220H265L290 108Z" fill="url(#hero-grad)"/>
+              </svg>
+              <div className="text-left">
+                <h2 className="text-2xl font-bold tracking-tight">
+                  <span className="text-[#FAFAFA]">QIE</span>
+                  <span className="text-[#10B981]">Pay</span>
+                </h2>
+                <p className="text-[10px] text-[#52525B] tracking-widest uppercase">
+                  Decentralized Payment Gateway
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
           <motion.h1
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -272,9 +302,16 @@ export default function Home() {
       <footer className="border-t border-[#1E1E21] py-6 px-4">
         <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-[#10B981] flex items-center justify-center">
-              <span className="text-white font-bold text-xs">Q</span>
-            </div>
+            <svg width="24" height="24" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="footer-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#10B981"/>
+                  <stop offset="100%" stopColor="#38BDF8"/>
+                </linearGradient>
+              </defs>
+              <circle cx="256" cy="256" r="170" stroke="url(#footer-grad)" strokeWidth="36" fill="none"/>
+              <path d="M290 108L175 300H245L220 410L340 220H265L290 108Z" fill="url(#footer-grad)"/>
+            </svg>
             <span className="text-sm font-semibold text-[#FAFAFA]">QIE<span className="text-[#10B981]">Pay</span></span>
           </div>
           <p className="text-xs text-[#71717A]">
