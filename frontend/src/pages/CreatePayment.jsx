@@ -67,12 +67,22 @@ export default function CreatePayment() {
       if (!wallet) {
         await handleConnect();
       }
+
+      const signer = await (await import('../utils/contract')).getSigner();
+      const currentAddress = await signer.getAddress();
+      console.log('Registering merchant:', currentAddress);
+
       const contract = await (await import('../utils/contract')).getContract();
       const tx = await contract.registerMerchant();
-      await tx.wait();
+      console.log('Register TX:', tx.hash);
+      const receipt = await tx.wait();
+      console.log('Register confirmed:', receipt.hash);
+
       setMerchantRegistered(true);
+      setWallet({ address: currentAddress });
     } catch (err) {
-      if (err.message.includes('already registered')) {
+      console.error('Register error:', err);
+      if (err.message.includes('already registered') || err.message.includes('already registered')) {
         setMerchantRegistered(true);
       } else {
         setError('Registration failed: ' + (err.reason || err.message));
@@ -96,8 +106,20 @@ export default function CreatePayment() {
         await handleConnect();
       }
 
-      if (!merchantRegistered) {
-        await handleRegister();
+      // Debug: log current address
+      const signer = await (await import('../utils/contract')).getSigner();
+      const currentAddress = await signer.getAddress();
+      console.log('Creating payment from:', currentAddress);
+
+      // Check if this address is a merchant
+      const { isMerchant } = await import('../utils/contract');
+      const registered = await isMerchant(currentAddress);
+      console.log('Is merchant:', registered);
+
+      if (!registered) {
+        setError(`Address ${currentAddress.slice(0,6)}...${currentAddress.slice(-4)} is not registered. Please register first.`);
+        setLoading(false);
+        return;
       }
 
       const { paymentId } = await createPayment(description, orderId || `ORD-${Date.now()}`);
