@@ -182,9 +182,38 @@ export async function createPayment(description, orderId, amountInQIE) {
 }
 
 // Pay for a payment
+// Pay for a payment
 export async function payForPayment(paymentId, amountInQIE) {
-  const contract = await getContract();
   const value = ethers.parseEther(amountInQIE.toString());
+
+  // Direct approach for QIE Wallet compatibility
+  if (window.ethereum) {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const address = await signer.getAddress();
+
+    const iface = new ethers.Interface(QIEPAY_ABI);
+    const data = iface.encodeFunctionData('pay', [BigInt(paymentId)]);
+
+    console.log('Paying payment:', paymentId);
+    console.log('Amount:', amountInQIE, 'QIE =', value.toString(), 'wei');
+
+    const txHash = await window.ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [{
+        from: address,
+        to: CONTRACT_ADDRESS,
+        data: data,
+        value: '0x' + value.toString(16),
+      }],
+    });
+
+    console.log('TX hash:', txHash);
+    return await provider.waitForTransaction(txHash);
+  }
+
+  // Fallback
+  const contract = await getContract();
   const tx = await contract.pay(paymentId, { value });
   return tx.wait();
 }
