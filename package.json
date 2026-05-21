@@ -1,0 +1,21 @@
+{
+  "name": "qie-pay",
+  "version": "1.0.0",
+  "description": "Merchant Payment Gateway on QIE Blockchain",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "deploy:testnet": "npx hardhat run scripts/deploy.js --network qieTestnet",
+    "deploy:mainnet": "npx hardhat run scripts/deploy.js --network qieMainnet",
+    "backend": "cd backend && npm start",
+    "frontend": "cd frontend && npm run dev",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
+}
