@@ -60,7 +60,7 @@ export function EmailWalletProvider({ children }) {
       toast.success(`Wallet created for ${email}`);
 
       // Auto-drip testnet QIE from faucet (fire-and-forget)
-      fetch('https://qie-pay.vercel.app/api/faucet/drip', {
+      fetch('/api/faucet/drip', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ address: wallet.address }),

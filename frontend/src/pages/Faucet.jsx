@@ -4,7 +4,7 @@ import { Droplets, Clock, CheckCircle, ExternalLink, Wallet, Mail, ArrowRight } 
 import { checkConnection } from '../utils/contract';
 import toast from 'react-hot-toast';
 
-const FAUCET_API = 'https://qie-pay.vercel.app/api/faucet';
+const FAUCET_API = '/api/faucet';
 const EXPLORER = 'https://testnet.qie.digital';
 
 export default function Faucet() {
