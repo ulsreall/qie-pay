@@ -1,6 +1,20 @@
 import { formatQIEAmount, formatUSD, getQIEPrice } from './currency';
 import { EXPLORER_URL } from './constants';
 
+/* ── QIEPay Logo SVG (ring + bolt, emerald gradient) ── */
+const LOGO_SVG = `<svg width="36" height="36" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+  </defs>
+  <circle cx="256" cy="256" r="170" stroke="url(#lg)" stroke-width="36" fill="none"/>
+  <path d="M290 108L175 300H245L220 410L340 220H265L290 108Z" fill="url(#lg)"/>
+</svg>`;
+
+const LOGO_DATA_URI = `data:image/svg+xml,${encodeURIComponent(LOGO_SVG)}`;
+
 /**
  * Generate a full professional invoice HTML document
  * @param {Object} payment - Payment object from getPayment
@@ -22,22 +36,22 @@ export function generateInvoiceHTML(payment, merchantAddress) {
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
       color: #1e293b;
       line-height: 1.6;
-      background: #f8fafc;
+      background: #f8fafb;
     }
     .container {
       max-width: 800px;
       margin: 0 auto;
       background: white;
       min-height: 100vh;
-      box-shadow: 0 0 40px rgba(0,0,0,0.05);
+      box-shadow: 0 0 40px rgba(0,0,0,0.04);
     }
 
-    /* Purple branded header */
+    /* ── Emerald branded header ── */
     .header {
-      background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 50%, #6D28D9 100%);
+      background: linear-gradient(135deg, #059669 0%, #10B981 40%, #38BDF8 100%);
       color: white;
       padding: 40px;
       position: relative;
@@ -59,14 +73,11 @@ export function generateInvoiceHTML(payment, merchantAddress) {
     .brand-icon {
       width: 36px;
       height: 36px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
-      font-size: 20px;
     }
+    .brand-icon img { width: 100%; height: 100%; }
 
     .body { padding: 40px; }
 
@@ -93,7 +104,7 @@ export function generateInvoiceHTML(payment, merchantAddress) {
     }
     .status-created { background: #fef3c7; color: #92400e; }
     .status-paid { background: #d1fae5; color: #065f46; }
-    .status-settled { background: #dbeafe; color: #1e40af; }
+    .status-settled { background: #d1fae5; color: #065f46; }
     .status-refunded { background: #ffedd5; color: #9a3412; }
     .status-cancelled { background: #fee2e2; color: #991b1b; }
 
@@ -128,7 +139,7 @@ export function generateInvoiceHTML(payment, merchantAddress) {
       font-size: 12px;
       color: #94a3b8;
     }
-    .footer a { color: #8B5CF6; text-decoration: none; }
+    .footer a { color: #10B981; text-decoration: none; }
 
     /* Settlement notice */
     .settled-notice {
@@ -138,7 +149,7 @@ export function generateInvoiceHTML(payment, merchantAddress) {
       padding: 16px;
       margin-top: 16px;
     }
-    .settled-notice strong { color: #166534; }
+    .settled-notice strong { color: #059669; }
 
     /* Print styles */
     @media print {
@@ -164,7 +175,9 @@ export function generateInvoiceHTML(payment, merchantAddress) {
       <div style="display:flex; justify-content:space-between; align-items:flex-start;">
         <div>
           <div class="brand">
-            <div class="brand-icon">Q</div>
+            <div class="brand-icon">
+              <img src="${LOGO_DATA_URI}" alt="QIEPay" />
+            </div>
             <div>
               <h1>QIEPay Invoice</h1>
               <p>Decentralized Payment Gateway</p>

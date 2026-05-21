@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import {
   FileText, Download, Printer, Copy, Check, Loader2, AlertCircle, ExternalLink,
 } from 'lucide-react';
+import { LogoIcon } from '../components/Sidebar';
 import toast from 'react-hot-toast';
 import { getPayment } from '../utils/contract';
 import { format } from 'date-fns';
@@ -142,8 +143,8 @@ export default function Invoice() {
         <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 mb-5">
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 bg-[rgba(16,185,129,0.1)] rounded-md flex items-center justify-center">
-                <span className="text-[#10B981] font-bold text-sm">Q</span>
+              <div className="w-8 h-8 rounded-md flex items-center justify-center overflow-hidden">
+                <LogoIcon size={32} />
               </div>
               <div>
                 <p className="text-xs font-semibold text-[#FAFAFA]">QIEPay Invoice</p>

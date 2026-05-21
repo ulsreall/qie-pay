@@ -69,7 +69,7 @@ const navSections = [
 ];
 
 /* ─── Inline SVG Logo (ring + bolt) ─── */
-function LogoIcon({ size = 32 }) {
+export function LogoIcon({ size = 32 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
