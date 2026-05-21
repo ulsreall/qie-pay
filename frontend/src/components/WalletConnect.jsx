@@ -25,7 +25,7 @@ export default function WalletConnect({ compact = false }) {
         setWallet(connected);
         setConnected(connected.address);
       }
-    });
+    }).catch(() => {});
 
     const handleAccounts = (accounts) => {
       if (accounts.length === 0) {
@@ -38,7 +38,7 @@ export default function WalletConnect({ compact = false }) {
             setWallet(w);
             setConnected(w.address);
           }
-        });
+        }).catch(() => {});
       }
     };
 

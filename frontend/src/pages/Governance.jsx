@@ -190,11 +190,10 @@ function CreateProposalModal({ isOpen, onClose, onSubmit, loading }) {
     setDescription('');
   };
 
-  if (!isOpen) return null;
-
   return (
     <AnimatePresence>
-      <motion.div
+      {isOpen && (
+        <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -254,7 +253,7 @@ function CreateProposalModal({ isOpen, onClose, onSubmit, loading }) {
             </div>
           </form>
         </motion.div>
-      </motion.div>
+      )}
     </AnimatePresence>
   );
 }
@@ -379,8 +378,8 @@ export default function Governance() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#FAFAFA]">Governance</h1>
-          <p className="text-sm text-[#A1A1AA] mt-1">Vote on protocol changes</p>
+          <h1 className="text-lg font-semibold tracking-tight text-[#FAFAFA]">Governance</h1>
+          <p className="text-xs text-[#A1A1AA] mt-0.5">Vote on protocol changes</p>
         </div>
         <button
           onClick={() => setShowCreate(true)}

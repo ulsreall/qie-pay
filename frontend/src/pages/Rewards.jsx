@@ -217,8 +217,8 @@ export default function Rewards() {
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-[#FAFAFA]">QIEP Rewards</h1>
-        <p className="text-sm text-[#A1A1AA] mt-1">Earn tokens on every payment</p>
+        <h1 className="text-lg font-semibold tracking-tight text-[#FAFAFA]">QIEP Rewards</h1>
+        <p className="text-xs text-[#A1A1AA] mt-0.5">Earn tokens on every payment</p>
       </div>
 
       {/* Balance Card */}

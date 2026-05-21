@@ -193,8 +193,8 @@ export default function Staking() {
     <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-[#FAFAFA]">Stake & Save</h1>
-        <p className="text-sm text-[#A1A1AA] mt-1">Stake QIE to reduce your payment fees</p>
+        <h1 className="text-lg font-semibold tracking-tight text-[#FAFAFA]">Stake & Save</h1>
+        <p className="text-xs text-[#A1A1AA] mt-0.5">Stake QIE to reduce your payment fees</p>
       </div>
 
       {/* Tier Cards */}

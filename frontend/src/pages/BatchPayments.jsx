@@ -32,9 +32,9 @@ export default function BatchPayments() {
   };
 
   const updateItem = (index, field, value) => {
-    const updated = [...items];
-    updated[index][field] = value;
-    setItems(updated);
+    setItems(prev => prev.map((item, i) =>
+      i === index ? { ...item, [field]: value } : item
+    ));
   };
 
   const handleCreateAll = async () => {

@@ -1,9 +1,9 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   DollarSign, TrendingUp, CreditCard, Plus, Layers, BarChart3,
-  ArrowRight, RefreshCw, Loader2, PlusCircle, Store, UserCog, Eye
+  ArrowRight, RefreshCw, PlusCircle, Store, UserCog, Eye
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { AreaChart, Area, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -76,6 +76,17 @@ function DemoBanner() {
       <Eye size={14} className="text-amber-400" />
       <span className="text-xs font-medium text-amber-400">Viewing demo data</span>
       <span className="text-[10px] text-amber-400/60 ml-1">Connect a wallet to see your real data</span>
+    </div>
+  );
+}
+
+function CustomTooltipDashboard({ active, payload, label }) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="bg-[#111113] border border-[#27272A] rounded-md px-3 py-2 shadow-lg">
+      <p className="text-xs text-[#A1A1AA] mb-0.5">{label}</p>
+      <p className="text-sm font-semibold text-[#FAFAFA] tabular-nums">{payload[0].value} QIE</p>
+      <p className="text-xs text-[#71717A]">{formatUSD(payload[0].value)}</p>
     </div>
   );
 }
@@ -194,7 +205,7 @@ export default function Dashboard() {
   const totalVolume = payments.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
 
   /* ─── Chart data (last 7 days) ─── */
-  const chartData = (() => {
+  const chartData = useMemo(() => {
     // In demo mode, use pre-computed chart data
     if (isDemo) return demoChartData;
 
@@ -205,7 +216,7 @@ export default function Dashboard() {
       const dayStart = new Date(d.setHours(0, 0, 0, 0)).getTime() / 1000;
       const dayEnd = dayStart + 86400;
       const dayPayments = payments.filter(
-        (p) => p.createdAt >= dayStart && p.createdAt < dayEnd && (p.status === 1 || p.status === 2)
+        (p) => p.createdAt >= dayStart && p.createdAt < dayEnd && p.status >= 1
       );
       const revenue = dayPayments.reduce((sum, p) => sum + parseFloat(p.amount || 0), 0);
       days.push({
@@ -214,20 +225,9 @@ export default function Dashboard() {
       });
     }
     return days;
-  })();
+  }, [isDemo, demoChartData, payments]);
 
   const recentPayments = payments.slice(0, 5);
-
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (!active || !payload?.length) return null;
-    return (
-      <div className="bg-[#111113] border border-[#27272A] rounded-md px-3 py-2 shadow-lg">
-        <p className="text-xs text-[#A1A1AA] mb-0.5">{label}</p>
-        <p className="text-sm font-semibold text-[#FAFAFA] tabular-nums">{payload[0].value} QIE</p>
-        <p className="text-xs text-[#71717A]">{formatUSD(payload[0].value)}</p>
-      </div>
-    );
-  };
 
   const relativeTime = (ts) => {
     if (!ts) return '—';
@@ -243,8 +243,8 @@ export default function Dashboard() {
       <div className="min-h-screen bg-[#09090B] p-6 lg:p-8">
         <div className="max-w-7xl mx-auto space-y-5">
           <div className="h-6 w-48 bg-[#111113] rounded animate-pulse" />
-          <div className="grid grid-cols-3 gap-4">
-            <div className="col-span-2"><SkeletonCard /></div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="sm:col-span-2"><SkeletonCard /></div>
             <SkeletonCard />
           </div>
           <SkeletonChart />
@@ -318,9 +318,9 @@ export default function Dashboard() {
         )}
 
         {/* Stats Cards — asymmetric layout */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Earnings — wider */}
-          <div className="col-span-2 bg-[#111113] border border-[#27272A] rounded-lg p-4">
+          <div className="sm:col-span-2 bg-[#111113] border border-[#27272A] rounded-lg p-4">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-md bg-[rgba(16,185,129,0.1)] flex items-center justify-center">
@@ -379,7 +379,7 @@ export default function Dashboard() {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
-                <Tooltip content={<CustomTooltip />} />
+                <Tooltip content={<CustomTooltipDashboard />} />
                 <Area
                   type="monotone"
                   dataKey="revenue"

@@ -146,7 +146,7 @@ export default function Analytics() {
       </div>
 
       {/* Stats — 3 cards */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
           <div className="flex items-center gap-2 mb-2">
             <DollarSign size={14} className="text-[#34D399]" />
