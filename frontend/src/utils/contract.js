@@ -12,7 +12,7 @@ export function getProvider() {
 // Get signer (requires wallet)
 export async function getSigner() {
   if (!window.ethereum) {
-    throw new Error('MetaMask not found. Please install MetaMask to continue.');
+    throw new Error('Wallet not found. Please install QIE Wallet or MetaMask.');
   }
   const provider = new ethers.BrowserProvider(window.ethereum);
   return provider.getSigner();
@@ -33,7 +33,7 @@ export function getReadContract() {
 // Connect wallet
 export async function connectWallet() {
   if (!window.ethereum) {
-    throw new Error('MetaMask not found. Please install MetaMask.');
+    throw new Error('Wallet not found. Please install QIE Wallet or MetaMask.');
   }
 
   const accounts = await window.ethereum.request({
