@@ -10,17 +10,21 @@ import {
   ArrowLeft,
   ExternalLink,
   AlertCircle,
+  UserPlus,
 } from 'lucide-react';
 import {
   connectWallet,
   ensureMerchant,
   createPayment,
   checkConnection,
+  isMerchant,
 } from '../utils/contract';
 
 export default function CreatePayment() {
   const navigate = useNavigate();
   const [wallet, setWallet] = useState(null);
+  const [merchantRegistered, setMerchantRegistered] = useState(false);
+  const [registering, setRegistering] = useState(false);
   const [description, setDescription] = useState('');
   const [orderId, setOrderId] = useState('');
   const [loading, setLoading] = useState(false);
@@ -30,18 +34,51 @@ export default function CreatePayment() {
 
   useEffect(() => {
     checkConnection().then((connected) => {
-      if (connected) setWallet(connected);
+      if (connected) {
+        setWallet(connected);
+        checkMerchantStatus(connected.address);
+      }
     });
   }, []);
+
+  const checkMerchantStatus = async (address) => {
+    try {
+      const registered = await isMerchant(address);
+      setMerchantRegistered(registered);
+    } catch (err) {
+      console.error('Failed to check merchant status:', err);
+    }
+  };
 
   const handleConnect = async () => {
     try {
       const result = await connectWallet();
       setWallet({ address: result.address });
-      await ensureMerchant();
+      await checkMerchantStatus(result.address);
     } catch (err) {
       setError(err.message);
     }
+  };
+
+  const handleRegister = async () => {
+    setRegistering(true);
+    setError(null);
+    try {
+      if (!wallet) {
+        await handleConnect();
+      }
+      const contract = await (await import('../utils/contract')).getContract();
+      const tx = await contract.registerMerchant();
+      await tx.wait();
+      setMerchantRegistered(true);
+    } catch (err) {
+      if (err.message.includes('already registered')) {
+        setMerchantRegistered(true);
+      } else {
+        setError('Registration failed: ' + (err.reason || err.message));
+      }
+    }
+    setRegistering(false);
   };
 
   const handleSubmit = async (e) => {
@@ -59,7 +96,10 @@ export default function CreatePayment() {
         await handleConnect();
       }
 
-      await ensureMerchant();
+      if (!merchantRegistered) {
+        await handleRegister();
+      }
+
       const { paymentId } = await createPayment(description, orderId || `ORD-${Date.now()}`);
 
       const paymentUrl = `${window.location.origin}/pay/${paymentId}`;
@@ -109,6 +149,54 @@ export default function CreatePayment() {
           </div>
         )}
 
+        {/* Wallet Connection */}
+        {!wallet && (
+          <div className="mb-6 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
+            <p className="text-yellow-300 text-sm mb-3">
+              Connect your wallet first
+            </p>
+            <button onClick={handleConnect} className="btn-primary">
+              Connect Wallet
+            </button>
+          </div>
+        )}
+
+        {/* Merchant Registration */}
+        {wallet && !merchantRegistered && (
+          <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+            <p className="text-blue-300 text-sm mb-3">
+              Register as a merchant to create payments
+            </p>
+            <button
+              onClick={handleRegister}
+              disabled={registering}
+              className="btn-primary flex items-center gap-2"
+            >
+              {registering ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  Registering...
+                </>
+              ) : (
+                <>
+                  <UserPlus size={16} />
+                  Register as Merchant
+                </>
+              )}
+            </button>
+          </div>
+        )}
+
+        {/* Merchant Status */}
+        {wallet && merchantRegistered && (
+          <div className="mb-6 p-3 bg-green-500/10 border border-green-500/20 rounded-lg flex items-center gap-2">
+            <Check size={16} className="text-green-400" />
+            <span className="text-green-300 text-sm">
+              Merchant registered ✓ | {wallet.address.slice(0, 6)}...{wallet.address.slice(-4)}
+            </span>
+          </div>
+        )}
+
         {!result ? (
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -153,19 +241,10 @@ export default function CreatePayment() {
               </p>
             </div>
 
-            {!wallet && (
-              <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-                <p className="text-yellow-300 text-sm">
-                  You need to connect your wallet and register as a merchant to
-                  create payments.
-                </p>
-              </div>
-            )}
-
             <button
               type="submit"
-              disabled={loading}
-              className="btn-primary w-full flex items-center justify-center gap-2 py-3"
+              disabled={loading || !wallet || !merchantRegistered}
+              className="btn-primary w-full flex items-center justify-center gap-2 py-3 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
@@ -173,9 +252,7 @@ export default function CreatePayment() {
                   Creating Payment...
                 </>
               ) : (
-                <>
-                  {wallet ? 'Create Payment' : 'Connect Wallet & Create'}
-                </>
+                'Create Payment'
               )}
             </button>
           </form>
