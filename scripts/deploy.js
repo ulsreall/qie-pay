@@ -1,39 +1,28 @@
 const hre = require("hardhat");
+require("dotenv").config();
 
 async function main() {
-  console.log("Deploying QIEPay to QIE Testnet...");
+  const [deployer] = await hre.ethers.getSigners();
+  console.log("Deploying with account:", deployer.address);
+
+  const balance = await hre.ethers.provider.getBalance(deployer.address);
+  console.log("Balance:", hre.ethers.formatEther(balance), "QIE");
 
   // Fee: 250 basis points = 2.5%
   const feePercent = 250;
-  const feeRecipient = process.env.FEE_RECIPIENT || process.env.PRIVATE_KEY
-    ? new hre.ethers.Wallet(process.env.PRIVATE_KEY).address
-    : "0x0000000000000000000000000000000000000000";
+  const feeRecipient = deployer.address;
 
   console.log(`Fee: ${feePercent / 100}%`);
   console.log(`Fee Recipient: ${feeRecipient}`);
 
-  const QIEPay = await hre.ethers.getContractFactory("QIEPay");
+  const QIEPay = await hre.ethers.getContractFactory("QIEPay", deployer);
   const qiePay = await QIEPay.deploy(feePercent, feeRecipient);
 
   await qiePay.waitForDeployment();
 
   const address = await qiePay.getAddress();
-  console.log(`QIEPay deployed to: ${address}`);
+  console.log(`\nQIEPay deployed to: ${address}`);
   console.log(`Explorer: https://testnet.qie.digital/address/${address}`);
-
-  // Verify on explorer
-  console.log("\nWaiting for block confirmations...");
-  await qiePay.deploymentTransaction().wait(5);
-
-  try {
-    await hre.run("verify:verify", {
-      address: address,
-      constructorArguments: [feePercent, feeRecipient],
-    });
-    console.log("Contract verified!");
-  } catch (e) {
-    console.log("Verification failed (may already be verified):", e.message);
-  }
 }
 
 main().catch((error) => {

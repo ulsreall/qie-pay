@@ -6,7 +6,7 @@ export const RPC_URL = 'https://rpc.qie.io';
 export const BLOCK_EXPLORER = 'https://explorer.qie.io';
 
 // Contract address - update after deployment
-export const CONTRACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+export const CONTRACT_ADDRESS = '0xa16AD240D5E360990D982f973a47329DAd349e18';
 
 export const QIEPAY_ABI = [
   // Events
