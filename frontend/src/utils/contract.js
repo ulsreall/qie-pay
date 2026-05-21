@@ -218,25 +218,50 @@ export async function payForPayment(paymentId, amountInQIE) {
   return tx.wait();
 }
 
+// Helper: send contract transaction via eth_sendTransaction
+async function sendContractTx(functionName, args = [], txOverrides = {}) {
+  if (window.ethereum) {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const address = await signer.getAddress();
+
+    const iface = new ethers.Interface(QIEPAY_ABI);
+    const data = iface.encodeFunctionData(functionName, args);
+
+    const params = {
+      from: address,
+      to: CONTRACT_ADDRESS,
+      data: data,
+      ...txOverrides,
+    };
+
+    const txHash = await window.ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [params],
+    });
+
+    return await provider.waitForTransaction(txHash);
+  }
+
+  // Fallback
+  const contract = await getContract();
+  const tx = await contract[functionName](...args, txOverrides);
+  return tx.wait();
+}
+
 // Settle payment (merchant)
 export async function settlePayment(paymentId) {
-  const contract = await getContract();
-  const tx = await contract.settlePayment(paymentId);
-  return tx.wait();
+  return sendContractTx('settlePayment', [BigInt(paymentId)]);
 }
 
 // Refund payment
 export async function refundPayment(paymentId) {
-  const contract = await getContract();
-  const tx = await contract.refundPayment(paymentId);
-  return tx.wait();
+  return sendContractTx('refundPayment', [BigInt(paymentId)]);
 }
 
 // Cancel payment
 export async function cancelPayment(paymentId) {
-  const contract = await getContract();
-  const tx = await contract.cancelPayment(paymentId);
-  return tx.wait();
+  return sendContractTx('cancelPayment', [BigInt(paymentId)]);
 }
 
 // Get payment details
