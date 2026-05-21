@@ -253,6 +253,7 @@ function CreateProposalModal({ isOpen, onClose, onSubmit, loading }) {
             </div>
           </form>
         </motion.div>
+      </motion.div>
       )}
     </AnimatePresence>
   );
