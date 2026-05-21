@@ -100,11 +100,65 @@ export async function registerMerchant() {
 
 // Create payment
 export async function createPayment(description, orderId) {
+  // Try direct approach for QIE Wallet compatibility
+  if (window.ethereum) {
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const address = await signer.getAddress();
+
+      // Encode function call manually
+      const iface = new ethers.Interface(QIEPAY_ABI);
+      const data = iface.encodeFunctionData('createPayment', [description, orderId]);
+
+      console.log('Creating payment from:', address);
+      console.log('Contract:', CONTRACT_ADDRESS);
+      console.log('Encoded data:', data);
+
+      // Send raw transaction via wallet
+      const txHash = await window.ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [{
+          from: address,
+          to: CONTRACT_ADDRESS,
+          data: data,
+        }],
+      });
+
+      console.log('TX hash:', txHash);
+
+      // Wait for receipt
+      const receipt = await provider.waitForTransaction(txHash);
+      console.log('Receipt:', receipt);
+
+      // Parse event
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, QIEPAY_ABI, provider);
+      for (const log of receipt.logs) {
+        try {
+          const parsed = contract.interface.parseLog(log);
+          if (parsed && parsed.name === 'PaymentCreated') {
+            return {
+              paymentId: parsed.args.paymentId.toString(),
+              receipt,
+            };
+          }
+        } catch {
+          continue;
+        }
+      }
+
+      return { paymentId: null, receipt };
+    } catch (err) {
+      console.error('Create payment error:', err);
+      throw err;
+    }
+  }
+
+  // Fallback to ethers.js
   const contract = await getContract();
   const tx = await contract.createPayment(description, orderId);
   const receipt = await tx.wait();
 
-  // Parse the event to get paymentId
   const event = receipt.logs.find((log) => {
     try {
       const parsed = contract.interface.parseLog(log);
