@@ -124,8 +124,9 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-sm text-[#A1A1AA] max-w-xl mx-auto mb-8 leading-relaxed"
           >
-            QIE Pay is a full-stack decentralized payment gateway built on the QIE Blockchain.
-            Accept payments with POS mode, storefronts, webhooks, and developer APIs — all on-chain.
+            A full-stack decentralized payment gateway on QIE Blockchain.
+            Accept crypto with POS mode, storefronts, and developer APIs —
+            plus DeFi features like staking, governance, and token rewards, all on-chain.
           </motion.p>
 
           <motion.div
@@ -276,7 +277,7 @@ export default function Home() {
           <div className="bg-[#10B981] rounded-lg p-5 sm:p-8 md:p-10">
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight">Start Accepting Payments Today</h2>
             <p className="text-[#D1FAE5] text-sm mb-6 max-w-md mx-auto">
-              Join the decentralized payment revolution. POS mode, storefronts, webhooks, and developer APIs — everything you need.
+              Join the decentralized payment revolution. POS mode, storefronts, webhooks, developer APIs, and DeFi features — everything you need to accept crypto.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
