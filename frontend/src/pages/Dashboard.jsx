@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   DollarSign, TrendingUp, CreditCard, Plus, Layers, BarChart3,
-  ArrowRight, RefreshCw, Loader2
+  ArrowRight, RefreshCw, Loader2, PlusCircle, Store, UserCog
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { AreaChart, Area, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -231,15 +231,51 @@ export default function Dashboard() {
             <h1 className="text-lg font-semibold text-[#FAFAFA] tracking-tight">Dashboard</h1>
             <p className="text-xs text-[#71717A] font-mono mt-0.5">{truncateAddr(address)}</p>
           </div>
-          <button
-            onClick={handleRefresh}
-            disabled={refreshing}
-            className="flex items-center gap-1.5 px-3 py-1.5 border border-[#27272A] hover:border-[#3F3F46] rounded-md text-xs text-[#A1A1AA] transition-colors disabled:opacity-50"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
-            Refresh
-          </button>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/create"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#10B981] hover:bg-[#059669] rounded-md text-xs font-medium text-white transition-colors"
+            >
+              <PlusCircle className="w-3.5 h-3.5" />
+              New Payment
+            </Link>
+            <button
+              onClick={handleRefresh}
+              disabled={refreshing}
+              className="flex items-center gap-1.5 px-3 py-1.5 border border-[#27272A] hover:border-[#3F3F46] rounded-md text-xs text-[#A1A1AA] transition-colors disabled:opacity-50"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
+              Refresh
+            </button>
+          </div>
         </div>
+
+        {/* Getting Started — show when no payments yet */}
+        {totalPayments === 0 && (
+          <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
+            <p className="text-sm font-medium text-[#FAFAFA] mb-2">Getting Started</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {[
+                { step: 1, label: 'Create your first payment', path: '/create', icon: PlusCircle },
+                { step: 2, label: 'Set up your storefront', path: '/store/' + address, icon: Store },
+                { step: 3, label: 'Configure your profile', path: '/merchant-settings', icon: UserCog },
+              ].map((item) => (
+                <Link
+                  key={item.step}
+                  to={item.path}
+                  className="flex items-center gap-3 p-3 rounded-md border border-[#27272A] hover:border-[#3F3F46] hover:bg-[#18181B] transition-all group"
+                >
+                  <span className="w-6 h-6 rounded-full bg-[rgba(16,185,129,0.1)] text-[#10B981] text-xs font-bold flex items-center justify-center">
+                    {item.step}
+                  </span>
+                  <span className="text-xs text-[#A1A1AA] group-hover:text-[#FAFAFA] transition-colors">
+                    {item.label}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Stats Cards — asymmetric layout */}
         <div className="grid grid-cols-3 gap-4">
