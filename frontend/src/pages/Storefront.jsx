@@ -76,7 +76,22 @@ export default function Storefront() {
         setMerchantExists(exists);
 
         if (exists) {
-          setProducts(loadProducts(address));
+          let prods = loadProducts(address);
+
+          // Seed demo products if empty (localStorage is per-browser, so seed for everyone)
+          if (prods.length === 0) {
+            prods = [
+              { id: 'demo-1', name: 'Espresso', description: 'Double shot espresso, rich and bold', price: 0.05 },
+              { id: 'demo-2', name: 'Cappuccino', description: 'Classic Italian cappuccino with steamed milk', price: 0.08 },
+              { id: 'demo-3', name: 'Matcha Latte', description: 'Premium Japanese matcha with oat milk', price: 0.10 },
+              { id: 'demo-4', name: 'Croissant', description: 'Buttery French croissant, freshly baked', price: 0.06 },
+              { id: 'demo-5', name: 'Avocado Toast', description: 'Sourdough with smashed avocado & poached egg', price: 0.12 },
+              { id: 'demo-6', name: 'Berry Smoothie', description: 'Mixed berry smoothie with Greek yogurt', price: 0.07 },
+            ];
+            saveProducts(address, prods);
+          }
+
+          setProducts(prods);
 
           try {
             const payments = await getMerchantPayments(address);
