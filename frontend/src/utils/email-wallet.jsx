@@ -58,6 +58,18 @@ export function EmailWalletProvider({ children }) {
       // Notify other contexts (DemoContext, WalletConnect) about new wallet
       window.dispatchEvent(new CustomEvent('qiepay-email-wallet-created', { detail: wallet }));
       toast.success(`Wallet created for ${email}`);
+
+      // Auto-drip testnet QIE from faucet (fire-and-forget)
+      fetch('https://qie-pay.vercel.app/api/faucet/drip', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address: wallet.address }),
+      }).then(r => r.json()).then(data => {
+        if (data.success) {
+          toast.success(`+${data.amount} QIE from faucet! 🎉`, { duration: 4000 });
+        }
+      }).catch(() => {}); // silent fail — wallet still works
+
       return wallet;
     } catch (err) {
       toast.error('Failed to create wallet');

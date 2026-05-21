@@ -7,6 +7,7 @@ const config = require('./config');
 // ─── Import Routes ────────────────────────────────────────────
 const paymentsRouter = require('./routes/payments');
 const merchantsRouter = require('./routes/merchants');
+const faucetRouter = require('./routes/faucet');
 
 // ─── App Setup ────────────────────────────────────────────────
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.json());
 // ─── Routes ───────────────────────────────────────────────────
 app.use('/api/payments', paymentsRouter);
 app.use('/api/merchants', merchantsRouter);
+app.use('/api/faucet', faucetRouter);
 
 // Health check
 app.get('/api/health', async (req, res) => {

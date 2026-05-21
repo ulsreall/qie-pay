@@ -23,6 +23,7 @@ const Developers = lazy(() => import('./pages/Developers'));
 const MerchantSettings = lazy(() => import('./pages/MerchantSettings'));
 const FeeCalculator = lazy(() => import('./pages/FeeCalculator'));
 const Staking = lazy(() => import('./pages/Staking'));
+const Faucet = lazy(() => import('./pages/Faucet'));
 const Governance = lazy(() => import('./pages/Governance'));
 const Rewards = lazy(() => import('./pages/Rewards'));
 
@@ -76,6 +77,7 @@ export default function App() {
           <Route path="/merchant-settings" element={<Layout><MerchantSettings /></Layout>} />
           <Route path="/calculator" element={<Layout><FeeCalculator /></Layout>} />
           <Route path="/staking" element={<Layout><Staking /></Layout>} />
+          <Route path="/faucet" element={<Layout><Faucet /></Layout>} />
           <Route path="/governance" element={<Layout><Governance /></Layout>} />
           <Route path="/rewards" element={<Layout><Rewards /></Layout>} />
         </Routes>

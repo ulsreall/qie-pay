@@ -16,6 +16,7 @@ import {
   Coins,
   Vote,
   Gift,
+  Droplets,
   X,
   ChevronsLeft,
   ChevronsRight,
@@ -55,6 +56,7 @@ const navSections = [
       { path: '/staking', label: 'Staking', icon: Coins },
       { path: '/governance', label: 'Governance', icon: Vote },
       { path: '/rewards', label: 'Rewards', icon: Gift },
+      { path: '/faucet', label: 'Faucet', icon: Droplets },
     ],
   },
   {
