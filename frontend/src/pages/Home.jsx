@@ -92,19 +92,19 @@ export default function Home() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                to="/dashboard"
+                to="/create"
                 className="btn-primary flex items-center gap-2 text-lg px-8 py-3.5"
               >
-                Get Started
+                Register & Start
                 <ArrowRight size={20} />
               </Link>
-              <Link
-                to="/create"
+              <a
+                href="#how-it-works"
                 className="btn-secondary flex items-center gap-2 text-lg px-8 py-3.5"
               >
-                Create Payment
+                How It Works
                 <ChevronRight size={20} />
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -147,7 +147,7 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 md:py-28 bg-gray-800/30">
+      <section id="how-it-works" className="py-20 md:py-28 bg-gray-800/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -199,10 +199,10 @@ export default function Home() {
               and start accepting QIE payments today.
             </p>
             <Link
-              to="/dashboard"
+              to="/create"
               className="btn-primary inline-flex items-center gap-2 text-lg px-8 py-3.5"
             >
-              Launch Dashboard
+              Register as Merchant
               <ArrowRight size={20} />
             </Link>
           </div>
