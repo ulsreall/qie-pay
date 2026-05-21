@@ -180,7 +180,7 @@ function SidebarContent({ onNavClick, collapsed, onToggle }) {
       {/* Collapse toggle — desktop only */}
       <button
         onClick={onToggle}
-        className="hidden lg:flex items-center justify-center gap-2 mx-2 mb-1 px-3 py-1.5 rounded-md text-[#52525B] hover:text-[#A1A1AA] hover:bg-[#111113]/50 transition-colors text-xs"
+        className="hidden lg:flex items-center justify-center gap-2 mx-3 mb-2 px-3 py-2 rounded-lg bg-[#111113] border border-[#27272A] hover:border-[#3F3F46] text-[#A1A1AA] hover:text-[#FAFAFA] transition-all duration-150 text-xs font-medium"
         aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
       >
         {collapsed ? <ChevronsRight size={14} /> : <ChevronsLeft size={14} />}
@@ -210,7 +210,7 @@ export default function Sidebar({ isOpen, onClose, collapsed, onToggle }) {
       <aside
         className={`
           fixed top-0 left-0 z-40 h-full
-          ${collapsed ? 'w-[64px]' : 'w-[260px]'}
+          ${collapsed ? 'w-[64px]' : 'w-[280px]'}
           flex flex-col
           bg-[#09090B] border-r border-[#1E1E21]
           transition-all duration-300 ease-in-out
