@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import { checkConnection, getMerchantPayments } from '../utils/contract';
 import { formatQIEAmount } from '../utils/currency';
 
-const STORAGE_PREFIX = 'notifications_';
+const STORAGE_PREFIX = 'notifications_v2_';
 const POLL_INTERVAL = 30000; // 30 seconds
 
 // Status labels for notifications
