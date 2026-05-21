@@ -1,95 +1,210 @@
-import { useState, useEffect } from 'react';
-import { connectWallet, getBalance, onAccountChange, checkConnection } from '../utils/contract';
-import { Wallet, LogOut, Copy, Check } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import {
+  connectWallet,
+  getBalance,
+  onAccountChange,
+  checkConnection,
+} from '../utils/contract';
+import { Wallet, LogOut, Copy, Check, RefreshCw } from 'lucide-react';
+import toast from 'react-hot-toast';
 
-export default function WalletConnect() {
+const QIE_USD_RATE = 0.5; // Mock exchange rate
+
+export default function WalletConnect({ compact = false }) {
   const [wallet, setWallet] = useState(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
+  // Auto-detect existing connection on mount
   useEffect(() => {
     checkConnection().then((connected) => {
       if (connected) setWallet(connected);
     });
 
-    onAccountChange((accounts) => {
+    const handleAccounts = (accounts) => {
       if (accounts.length === 0) {
         setWallet(null);
+        toast('Wallet disconnected', { icon: '🔌' });
       } else {
-        checkConnection().then(setWallet);
+        checkConnection().then((w) => {
+          if (w) setWallet(w);
+        });
       }
-    });
+    };
+
+    onAccountChange(handleAccounts);
   }, []);
 
   const handleConnect = async () => {
     setLoading(true);
     try {
       const result = await connectWallet();
-      setWallet({
-        address: result.address,
-        balance: result.balance,
-      });
+      setWallet({ address: result.address, balance: result.balance });
+      toast.success('Wallet connected');
     } catch (err) {
       console.error('Connection failed:', err);
-      alert(err.message);
+      toast.error(err.message || 'Connection failed');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  const handleDisconnect = () => {
+  const handleDisconnect = useCallback(() => {
     setWallet(null);
-  };
+    toast.success('Wallet disconnected');
+  }, []);
 
-  const copyAddress = () => {
-    if (wallet?.address) {
-      navigator.clipboard.writeText(wallet.address);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+  const refreshBalance = useCallback(async () => {
+    if (!wallet?.address) return;
+    setRefreshing(true);
+    try {
+      const bal = await getBalance(wallet.address);
+      setWallet((prev) => (prev ? { ...prev, balance: bal } : prev));
+    } catch {
+      // silently fail
+    } finally {
+      setRefreshing(false);
     }
-  };
+  }, [wallet?.address]);
+
+  const copyAddress = useCallback(() => {
+    if (!wallet?.address) return;
+    navigator.clipboard.writeText(wallet.address);
+    setCopied(true);
+    toast.success('Address copied to clipboard');
+    setTimeout(() => setCopied(false), 2000);
+  }, [wallet?.address]);
 
   const truncateAddress = (addr) =>
-    `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+    addr ? `${addr.slice(0, 6)}⋯${addr.slice(-4)}` : '';
 
+  const usdValue = wallet?.balance
+    ? (parseFloat(wallet.balance) * QIE_USD_RATE).toFixed(2)
+    : '0.00';
+
+  // ---- Disconnected state ----
   if (!wallet) {
     return (
       <button
         onClick={handleConnect}
         disabled={loading}
-        className="btn-primary flex items-center gap-2"
+        className="btn-primary w-full flex items-center justify-center gap-2 text-sm"
       >
-        <Wallet size={18} />
-        {loading ? 'Connecting...' : 'Connect Wallet'}
+        <Wallet size={16} />
+        {loading ? (
+          <span className="flex items-center gap-2">
+            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            Connecting…
+          </span>
+        ) : compact ? (
+          'Connect'
+        ) : (
+          'Connect Wallet'
+        )}
       </button>
     );
   }
 
+  // ---- Compact (sidebar) view ----
+  if (compact) {
+    return (
+      <div className="space-y-2">
+        {/* Address row */}
+        <button
+          onClick={copyAddress}
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/30 transition-colors group"
+        >
+          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+          <span className="text-sm font-medium text-white truncate flex-1 text-left">
+            {truncateAddress(wallet.address)}
+          </span>
+          {copied ? (
+            <Check size={12} className="text-emerald-400 shrink-0" />
+          ) : (
+            <Copy
+              size={12}
+              className="text-slate-500 group-hover:text-slate-300 shrink-0 transition-colors"
+            />
+          )}
+        </button>
+
+        {/* Balance row */}
+        <div className="flex items-center justify-between px-3 py-1.5">
+          <div>
+            <p className="text-xs text-slate-500">Balance</p>
+            <p className="text-sm font-semibold text-white">
+              {parseFloat(wallet.balance).toFixed(4)}{' '}
+              <span className="text-slate-400 font-normal">QIE</span>
+            </p>
+            <p className="text-[11px] text-slate-500">≈ ${usdValue} USD</p>
+          </div>
+          <button
+            onClick={refreshBalance}
+            disabled={refreshing}
+            className="p-1.5 rounded-lg text-slate-500 hover:text-white hover:bg-white/10 transition-colors"
+            title="Refresh balance"
+          >
+            <RefreshCw
+              size={14}
+              className={refreshing ? 'animate-spin' : ''}
+            />
+          </button>
+        </div>
+
+        {/* Disconnect */}
+        <button
+          onClick={handleDisconnect}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+        >
+          <LogOut size={14} />
+          Disconnect
+        </button>
+      </div>
+    );
+  }
+
+  // ---- Full (navbar) view ----
   return (
     <div className="flex items-center gap-3">
-      <div className="hidden sm:flex items-center gap-2 bg-gray-800 rounded-lg px-3 py-2 border border-gray-700">
-        <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-        <span className="text-sm text-gray-300">
+      {/* Balance pill */}
+      <div className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10">
+        <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+        <span className="text-sm text-slate-300 font-medium">
           {parseFloat(wallet.balance).toFixed(4)} QIE
         </span>
+        <span className="text-xs text-slate-500">(${usdValue})</span>
       </div>
 
+      {/* Address with copy */}
       <button
         onClick={copyAddress}
-        className="flex items-center gap-2 bg-gray-800 rounded-lg px-3 py-2 border border-gray-700 hover:border-primary-500 transition-colors"
+        className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:border-purple-500/30 transition-colors"
       >
-        <span className="text-sm font-medium">
+        <span className="text-sm font-medium text-white">
           {truncateAddress(wallet.address)}
         </span>
         {copied ? (
-          <Check size={14} className="text-green-400" />
+          <Check size={14} className="text-emerald-400" />
         ) : (
-          <Copy size={14} className="text-gray-400" />
+          <Copy size={14} className="text-slate-400" />
         )}
       </button>
 
+      {/* Refresh */}
+      <button
+        onClick={refreshBalance}
+        disabled={refreshing}
+        className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+        title="Refresh balance"
+      >
+        <RefreshCw size={16} className={refreshing ? 'animate-spin' : ''} />
+      </button>
+
+      {/* Disconnect */}
       <button
         onClick={handleDisconnect}
-        className="p-2 text-gray-400 hover:text-red-400 transition-colors"
+        className="p-2 text-slate-400 hover:text-red-400 transition-colors"
         title="Disconnect"
       >
         <LogOut size={18} />

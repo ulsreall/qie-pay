@@ -4,6 +4,7 @@ export const CHAIN_ID_HEX = '0x7BF';
 export const CHAIN_NAME = 'QIE Testnet';
 export const RPC_URL = 'https://rpc.qie.io';
 export const BLOCK_EXPLORER = 'https://explorer.qie.io';
+export const EXPLORER_URL = 'https://explorer.qie.io';
 
 // Contract address - update after deployment
 export const CONTRACT_ADDRESS = '0xFFC670DA0f40c1602175415abd9CEcd6d6BADD42';
@@ -42,6 +43,9 @@ export const QIEPAY_ABI = [
   'function getMerchantPayments(address _merchant) external view returns (uint256[])',
   'function getMerchantEarnings(address _merchant) external view returns (uint256)',
 ];
+
+// Alias for convenience
+export const ABI = QIEPAY_ABI;
 
 export const STATUS_MAP = {
   0: 'Created',

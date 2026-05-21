@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import Layout from './components/Layout';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import CreatePayment from './pages/CreatePayment';
@@ -9,16 +9,40 @@ import MerchantProfile from './pages/MerchantProfile';
 export default function App() {
   return (
     <div className="min-h-screen bg-gray-900">
-      <Navbar />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/create" element={<CreatePayment />} />
-          <Route path="/pay/:id" element={<Pay />} />
-          <Route path="/merchant/:address" element={<MerchantProfile />} />
-        </Routes>
-      </main>
+      <Routes>
+        {/* Home: full-width, no sidebar */}
+        <Route path="/" element={<Home />} />
+
+        {/* Internal pages: with sidebar layout */}
+        <Route
+          path="/dashboard"
+          element={
+            <Layout>
+              <Dashboard />
+            </Layout>
+          }
+        />
+        <Route
+          path="/create"
+          element={
+            <Layout>
+              <CreatePayment />
+            </Layout>
+          }
+        />
+        <Route
+          path="/pay/:id"
+          element={<Pay />}
+        />
+        <Route
+          path="/merchant/:address"
+          element={
+            <Layout>
+              <MerchantProfile />
+            </Layout>
+          }
+        />
+      </Routes>
     </div>
   );
 }
