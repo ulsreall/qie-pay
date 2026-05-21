@@ -10,8 +10,11 @@ import {
   Webhook,
   Code2,
   X,
+  UserCog,
+  Calculator,
 } from 'lucide-react';
 import WalletConnect from './WalletConnect';
+import NotificationCenter from './NotificationCenter';
 
 const navSections = [
   {
@@ -35,11 +38,13 @@ const navSections = [
     items: [
       { path: '/webhooks', label: 'Webhooks', icon: Webhook },
       { path: '/developers', label: 'API Docs', icon: Code2 },
+      { path: '/calculator', label: 'Fee Calculator', icon: Calculator },
     ],
   },
   {
     label: 'Other',
     items: [
+      { path: '/merchant-settings', label: 'Merchant Settings', icon: UserCog },
       { path: '/settings', label: 'Settings', icon: Settings },
     ],
   },
@@ -68,11 +73,10 @@ function SidebarContent({ onNavClick }) {
         ? 'bg-[#111113] text-[#34D399]'
         : 'text-[#A1A1AA] hover:text-[#D4D4D8] hover:bg-[#111113]/50'
     }`;
-
   return (
     <div className="flex flex-col h-full">
-      {/* Logo */}
-      <div className="p-4 pb-3">
+      {/* Logo + Notifications */}
+      <div className="p-4 pb-3 flex items-center justify-between">
         <Link
           to="/"
           className="flex items-center gap-3 group"
@@ -89,6 +93,7 @@ function SidebarContent({ onNavClick }) {
             </p>
           </div>
         </Link>
+        <NotificationCenter />
       </div>
 
       {/* Navigation sections */}

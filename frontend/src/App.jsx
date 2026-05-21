@@ -15,6 +15,8 @@ import POS from './pages/POS';
 import Storefront from './pages/Storefront';
 import Webhooks from './pages/Webhooks';
 import Developers from './pages/Developers';
+import MerchantSettings from './pages/MerchantSettings';
+import FeeCalculator from './pages/FeeCalculator';
 
 export default function App() {
   return (
@@ -53,6 +55,8 @@ export default function App() {
         <Route path="/settings" element={<Layout><Settings /></Layout>} />
         <Route path="/webhooks" element={<Layout><Webhooks /></Layout>} />
         <Route path="/developers" element={<Layout><Developers /></Layout>} />
+        <Route path="/merchant-settings" element={<Layout><MerchantSettings /></Layout>} />
+        <Route path="/calculator" element={<Layout><FeeCalculator /></Layout>} />
       </Routes>
     </div>
   );
