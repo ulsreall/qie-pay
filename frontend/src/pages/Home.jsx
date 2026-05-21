@@ -6,6 +6,7 @@ import {
   ArrowRight, Globe, Code2, Database, Cpu,
   Monitor, Store, Webhook, FileText, Coins, Vote, Gift
 } from 'lucide-react';
+import { EmailLoginButton } from '../utils/email-wallet';
 
 /* ─── Features Data ─── */
 const features = [
@@ -149,6 +150,24 @@ export default function Home() {
               Try POS Mode
               <Monitor className="w-4 h-4" />
             </Link>
+          </motion.div>
+
+          {/* Email Login Option */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mt-6 max-w-xs mx-auto"
+          >
+            <div className="relative mb-3">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-[#27272A]" />
+              </div>
+              <div className="relative flex justify-center text-[10px]">
+                <span className="bg-[#09090B] px-2 text-[#52525B]">No wallet? No problem</span>
+              </div>
+            </div>
+            <EmailLoginButton />
           </motion.div>
         </div>
       </section>

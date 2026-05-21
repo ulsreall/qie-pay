@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Layout from './components/Layout';
 import LoadingSpinner from './components/LoadingSpinner';
+import { EmailWalletProvider } from './utils/email-wallet';
 
 // Lazy load all pages — only download when visited
 const Home = lazy(() => import('./pages/Home'));
@@ -35,6 +36,7 @@ function PageLoader() {
 
 export default function App() {
   return (
+    <EmailWalletProvider>
     <div className="min-h-screen bg-[#09090B] text-[#FAFAFA]">
       <Toaster
         position="top-right"
@@ -79,5 +81,6 @@ export default function App() {
         </Routes>
       </Suspense>
     </div>
+    </EmailWalletProvider>
   );
 }

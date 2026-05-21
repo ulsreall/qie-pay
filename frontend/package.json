@@ -9,6 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@web3auth/base": "^9.7.0",
+    "@web3auth/ethereum-provider": "^9.7.0",
+    "@web3auth/modal": "^10.16.0",
     "date-fns": "^4.2.1",
     "ethers": "^6.13.0",
     "framer-motion": "^12.39.0",

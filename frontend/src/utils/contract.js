@@ -7,6 +7,20 @@ import {
   DEMO_BALANCE,
 } from './demoData';
 
+// Email wallet storage key
+const EMAIL_WALLET_KEY = 'qiepay_email_wallet';
+
+// Get email wallet from localStorage
+function getEmailWallet() {
+  try {
+    const saved = localStorage.getItem(EMAIL_WALLET_KEY);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch {}
+  return null;
+}
+
 // Get provider (read-only)
 export function getProvider() {
   if (typeof window !== 'undefined' && window.ethereum) {
@@ -17,6 +31,12 @@ export function getProvider() {
 
 // Get signer (requires wallet)
 export async function getSigner() {
+  // Check for email wallet first
+  const emailWallet = getEmailWallet();
+  if (emailWallet && emailWallet.privateKey) {
+    return new ethers.Wallet(emailWallet.privateKey, getProvider());
+  }
+  
   if (!window.ethereum) {
     throw new Error('Wallet not found. Please install QIE Wallet or MetaMask.');
   }
@@ -358,6 +378,31 @@ export function onAccountChange(callback) {
 // Check if wallet is connected
 // Returns real wallet data if available, otherwise returns demo data for demo mode
 export async function checkConnection() {
+  // Check for email wallet first
+  const emailWallet = getEmailWallet();
+  if (emailWallet && emailWallet.address) {
+    try {
+      const provider = getProvider();
+      const balance = await provider.getBalance(emailWallet.address);
+      return {
+        address: emailWallet.address,
+        balance: ethers.formatEther(balance),
+        email: emailWallet.email,
+        isEmailWallet: true,
+        isDemo: false,
+      };
+    } catch {
+      // If balance fetch fails, return email wallet with 0 balance
+      return {
+        address: emailWallet.address,
+        balance: '0',
+        email: emailWallet.email,
+        isEmailWallet: true,
+        isDemo: false,
+      };
+    }
+  }
+
   if (!window.ethereum) {
     // No wallet provider → enter demo mode
     return {

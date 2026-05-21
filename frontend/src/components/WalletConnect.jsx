@@ -6,7 +6,8 @@ import {
   checkConnection,
 } from '../utils/contract';
 import { useDemo } from '../context/DemoContext';
-import { Wallet, LogOut, Copy, Check, RefreshCw, Eye } from 'lucide-react';
+import { useEmailWallet, EmailLoginButton } from '../utils/email-wallet';
+import { Wallet, LogOut, Copy, Check, RefreshCw, Eye, Mail } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const QIE_USD_RATE = 0.5; // Mock exchange rate
@@ -219,23 +220,36 @@ export default function WalletConnect({ compact = false, collapsed = false }) {
   // ---- Disconnected state (no demo, no wallet — fallback) ----
   if (!wallet) {
     return (
-      <button
-        onClick={handleConnect}
-        disabled={loading}
-        className="btn-primary w-full flex items-center justify-center gap-2 text-sm"
-      >
-        <Wallet size={16} />
-        {loading ? (
-          <span className="flex items-center gap-2">
-            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            Connecting…
-          </span>
-        ) : compact ? (
-          'Connect'
-        ) : (
-          'Connect Wallet'
+      <div className="space-y-2">
+        <button
+          onClick={handleConnect}
+          disabled={loading}
+          className="btn-primary w-full flex items-center justify-center gap-2 text-sm"
+        >
+          <Wallet size={16} />
+          {loading ? (
+            <span className="flex items-center gap-2">
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Connecting…
+            </span>
+          ) : compact ? (
+            'Connect'
+          ) : (
+            'Connect Wallet'
+          )}
+        </button>
+        {!compact && (
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-[#27272A]" />
+            </div>
+            <div className="relative flex justify-center text-[10px]">
+              <span className="bg-[#09090B] px-2 text-[#52525B]">or</span>
+            </div>
+          </div>
         )}
-      </button>
+        {!compact && <EmailLoginButton />}
+      </div>
     );
   }
 
