@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+const { ethers } = require('ethers');
 
 const FAUCET_ADDRESS = '0xe0BC1D6CC58E091F6A2866788D7D938895E1E2a6';
 const FAUCET_ABI = [
@@ -7,10 +7,10 @@ const FAUCET_ABI = [
   'function dripAmount() external view returns (uint256)',
 ];
 
-const RPC_URL = 'https://rpc1testnet.qie.digital/';
+const RPC_URL = process.env.RPC_URL || 'https://rpc1testnet.qie.digital/';
 const PRIVATE_KEY = process.env.FAUCET_PRIVATE_KEY || process.env.PRIVATE_KEY || '';
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -57,4 +57,4 @@ export default async function handler(req, res) {
     }
     return res.status(500).json({ error: 'Faucet request failed' });
   }
-}
+};

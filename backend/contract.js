@@ -30,8 +30,8 @@ if (contractAddress && ethers.isAddress(contractAddress)) {
 }
 
 // ─── Helper: get contract connected to any address ────────────
-function getContractForAddress(address) {
-  const wallet = new ethers.Wallet(address, provider);
+function getContractForAddress(privateKey) {
+  const wallet = new ethers.Wallet(privateKey, provider);
   return new ethers.Contract(config.contractAddress, abi, wallet);
 }
 

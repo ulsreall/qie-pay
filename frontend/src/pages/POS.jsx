@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShoppingCart, Plus, Minus, Trash2, X, CreditCard, Package,
   ArrowLeft, Copy, ExternalLink, RotateCcw, Loader2, CheckCircle2,
-  QrCode, Coffee, Sandwich, Cake, GlassWater, IceCreamCone, Cookie
+  QrCode, Coffee, Sandwich, Cake, GlassWater, IceCream, Cookie
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { QRCodeSVG } from 'qrcode.react';
