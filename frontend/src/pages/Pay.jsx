@@ -16,6 +16,30 @@ import { EXPLORER_URL } from '../utils/constants';
 import { useDemo } from '../context/DemoContext';
 import { DEMO_PAYMENTS, DEMO_ADDRESS } from '../utils/demoData';
 
+/* ─── Error parser ─── */
+function parsePaymentError(err) {
+  const msg = err?.reason || err?.message || String(err);
+  if (msg.includes('merchant cannot pay own invoice') || msg.includes('msg.sender != payment.merchant')) {
+    return "You can't pay your own invoice. Switch to a different wallet.";
+  }
+  if (msg.includes('insufficient') || msg.includes('not enough')) {
+    return 'Insufficient QIE balance to complete this payment.';
+  }
+  if (msg.includes('not available') || msg.includes('not Created')) {
+    return 'This payment is no longer available (already paid or cancelled).';
+  }
+  if (msg.includes('zero amount')) {
+    return 'Payment amount is zero.';
+  }
+  if (msg.includes('user rejected') || msg.includes('User denied')) {
+    return 'Transaction was rejected by user.';
+  }
+  if (msg.includes('CALL_EXCEPTION')) {
+    return 'Transaction failed — check your balance and make sure you are on QIE Testnet.';
+  }
+  return msg || 'Payment failed. Please try again.';
+}
+
 /* ─── Skeleton ─── */
 function PaySkeleton() {
   return (
@@ -101,14 +125,19 @@ export default function Pay() {
       try {
         const wallet = await connectWallet();
         setWalletAddress(wallet.address);
+        // Check self-pay after connecting
+        if (wallet.address.toLowerCase() === payment.merchant?.toLowerCase()) {
+          toast.error("You can't pay your own invoice. Switch to a different wallet.");
+          return;
+        }
         toast.success('Wallet connected! Now processing payment...');
-        // After connecting, proceed with real payment
         await payForPayment(payment.id, payment.amount);
         toast.success('Payment sent!');
         const updated = await getPayment(id);
         setPayment(updated);
       } catch (err) {
-        toast.error(err?.reason || err?.message || 'Please connect a wallet to pay');
+        const msg = parsePaymentError(err);
+        toast.error(msg);
       }
       return;
     }
@@ -118,13 +147,26 @@ export default function Pay() {
       if (!walletAddress) {
         const wallet = await connectWallet();
         setWalletAddress(wallet.address);
+        // Check self-pay after connecting
+        if (wallet.address.toLowerCase() === payment.merchant?.toLowerCase()) {
+          toast.error("You can't pay your own invoice. Switch to a different wallet.");
+          setPaying(false);
+          return;
+        }
+      }
+      // Check self-pay for already connected wallet
+      if (walletAddress && walletAddress.toLowerCase() === payment.merchant?.toLowerCase()) {
+        toast.error("You can't pay your own invoice. Switch to a different wallet.");
+        setPaying(false);
+        return;
       }
       await payForPayment(payment.id, payment.amount);
       toast.success('Payment sent!');
       const updated = await getPayment(id);
       setPayment(updated);
     } catch (err) {
-      toast.error(err?.reason || err?.message || 'Payment failed');
+      const msg = parsePaymentError(err);
+      toast.error(msg);
     } finally {
       setPaying(false);
     }
@@ -232,9 +274,20 @@ export default function Pay() {
 
           {/* Action area based on status */}
           {payment.status === 0 && (
-            <button
-              onClick={handlePay}
-              disabled={paying}
+            <>
+              {/* Self-pay warning */}
+              {walletAddress && walletAddress.toLowerCase() === payment.merchant?.toLowerCase() && (
+                <div className="mb-3 flex items-start gap-2 p-3 rounded-md bg-amber-500/10 border border-amber-500/20">
+                  <AlertTriangle className="w-4 h-4 text-amber-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs font-medium text-amber-400">This is your own invoice</p>
+                    <p className="text-xs text-amber-400/70 mt-0.5">Switch to a different wallet to pay this invoice.</p>
+                  </div>
+                </div>
+              )}
+              <button
+                onClick={handlePay}
+                disabled={paying || (walletAddress && walletAddress.toLowerCase() === payment.merchant?.toLowerCase())}
               className="w-full h-10 flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md text-sm transition-colors disabled:opacity-60"
             >
               {paying ? (
@@ -245,6 +298,7 @@ export default function Pay() {
                 <><Wallet className="w-4 h-4" /> Pay {formatQIEAmount(payment.amount)} QIE</>
               )}
             </button>
+            </>
           )}
 
           {(payment.status === 1 || payment.status === 2) && (
