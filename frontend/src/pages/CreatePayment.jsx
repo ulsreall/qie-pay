@@ -11,11 +11,13 @@ import {
   connectWallet, checkConnection, isMerchant, registerMerchant, createPayment
 } from '../utils/contract';
 import { formatUSD, getQIEPrice } from '../utils/currency';
+import { useEmailWallet } from '../utils/email-wallet';
 
 const STEP_LABELS = ['Connect Wallet', 'Register', 'Create Payment'];
 
 export default function CreatePayment() {
   const navigate = useNavigate();
+  const { emailWallet } = useEmailWallet();
   const [step, setStep] = useState(0);
   const [address, setAddress] = useState(null);
   const [isRegistered, setIsRegistered] = useState(false);
@@ -31,12 +33,21 @@ export default function CreatePayment() {
   const [creating, setCreating] = useState(false);
   const [result, setResult] = useState(null);
 
-  // Check existing connection on mount
+  // Check existing connection on mount — email wallet first, then extension
   useEffect(() => {
     (async () => {
       try {
+        // Check email wallet from context (instant, no RPC needed)
+        if (emailWallet && emailWallet.address) {
+          setAddress(emailWallet.address);
+          const registered = await isMerchant(emailWallet.address);
+          setIsRegistered(registered);
+          setStep(registered ? 2 : 1);
+          return;
+        }
+        // Fallback: check extension wallet
         const conn = await checkConnection();
-        if (conn) {
+        if (conn && !conn.isDemo) {
           setAddress(conn.address);
           const registered = await isMerchant(conn.address);
           setIsRegistered(registered);
@@ -46,7 +57,7 @@ export default function CreatePayment() {
         // no wallet connected
       }
     })();
-  }, []);
+  }, [emailWallet]);
 
   /* ─── Step 1: Connect ─── */
   const handleConnect = async () => {
@@ -165,9 +176,9 @@ export default function CreatePayment() {
                   <><Wallet className="w-4 h-4" /> Connect Wallet</>
                 )}
               </button>
-              {!window.ethereum && (
+              {!window.ethereum && !emailWallet && (
                 <p className="text-red-400 text-xs mt-3">
-                  No wallet detected. Please install QIE Wallet or MetaMask.
+                  No wallet detected. Please install QIE Wallet or MetaMask, or connect with email on the home page.
                 </p>
               )}
             </div>

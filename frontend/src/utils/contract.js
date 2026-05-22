@@ -288,29 +288,26 @@ export function onAccountChange(callback) {
 // Check if wallet is connected
 // Returns real wallet data if available, otherwise returns demo data for demo mode
 export async function checkConnection() {
-  // Check for email wallet first
+  // Check for email wallet first — synchronous, no RPC needed
   const emailWallet = getEmailWallet();
   if (emailWallet && emailWallet.address) {
+    // Always return email wallet immediately — balance fetched async below
+    const result = {
+      address: emailWallet.address,
+      balance: '0',
+      email: emailWallet.email,
+      isEmailWallet: true,
+      isDemo: false,
+    };
+    // Try to fetch balance (non-blocking, best-effort)
     try {
       const provider = getDirectProvider();
       const balance = await provider.getBalance(emailWallet.address);
-      return {
-        address: emailWallet.address,
-        balance: ethers.formatEther(balance),
-        email: emailWallet.email,
-        isEmailWallet: true,
-        isDemo: false,
-      };
+      result.balance = ethers.formatEther(balance);
     } catch {
-      // If balance fetch fails, return email wallet with 0 balance
-      return {
-        address: emailWallet.address,
-        balance: '0',
-        email: emailWallet.email,
-        isEmailWallet: true,
-        isDemo: false,
-      };
+      // Balance fetch failed — still return the wallet with 0 balance
     }
+    return result;
   }
 
   if (!window.ethereum) {
