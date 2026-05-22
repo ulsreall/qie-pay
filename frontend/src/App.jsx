@@ -26,11 +26,16 @@ const Staking = lazy(() => import('./pages/Staking'));
 const Faucet = lazy(() => import('./pages/Faucet'));
 const Governance = lazy(() => import('./pages/Governance'));
 const Rewards = lazy(() => import('./pages/Rewards'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const StorefrontRedirect = lazy(() => import('./pages/StorefrontRedirect'));
 
 function PageLoader() {
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <LoadingSpinner size="md" />
+    <div className="flex items-center justify-center min-h-screen bg-[#09090B]">
+      <div className="flex flex-col items-center gap-3">
+        <LoadingSpinner size="md" />
+        <p className="text-xs text-[#52525B]">Loading...</p>
+      </div>
     </div>
   );
 }
@@ -62,6 +67,7 @@ export default function App() {
           <Route path="/pay/:id" element={<Pay />} />
           <Route path="/widget/:address" element={<Widget />} />
           <Route path="/pos" element={<POS />} />
+          <Route path="/store" element={<StorefrontRedirect />} />
           <Route path="/store/:address" element={<Storefront />} />
 
           {/* Internal pages with sidebar layout */}
@@ -80,6 +86,9 @@ export default function App() {
           <Route path="/faucet" element={<Layout><Faucet /></Layout>} />
           <Route path="/governance" element={<Layout><Governance /></Layout>} />
           <Route path="/rewards" element={<Layout><Rewards /></Layout>} />
+
+          {/* 404 catch-all */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </div>

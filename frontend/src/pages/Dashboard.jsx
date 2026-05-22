@@ -138,13 +138,9 @@ export default function Dashboard() {
             setRefreshing(false);
             return;
           }
-          try {
-            await registerMerchant();
-            toast.success('Merchant registered!');
-          } catch {
-            navigate('/create');
-            return;
-          }
+          // Not registered — redirect to registration flow
+          navigate('/create');
+          return;
         }
         await fetchPayments(conn.address);
       } catch (err) {

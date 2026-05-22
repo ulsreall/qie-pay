@@ -47,7 +47,7 @@ const navSections = [
     items: [
       { path: '/batch', label: 'Batch Payments', icon: Layers },
       { path: '/store', label: 'Storefront', icon: Store },
-      { path: '/merchant-settings', label: 'Merchant Profile', icon: UserCog },
+      { path: '/merchant-settings', label: 'Merchant Settings', icon: UserCog },
     ],
   },
   {

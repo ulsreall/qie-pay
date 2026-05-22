@@ -42,8 +42,9 @@ export function EmailWalletProvider({ children }) {
   }, []);
 
   const connectWithEmail = useCallback(async (email) => {
-    if (!email || !email.includes('@')) {
-      toast.error('Please enter a valid email');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email.trim())) {
+      toast.error('Please enter a valid email address');
       return null;
     }
 
