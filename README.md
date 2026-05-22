@@ -76,10 +76,10 @@ All deployed on **QIE Testnet** (Chain ID 1983):
 | Contract | Address | Purpose |
 |----------|---------|---------|
 | **QIEPay** | [`0xFFC670...BADD42`](https://testnet.qie.digital/address/0xFFC670DA0f40c1602175415abd9CEcd6d6BADD42) | Payment gateway — register, create, pay, settle, refund |
-| **QIEStaking** | `0x98D953...7140fC` | 4-tier staking for reduced fees |
-| **QIEGovernance** | `0xDBdDb2...1f4d74` | Proposal creation, voting, execution |
-| **QIERewards** | `0x56A140...DfaECa4` | QIEP ERC-20 reward token |
-| **QIEFaucet** | `0xe0BC1D...95E1E2a6` | Decentralized testnet faucet (109.5 QIE funded) |
+| **QIEStaking** | [`0x98D953...7140fC`](https://testnet.qie.digital/address/0x98D953BE697C730Ebc94e5d5032f68503f7140fC) | 4-tier staking for reduced fees |
+| **QIEGovernance** | [`0xDBdDb2...1f4d74`](https://testnet.qie.digital/address/0xDBdDb269CcBd0EcE141c14E9eCaF695f2b1f4d74) | Proposal creation, voting, execution |
+| **QIERewards** | [`0x56A140...DfaECa4`](https://testnet.qie.digital/address/0x56A140D3700aad23461605a3Cf7b9E880DfaECa4) | QIEP ERC-20 reward token |
+| **QIEFaucet** | [`0xe0BC1D...95E1E2a6`](https://testnet.qie.digital/address/0xe0BC1D6CC58E091F6A2866788D7D938895E1E2a6) | Decentralized testnet faucet (109.5 QIE funded) |
 
 ### QIEPay Functions
 ```solidity
