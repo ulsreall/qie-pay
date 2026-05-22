@@ -123,17 +123,36 @@ export default function Dashboard() {
 
       // Real wallet connected
       setAddress(conn.address);
-      const registered = await isMerchant(conn.address);
-      if (!registered) {
-        try {
-          await registerMerchant();
-          toast.success('Merchant registered!');
-        } catch {
-          navigate('/create');
-          return;
+
+      // Check if wallet has balance (new email wallets may have 0 QIE)
+      const bal = parseFloat(conn.balance || '0');
+
+      try {
+        const registered = await isMerchant(conn.address);
+        if (!registered) {
+          if (bal < 0.01) {
+            // New email wallet — faucet drip pending, show empty dashboard
+            setPayments([]);
+            setEarnings('0');
+            setLoading(false);
+            setRefreshing(false);
+            return;
+          }
+          try {
+            await registerMerchant();
+            toast.success('Merchant registered!');
+          } catch {
+            navigate('/create');
+            return;
+          }
         }
+        await fetchPayments(conn.address);
+      } catch (err) {
+        // Contract call failed — likely new wallet with no balance
+        console.warn('Dashboard load warning:', err.message);
+        setPayments([]);
+        setEarnings('0');
       }
-      await fetchPayments(conn.address);
     } catch (err) {
       console.error('Dashboard load error:', err);
       if (!silent) toast.error('Failed to load dashboard');
