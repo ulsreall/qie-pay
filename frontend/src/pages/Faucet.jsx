@@ -14,25 +14,31 @@ export default function Faucet() {
   const [dripResult, setDripResult] = useState(null);
   const [checking, setChecking] = useState(false);
 
-  // Auto-detect wallet
+  // Auto-detect wallet + check status immediately
   useEffect(() => {
-    checkConnection().then((conn) => {
+    checkConnection().then(async (conn) => {
       if (conn && conn.address) {
         setAddress(conn.address);
-        checkStatus(conn.address);
+        const s = await checkStatus(conn.address);
+        // If already claimed (on cooldown), show "already received" state silently
+        if (s && !s.canDrip) {
+          setDripResult({ alreadyClaimed: true, amount: s.dripAmount });
+        }
       }
     }).catch(() => {});
   }, []);
 
   const checkStatus = async (addr) => {
-    if (!addr) return;
+    if (!addr) return null;
     setChecking(true);
     try {
       const res = await fetch(`${FAUCET_API}/status/${addr}`);
       const data = await res.json();
       setStatus(data);
+      return data;
     } catch {
       setStatus(null);
+      return null;
     } finally {
       setChecking(false);
     }
@@ -149,22 +155,35 @@ export default function Faucet() {
 
         {/* Drip Result */}
         {dripResult && (
-          <div className="bg-[#10B981]/10 border border-[#10B981]/20 rounded-lg p-4 space-y-2">
-            <div className="flex items-center gap-2 text-[#10B981] font-medium text-sm">
+          <div className={`border rounded-lg p-4 space-y-2 ${
+            dripResult.alreadyClaimed 
+              ? 'bg-[#F59E0B]/10 border-[#F59E0B]/20' 
+              : 'bg-[#10B981]/10 border-[#10B981]/20'
+          }`}>
+            <div className={`flex items-center gap-2 font-medium text-sm ${
+              dripResult.alreadyClaimed ? 'text-[#F59E0B]' : 'text-[#10B981]'
+            }`}>
               <CheckCircle size={16} />
-              Tokens Sent!
+              {dripResult.alreadyClaimed ? 'Already Received' : 'Tokens Sent!'}
             </div>
             <div className="text-sm text-[#A1A1AA] space-y-1">
               <p>Amount: <span className="text-[#FAFAFA]">{dripResult.amount} QIE</span></p>
-              <p>To: <span className="text-[#FAFAFA] font-mono text-xs">{dripResult.to}</span></p>
-              <a
-                href={`${EXPLORER}/tx/${dripResult.txHash}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[#10B981] hover:underline text-xs"
-              >
-                View on Explorer <ExternalLink size={12} />
-              </a>
+              {dripResult.to && (
+                <>
+                  <p>To: <span className="text-[#FAFAFA] font-mono text-xs">{dripResult.to}</span></p>
+                  <a
+                    href={`${EXPLORER}/tx/${dripResult.txHash}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[#10B981] hover:underline text-xs"
+                  >
+                    View on Explorer <ExternalLink size={12} />
+                  </a>
+                </>
+              )}
+              {dripResult.alreadyClaimed && (
+                <p className="text-xs text-[#52525B]">You can claim again after cooldown expires.</p>
+              )}
             </div>
           </div>
         )}
