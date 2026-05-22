@@ -52,11 +52,15 @@ export default function Faucet() {
     setLoading(true);
     setDripResult(null);
     try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 45000); // 45s timeout
       const res = await fetch(`${FAUCET_API}/drip`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ address }),
+        signal: controller.signal,
       });
+      clearTimeout(timeout);
       const data = await res.json();
       if (data.success) {
         setDripResult(data);
@@ -69,7 +73,11 @@ export default function Faucet() {
         toast.error(data.error || 'Faucet request failed');
       }
     } catch (err) {
-      toast.error('Network error');
+      if (err.name === 'AbortError') {
+        toast.error('Request timeout — try again');
+      } else {
+        toast.error('Network error');
+      }
     } finally {
       setLoading(false);
     }
