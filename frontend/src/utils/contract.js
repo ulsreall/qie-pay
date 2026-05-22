@@ -22,6 +22,12 @@ function getEmailWallet() {
 }
 
 // Get provider (read-only)
+// Direct RPC provider — always uses JSON-RPC, ignores browser extension
+// Used for email wallet operations to avoid network mismatch
+function getDirectProvider() {
+  return new ethers.JsonRpcProvider(RPC_URL);
+}
+
 export function getProvider() {
   if (typeof window !== 'undefined' && window.ethereum) {
     return new ethers.BrowserProvider(window.ethereum);
@@ -31,10 +37,10 @@ export function getProvider() {
 
 // Get signer (requires wallet)
 export async function getSigner() {
-  // Check for email wallet first
+  // Check for email wallet first — uses direct RPC, not browser extension
   const emailWallet = getEmailWallet();
   if (emailWallet && emailWallet.privateKey) {
-    return new ethers.Wallet(emailWallet.privateKey, getProvider());
+    return new ethers.Wallet(emailWallet.privateKey, getDirectProvider());
   }
   
   if (!window.ethereum) {
@@ -50,10 +56,14 @@ export async function getContract() {
   return new ethers.Contract(CONTRACT_ADDRESS, QIEPAY_ABI, signer);
 }
 
-// Get contract with provider (for reads)
+// Get contract with provider (for reads) — email wallet uses direct RPC
 export function getReadContract() {
-  const provider = getProvider();
-  return new ethers.Contract(CONTRACT_ADDRESS, QIEPAY_ABI, provider);
+  // If email wallet exists, use direct RPC to avoid extension network mismatch
+  const emailWallet = getEmailWallet();
+  if (emailWallet) {
+    return new ethers.Contract(CONTRACT_ADDRESS, QIEPAY_ABI, getDirectProvider());
+  }
+  return new ethers.Contract(CONTRACT_ADDRESS, QIEPAY_ABI, getProvider());
 }
 
 // Connect wallet
@@ -282,7 +292,7 @@ export async function checkConnection() {
   const emailWallet = getEmailWallet();
   if (emailWallet && emailWallet.address) {
     try {
-      const provider = getProvider();
+      const provider = getDirectProvider();
       const balance = await provider.getBalance(emailWallet.address);
       return {
         address: emailWallet.address,
