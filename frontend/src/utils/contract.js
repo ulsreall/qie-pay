@@ -136,7 +136,7 @@ export async function getBalance(address) {
 // Register as merchant
 export async function registerMerchant() {
   const contract = await getContract();
-  const tx = await contract.registerMerchant();
+  const tx = await contract.registerMerchant({ gasLimit: 200000 });
   return tx.wait();
 }
 
@@ -147,7 +147,8 @@ export async function createPayment(description, orderId, amountInQIE) {
   // getContract() uses getSigner() which checks email wallet first,
   // then falls back to browser extension (window.ethereum)
   const contract = await getContract();
-  const tx = await contract.createPayment(description, orderId, amountWei);
+  // gasLimit bypasses wallet's eth_estimateGas which may fail on testnet
+  const tx = await contract.createPayment(description, orderId, amountWei, { gasLimit: 500000 });
   const receipt = await tx.wait();
 
   const contract2 = new ethers.Contract(CONTRACT_ADDRESS, QIEPAY_ABI, getProvider());
@@ -172,14 +173,15 @@ export async function createPayment(description, orderId, amountInQIE) {
 export async function payForPayment(paymentId, amountInQIE) {
   const value = ethers.parseEther(amountInQIE.toString());
   const contract = await getContract();
-  const tx = await contract.pay(paymentId, { value });
+  // gasLimit bypasses wallet's eth_estimateGas which may fail on testnet RPC mismatch
+  const tx = await contract.pay(paymentId, { value, gasLimit: 300000 });
   return tx.wait();
 }
 
 // Helper: send contract transaction (email wallet aware)
 async function sendContractTx(functionName, args = [], txOverrides = {}) {
   const contract = await getContract();
-  const tx = await contract[functionName](...args, txOverrides);
+  const tx = await contract[functionName](...args, { gasLimit: 300000, ...txOverrides });
   return tx.wait();
 }
 
