@@ -56,6 +56,9 @@ export default function Faucet() {
         setDripResult(data);
         toast.success(`+${data.amount} QIE sent!`);
         checkStatus(address); // refresh cooldown
+      } else if (data.error && data.error.includes('claimed')) {
+        // Already claimed — just refresh status, no error toast
+        checkStatus(address);
       } else {
         toast.error(data.error || 'Faucet request failed');
       }
