@@ -1,4 +1,4 @@
-const { ethers } = require('ethers');
+import { ethers } from 'ethers';
 
 const FAUCET_ADDRESS = '0xe0BC1D6CC58E091F6A2866788D7D938895E1E2a6';
 const FAUCET_ABI = [
@@ -8,7 +8,7 @@ const FAUCET_ABI = [
 
 const RPC_URL = process.env.RPC_URL || 'https://rpc1testnet.qie.digital/';
 
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
 
   if (req.method !== 'GET') {
@@ -38,4 +38,4 @@ module.exports = async function handler(req, res) {
   } catch (err) {
     return res.status(500).json({ error: 'Failed to check status' });
   }
-};
+}
