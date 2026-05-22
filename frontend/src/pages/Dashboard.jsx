@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   DollarSign, TrendingUp, CreditCard, Plus, Layers, BarChart3,
-  ArrowRight, RefreshCw, PlusCircle, Store, UserCog, Eye
+  ArrowRight, RefreshCw, PlusCircle, Store, UserCog, Eye, Copy, ExternalLink
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { AreaChart, Area, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -444,16 +444,36 @@ export default function Dashboard() {
                     <td className="text-right pr-2">
                       <span className="text-sm text-[#FAFAFA] font-medium tabular-nums">{formatQIEAmount(p.amount)} QIE</span>
                     </td>
-                    {p.status === 1 && (
-                      <td className="pl-2">
+                    <td className="pl-1">
+                      <div className="flex items-center gap-1">
                         <button
-                          onClick={() => handleSettle(p.id)}
-                          className="px-2 py-0.5 bg-[rgba(16,185,129,0.1)] hover:bg-[rgba(16,185,129,0.2)] text-[#34D399] text-xs rounded transition-colors"
+                          onClick={() => {
+                            const url = `${window.location.origin}/pay/${p.id}`;
+                            navigator.clipboard.writeText(url);
+                            toast.success('Payment link copied!');
+                          }}
+                          className="p-1 rounded hover:bg-[#27272A] text-[#71717A] hover:text-[#A1A1AA] transition-colors"
+                          title="Copy payment link"
                         >
-                          Settle
+                          <Copy className="w-3.5 h-3.5" />
                         </button>
-                      </td>
-                    )}
+                        <Link
+                          to={`/pay/${p.id}`}
+                          className="p-1 rounded hover:bg-[#27272A] text-[#71717A] hover:text-[#A1A1AA] transition-colors"
+                          title="View payment"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </Link>
+                        {p.status === 1 && (
+                          <button
+                            onClick={() => handleSettle(p.id)}
+                            className="px-2 py-0.5 bg-[rgba(16,185,129,0.1)] hover:bg-[rgba(16,185,129,0.2)] text-[#34D399] text-xs rounded transition-colors"
+                          >
+                            Settle
+                          </button>
+                        )}
+                      </div>
+                    </td>
                   </tr>
                 ))}
               </tbody>
