@@ -85,8 +85,8 @@ export default function WalletConnect({ compact = false, collapsed = false }) {
     if (!wallet?.address) return;
     setRefreshing(true);
     try {
-      const bal = await getBalance(wallet.address);
-      setWallet((prev) => (prev ? { ...prev, balance: bal } : prev));
+      const balResult = await getBalance(wallet.address);
+      setWallet((prev) => (prev ? { ...prev, balance: balResult.balance } : prev));
     } catch {
       // silently fail
     } finally {

@@ -123,8 +123,14 @@ export async function connectWallet() {
 // Get wallet balance
 export async function getBalance(address) {
   const provider = getProvider();
-  const balance = await provider.getBalance(address);
-  return ethers.formatEther(balance);
+  const [balance, network] = await Promise.all([
+    provider.getBalance(address),
+    provider.getNetwork(),
+  ]);
+  return {
+    balance: ethers.formatEther(balance),
+    chainId: Number(network.chainId),
+  };
 }
 
 // Register as merchant

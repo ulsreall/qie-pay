@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 import { format } from 'date-fns';
 import { QRCodeSVG } from 'qrcode.react';
 import StatusBadge from '../components/StatusBadge';
-import { getPayment, payForPayment, connectWallet, checkConnection } from '../utils/contract';
+import { getPayment, payForPayment, connectWallet, checkConnection, getBalance } from '../utils/contract';
 import { formatQIEAmount, formatUSD } from '../utils/currency';
 import { pollPaymentStatus } from '../utils/polling';
 import { EXPLORER_URL } from '../utils/constants';
@@ -68,6 +68,8 @@ export default function Pay() {
   const [paying, setPaying] = useState(false);
   const [polling, setPolling] = useState(false);
   const [walletAddress, setWalletAddress] = useState(null);
+  const [walletBalance, setWalletBalance] = useState(null);
+  const [balanceLoading, setBalanceLoading] = useState(false);
   const pollCleanup = useRef(null);
 
   /* ─── Load payment ─── */
@@ -96,9 +98,17 @@ export default function Pay() {
 
   useEffect(() => {
     loadPayment();
-    checkConnection().then((conn) => {
+    checkConnection().then(async (conn) => {
       if (conn && !conn.isDemo) {
         setWalletAddress(conn.address);
+        // Fetch native balance on QIE Testnet
+        setBalanceLoading(true);
+        try {
+          const { getBalance } = await import('../utils/contract');
+          const balResult = await getBalance(conn.address);
+          setWalletBalance(balResult.balance);
+        } catch { setWalletBalance('0'); }
+        setBalanceLoading(false);
       }
     }).catch(() => {});
     return () => { if (pollCleanup.current) pollCleanup.current(); };
@@ -125,9 +135,23 @@ export default function Pay() {
       try {
         const wallet = await connectWallet();
         setWalletAddress(wallet.address);
+        // Fetch balance
+        setBalanceLoading(true);
+        try {
+          const balResult = await getBalance(wallet.address);
+          setWalletBalance(balResult.balance);
+        } catch { setWalletBalance('0'); }
+        setBalanceLoading(false);
         // Check self-pay after connecting
         if (wallet.address.toLowerCase() === payment.merchant?.toLowerCase()) {
           toast.error("You can't pay your own invoice. Switch to a different wallet.");
+          return;
+        }
+        // Check balance
+        const balNum = parseFloat(walletBalance || '0');
+        const payAmt = parseFloat(payment.amount);
+        if (balNum < payAmt) {
+          toast.error(`Insufficient balance. You need ${payment.amount} QIE on QIE Testnet (chain 1983).`);
           return;
         }
         toast.success('Wallet connected! Now processing payment...');
@@ -147,6 +171,13 @@ export default function Pay() {
       if (!walletAddress) {
         const wallet = await connectWallet();
         setWalletAddress(wallet.address);
+        // Fetch balance
+        setBalanceLoading(true);
+        try {
+          const balResult = await getBalance(wallet.address);
+          setWalletBalance(balResult.balance);
+        } catch { setWalletBalance('0'); }
+        setBalanceLoading(false);
         // Check self-pay after connecting
         if (wallet.address.toLowerCase() === payment.merchant?.toLowerCase()) {
           toast.error("You can't pay your own invoice. Switch to a different wallet.");
@@ -157,6 +188,14 @@ export default function Pay() {
       // Check self-pay for already connected wallet
       if (walletAddress && walletAddress.toLowerCase() === payment.merchant?.toLowerCase()) {
         toast.error("You can't pay your own invoice. Switch to a different wallet.");
+        setPaying(false);
+        return;
+      }
+      // Check balance
+      const balNum = parseFloat(walletBalance || '0');
+      const payAmt = parseFloat(payment.amount);
+      if (balNum < payAmt) {
+        toast.error(`Insufficient balance. You need ${payment.amount} QIE on QIE Testnet (chain 1983).`);
         setPaying(false);
         return;
       }
@@ -285,9 +324,31 @@ export default function Pay() {
                   </div>
                 </div>
               )}
+              {/* Insufficient balance warning */}
+              {walletAddress && walletBalance !== null && parseFloat(walletBalance) < parseFloat(payment.amount) && (
+                <div className="mb-3 flex items-start gap-2 p-3 rounded-md bg-red-500/10 border border-red-500/20">
+                  <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="text-xs font-medium text-red-400">Insufficient QIE on QIE Testnet</p>
+                    <p className="text-xs text-red-400/70 mt-0.5">
+                      Balance: {parseFloat(walletBalance).toFixed(4)} QIE — Need: {payment.amount} QIE on chain 1983.
+                      {parseFloat(walletBalance) === 0 && ' Your wallet may be on a different network.'}
+                    </p>
+                  </div>
+                </div>
+              )}
+              {/* Balance display */}
+              {walletAddress && walletBalance !== null && !balanceLoading && (
+                <div className="mb-3 flex items-center justify-between px-3 py-2 rounded-md bg-[#09090B] border border-[#27272A]/40">
+                  <span className="text-xs text-[#71717A]">Your balance (QIE Testnet)</span>
+                  <span className={`text-xs font-mono font-medium ${parseFloat(walletBalance) >= parseFloat(payment.amount) ? 'text-[#34D399]' : 'text-red-400'}`}>
+                    {parseFloat(walletBalance).toFixed(4)} QIE
+                  </span>
+                </div>
+              )}
               <button
                 onClick={handlePay}
-                disabled={paying || (walletAddress && walletAddress.toLowerCase() === payment.merchant?.toLowerCase())}
+                disabled={paying || (walletAddress && walletAddress.toLowerCase() === payment.merchant?.toLowerCase()) || (walletBalance !== null && parseFloat(walletBalance) < parseFloat(payment.amount))}
               className="w-full h-10 flex items-center justify-center gap-2 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md text-sm transition-colors disabled:opacity-60"
             >
               {paying ? (
