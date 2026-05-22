@@ -128,140 +128,40 @@ export async function registerMerchant() {
 export async function createPayment(description, orderId, amountInQIE) {
   const amountWei = ethers.parseEther(amountInQIE.toString());
 
-  // Try direct approach for QIE Wallet compatibility
-  if (window.ethereum) {
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const address = await signer.getAddress();
-
-      // Encode function call manually
-      const iface = new ethers.Interface(QIEPAY_ABI);
-      const data = iface.encodeFunctionData('createPayment', [description, orderId, amountWei]);
-
-
-      // Send raw transaction via wallet
-      const txHash = await window.ethereum.request({
-        method: 'eth_sendTransaction',
-        params: [{
-          from: address,
-          to: CONTRACT_ADDRESS,
-          data: data,
-        }],
-      });
-
-
-      // Wait for receipt
-      const receipt = await provider.waitForTransaction(txHash);
-
-      // Parse event
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, QIEPAY_ABI, provider);
-      for (const log of receipt.logs) {
-        try {
-          const parsed = contract.interface.parseLog(log);
-          if (parsed && parsed.name === 'PaymentCreated') {
-            return {
-              paymentId: parsed.args.paymentId.toString(),
-              receipt,
-            };
-          }
-        } catch {
-          continue;
-        }
-      }
-
-      return { paymentId: null, receipt };
-    } catch (err) {
-      console.error('Create payment error:', err);
-      throw err;
-    }
-  }
-
-  // Fallback to ethers.js
+  // getContract() uses getSigner() which checks email wallet first,
+  // then falls back to browser extension (window.ethereum)
   const contract = await getContract();
   const tx = await contract.createPayment(description, orderId, amountWei);
   const receipt = await tx.wait();
 
-  const event = receipt.logs.find((log) => {
+  const contract2 = new ethers.Contract(CONTRACT_ADDRESS, QIEPAY_ABI, getProvider());
+  for (const log of receipt.logs) {
     try {
-      const parsed = contract.interface.parseLog(log);
-      return parsed.name === 'PaymentCreated';
+      const parsed = contract2.interface.parseLog(log);
+      if (parsed && parsed.name === 'PaymentCreated') {
+        return {
+          paymentId: parsed.args.paymentId.toString(),
+          receipt,
+        };
+      }
     } catch {
-      return false;
+      continue;
     }
-  });
-
-  if (event) {
-    const parsed = contract.interface.parseLog(event);
-    return {
-      paymentId: parsed.args.paymentId.toString(),
-      receipt,
-    };
   }
 
   return { paymentId: null, receipt };
 }
 
 // Pay for a payment
-// Pay for a payment
 export async function payForPayment(paymentId, amountInQIE) {
   const value = ethers.parseEther(amountInQIE.toString());
-
-  // Direct approach for QIE Wallet compatibility
-  if (window.ethereum) {
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
-    const address = await signer.getAddress();
-
-    const iface = new ethers.Interface(QIEPAY_ABI);
-    const data = iface.encodeFunctionData('pay', [BigInt(paymentId)]);
-
-
-    const txHash = await window.ethereum.request({
-      method: 'eth_sendTransaction',
-      params: [{
-        from: address,
-        to: CONTRACT_ADDRESS,
-        data: data,
-        value: '0x' + value.toString(16),
-      }],
-    });
-
-    return await provider.waitForTransaction(txHash);
-  }
-
-  // Fallback
   const contract = await getContract();
   const tx = await contract.pay(paymentId, { value });
   return tx.wait();
 }
 
-// Helper: send contract transaction via eth_sendTransaction
+// Helper: send contract transaction (email wallet aware)
 async function sendContractTx(functionName, args = [], txOverrides = {}) {
-  if (window.ethereum) {
-    const provider = new ethers.BrowserProvider(window.ethereum);
-    const signer = await provider.getSigner();
-    const address = await signer.getAddress();
-
-    const iface = new ethers.Interface(QIEPAY_ABI);
-    const data = iface.encodeFunctionData(functionName, args);
-
-    const params = {
-      from: address,
-      to: CONTRACT_ADDRESS,
-      data: data,
-      ...txOverrides,
-    };
-
-    const txHash = await window.ethereum.request({
-      method: 'eth_sendTransaction',
-      params: [params],
-    });
-
-    return await provider.waitForTransaction(txHash);
-  }
-
-  // Fallback
   const contract = await getContract();
   const tx = await contract[functionName](...args, txOverrides);
   return tx.wait();
