@@ -138,9 +138,15 @@ export default function Dashboard() {
             setRefreshing(false);
             return;
           }
-          // Not registered — redirect to registration flow
-          navigate('/create');
-          return;
+          // Auto-register merchant on-chain
+          try {
+            toast.loading('Registering merchant...', { id: 'register' });
+            await registerMerchant();
+            toast.success('Merchant registered!', { id: 'register' });
+          } catch (regErr) {
+            console.warn('Auto-register failed:', regErr.message);
+            toast.dismiss('register');
+          }
         }
         await fetchPayments(conn.address);
       } catch (err) {

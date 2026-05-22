@@ -56,14 +56,10 @@ export async function getContract() {
   return new ethers.Contract(CONTRACT_ADDRESS, QIEPAY_ABI, signer);
 }
 
-// Get contract with provider (for reads) — email wallet uses direct RPC
+// Get contract with provider (for reads) — always use direct RPC
+// Read calls don't need wallet connection, direct RPC is more reliable
 export function getReadContract() {
-  // If email wallet exists, use direct RPC to avoid extension network mismatch
-  const emailWallet = getEmailWallet();
-  if (emailWallet) {
-    return new ethers.Contract(CONTRACT_ADDRESS, QIEPAY_ABI, getDirectProvider());
-  }
-  return new ethers.Contract(CONTRACT_ADDRESS, QIEPAY_ABI, getProvider());
+  return new ethers.Contract(CONTRACT_ADDRESS, QIEPAY_ABI, getDirectProvider());
 }
 
 // Connect wallet

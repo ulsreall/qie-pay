@@ -36,11 +36,17 @@ export default function CreatePayment() {
   // Check existing connection on mount — email wallet first, then extension
   useEffect(() => {
     (async () => {
-      // Email wallet: skip RPC check, go straight to register step
-      // isMerchant() will be checked when user clicks Register
+      // Email wallet: check merchant status, skip to create if already registered
       if (emailWallet && emailWallet.address) {
         setAddress(emailWallet.address);
-        setStep(1);
+        try {
+          const registered = await isMerchant(emailWallet.address);
+          setIsRegistered(registered);
+          setStep(registered ? 2 : 1);
+        } catch {
+          // If RPC check fails, show register step
+          setStep(1);
+        }
         return;
       }
       // Extension wallet: check connection + merchant status
