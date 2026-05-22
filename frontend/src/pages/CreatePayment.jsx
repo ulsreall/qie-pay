@@ -36,16 +36,15 @@ export default function CreatePayment() {
   // Check existing connection on mount — email wallet first, then extension
   useEffect(() => {
     (async () => {
+      // Email wallet: skip RPC check, go straight to register step
+      // isMerchant() will be checked when user clicks Register
+      if (emailWallet && emailWallet.address) {
+        setAddress(emailWallet.address);
+        setStep(1);
+        return;
+      }
+      // Extension wallet: check connection + merchant status
       try {
-        // Check email wallet from context (instant, no RPC needed)
-        if (emailWallet && emailWallet.address) {
-          setAddress(emailWallet.address);
-          const registered = await isMerchant(emailWallet.address);
-          setIsRegistered(registered);
-          setStep(registered ? 2 : 1);
-          return;
-        }
-        // Fallback: check extension wallet
         const conn = await checkConnection();
         if (conn && !conn.isDemo) {
           setAddress(conn.address);
@@ -87,7 +86,15 @@ export default function CreatePayment() {
       setIsRegistered(true);
       setStep(2);
     } catch (err) {
-      toast.error(err?.reason || err?.message || 'Registration failed');
+      const msg = err?.reason || err?.message || 'Registration failed';
+      // If already registered, treat as success and move to create step
+      if (msg.includes('already registered')) {
+        setIsRegistered(true);
+        setStep(2);
+        toast('Already registered — continuing...');
+      } else {
+        toast.error(msg);
+      }
     } finally {
       setRegistering(false);
     }

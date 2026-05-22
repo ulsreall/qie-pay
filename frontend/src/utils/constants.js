@@ -2,7 +2,7 @@
 export const CHAIN_ID = 1983;
 export const CHAIN_ID_HEX = '0x7BF';
 export const CHAIN_NAME = 'QIE Testnet';
-export const RPC_URL = 'https://rpc.qie.io';
+export const RPC_URL = 'https://rpc1testnet.qie.digital/';
 export const BLOCK_EXPLORER = 'https://explorer.qie.io';
 export const EXPLORER_URL = 'https://explorer.qie.io';
 

@@ -342,7 +342,7 @@ export default function Home() {
             <a href="https://explorer.qie.io" target="_blank" rel="noopener noreferrer" className="text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors">
               Explorer
             </a>
-            <a href="https://rpc.qie.io" target="_blank" rel="noopener noreferrer" className="text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors">
+            <a href="https://rpc1testnet.qie.digital/" target="_blank" rel="noopener noreferrer" className="text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors">
               RPC
             </a>
             <Link to="/developers" className="text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors">
