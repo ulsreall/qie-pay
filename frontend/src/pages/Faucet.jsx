@@ -230,7 +230,7 @@ export default function Faucet() {
         >
           0xe0BC1D6C...95E1E2a6 <ExternalLink size={12} />
         </a>
-        <p className="text-xs text-[#52525B]">10 QIE funded • 0.5 QIE per drip • 24h cooldown</p>
+        <p className="text-xs text-[#52525B]">109.5 QIE funded • 0.5 QIE per drip • 24h cooldown</p>
       </div>
     </motion.div>
   );

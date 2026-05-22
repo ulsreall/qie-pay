@@ -79,7 +79,7 @@ All deployed on **QIE Testnet** (Chain ID 1983):
 | **QIEStaking** | `0x98D953...7140fC` | 4-tier staking for reduced fees |
 | **QIEGovernance** | `0xDBdDb2...1f4d74` | Proposal creation, voting, execution |
 | **QIERewards** | `0x56A140...DfaECa4` | QIEP ERC-20 reward token |
-| **QIEFaucet** | `0xe0BC1D...95E1E2a6` | Decentralized testnet faucet (10 QIE funded) |
+| **QIEFaucet** | `0xe0BC1D...95E1E2a6` | Decentralized testnet faucet (109.5 QIE funded) |
 
 ### QIEPay Functions
 ```solidity
