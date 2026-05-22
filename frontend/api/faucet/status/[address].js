@@ -16,7 +16,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Support both /api/faucet/status?address=0x... and /api/faucet/status/0x...
     const { address } = req.query;
     if (!address || !ethers.isAddress(address)) {
       return res.status(400).json({ error: 'Invalid address' });
