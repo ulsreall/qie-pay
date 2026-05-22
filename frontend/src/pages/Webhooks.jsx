@@ -63,6 +63,15 @@ export default function Webhooks() {
 
   useEffect(() => {
     const check = async () => {
+      // Check email wallet first
+      try {
+        const saved = localStorage.getItem('qiepay_email_wallet');
+        if (saved) {
+          const ew = JSON.parse(saved);
+          if (ew.address) { setWallet(ew.address); return; }
+        }
+      } catch {}
+      // Fall back to browser wallet
       if (window.ethereum) {
         try {
           const accounts = await window.ethereum.request({ method: 'eth_accounts' });

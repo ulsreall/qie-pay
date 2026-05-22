@@ -7,68 +7,74 @@ import {
   GOVERNANCE_ABI,
   REWARDS_ABI,
 } from './defi-constants';
+import { RPC_URL } from './constants';
 
-// ─── Shared helpers ───
+// ─── Shared helpers (email wallet + browser wallet) ───
+
+const EMAIL_WALLET_KEY = 'qiepay_email_wallet';
+
+function getEmailWallet() {
+  try {
+    const saved = localStorage.getItem(EMAIL_WALLET_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch {}
+  return null;
+}
+
+function getDirectProvider() {
+  return new ethers.JsonRpcProvider(RPC_URL);
+}
 
 function getProvider() {
   if (typeof window !== 'undefined' && window.ethereum) {
     return new ethers.BrowserProvider(window.ethereum);
   }
-  return null;
+  return getDirectProvider();
+}
+
+async function getSigner() {
+  // Check email wallet first
+  const emailWallet = getEmailWallet();
+  if (emailWallet && emailWallet.privateKey) {
+    return new ethers.Wallet(emailWallet.privateKey, getDirectProvider());
+  }
+  // Fall back to browser extension
+  if (typeof window !== 'undefined' && window.ethereum) {
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    return provider.getSigner();
+  }
+  throw new Error('No wallet connected. Please connect a wallet or login with email.');
 }
 
 async function getSignerAddress() {
-  const provider = getProvider();
-  if (!provider) throw new Error('No wallet connected');
-  const signer = await provider.getSigner();
+  const signer = await getSigner();
   return signer.getAddress();
 }
 
 async function sendTx(abi, address, functionName, args = [], txOverrides = {}) {
-  if (!window.ethereum) throw new Error('No wallet connected');
-
-  const provider = new ethers.BrowserProvider(window.ethereum);
-  const signer = await provider.getSigner();
-  const from = await signer.getAddress();
-
-  const iface = new ethers.Interface(abi);
-  const data = iface.encodeFunctionData(functionName, args);
-
-  const params = { from, to: address, data, ...txOverrides };
-
-  const txHash = await window.ethereum.request({
-    method: 'eth_sendTransaction',
-    params: [params],
-  });
-
-  return provider.waitForTransaction(txHash);
+  const signer = await getSigner();
+  const contract = new ethers.Contract(address, abi, signer);
+  const tx = await contract[functionName](...args, { gasLimit: 300000, ...txOverrides });
+  return tx.wait();
 }
 
 async function readCall(abi, address, functionName, args = []) {
-  const provider = getProvider();
-  if (!provider) throw new Error('No wallet connected');
-
+  const provider = getDirectProvider();
   const contract = new ethers.Contract(address, abi, provider);
   return contract[functionName](...args);
 }
 
 async function sendTxRaw(to, data) {
-  if (!window.ethereum) throw new Error('No wallet connected');
-  const provider = new ethers.BrowserProvider(window.ethereum);
-  const signer = await provider.getSigner();
-  const from = await signer.getAddress();
-  const txHash = await window.ethereum.request({
-    method: 'eth_sendTransaction',
-    params: [{ from, to, data }],
-  });
-  return provider.waitForTransaction(txHash);
+  const signer = await getSigner();
+  const tx = await signer.sendTransaction({ to, data, gasLimit: 300000 });
+  return tx.wait();
 }
 
 // ─── Staking ───
 
 export async function stakeQIE(amountWei) {
   return sendTx(STAKING_ABI, STAKING_ADDRESS, 'stake', [], {
-    value: '0x' + BigInt(amountWei).toString(16),
+    value: BigInt(amountWei),
   });
 }
 
@@ -164,14 +170,10 @@ export async function burnQIEPForDiscount() {
 }
 
 export async function mintRewards(customer, paymentId) {
-  // Manual ABI encoding for QIE Wallet compatibility
-  // mintRewards(address,uint256) = 0x6a20de92
-  const selector = '0x6a20de92';
-  const data = selector + ethers.AbiCoder.defaultAbiCoder().encode(
-    ['address', 'uint256'],
-    [customer, BigInt(paymentId)]
-  ).slice(2);
-  return sendTxRaw(REWARDS_ADDRESS, data);
+  const signer = await getSigner();
+  const contract = new ethers.Contract(REWARDS_ADDRESS, REWARDS_ABI, signer);
+  const tx = await contract.mintRewards(customer, BigInt(paymentId), { gasLimit: 300000 });
+  return tx.wait();
 }
 
 export async function getDiscountInfo(address) {
@@ -184,7 +186,7 @@ export async function getDiscountInfo(address) {
 }
 
 export async function addQIEPToWallet() {
-  if (!window.ethereum) throw new Error('No wallet connected');
+  if (!window.ethereum) throw new Error('Browser wallet required to add token to wallet');
   return window.ethereum.request({
     method: 'wallet_watchAsset',
     params: {
