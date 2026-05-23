@@ -377,7 +377,7 @@ export default function Governance() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
           <h1 className="text-lg font-semibold tracking-tight text-[#FAFAFA]">Governance</h1>
           <p className="text-xs text-[#A1A1AA] mt-0.5">Vote on protocol changes</p>

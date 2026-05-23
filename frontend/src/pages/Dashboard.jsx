@@ -287,12 +287,12 @@ export default function Dashboard() {
         {isDemo && <DemoBanner />}
 
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="text-lg font-semibold text-[#FAFAFA] tracking-tight">Dashboard</h1>
             <p className="text-xs text-[#71717A] font-mono mt-0.5">{truncateAddr(address)}</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Link
               to="/create"
               className="flex items-center gap-1.5 px-3 py-1.5 bg-[#10B981] hover:bg-[#059669] rounded-md text-xs font-medium text-white transition-colors"
@@ -431,7 +431,7 @@ export default function Dashboard() {
               </Link>
             </div>
           ) : (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto"><table className="w-full text-sm">
               <tbody>
                 {recentPayments.map((p, i) => (
                   <tr
@@ -483,11 +483,11 @@ export default function Dashboard() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           )}
 
           {/* Inline quick links */}
-          <div className="flex items-center gap-4 mt-4 pt-3 border-t border-[#27272A]/50">
+          <div className="flex flex-wrap items-center gap-4 mt-4 pt-3 border-t border-[#27272A]/50">
             <Link to="/create" className="text-xs text-[#10B981] hover:text-[#34D399] transition-colors flex items-center gap-1">
               <Plus className="w-3 h-3" /> Create Payment
             </Link>

@@ -131,9 +131,9 @@ export default function NotificationCenter({ collapsed = false }) {
       }
     };
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('pointerdown', handleClickOutside);
     }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('pointerdown', handleClickOutside);
   }, [isOpen]);
 
   const unreadCount = notifications.filter((n) => !n.read).length;

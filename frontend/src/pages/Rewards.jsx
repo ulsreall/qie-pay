@@ -228,18 +228,18 @@ export default function Rewards() {
         transition={{ duration: 0.15 }}
         className="bg-[#111113] border border-[#27272A] rounded-lg p-6"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <Gift size={16} className="text-[#10B981]" />
               <p className="text-xs text-[#71717A]">QIEP Balance</p>
             </div>
-            <p className="text-4xl font-bold text-[#FAFAFA] tabular-nums tracking-tight">
+            <p className="text-3xl sm:text-4xl font-bold text-[#FAFAFA] tabular-nums tracking-tight">
               {balance.toLocaleString()}
               <span className="text-sm font-normal text-[#A1A1AA] ml-2">QIEP</span>
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={async () => {
                 try {

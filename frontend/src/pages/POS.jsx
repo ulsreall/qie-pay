@@ -402,19 +402,30 @@ export default function POS() {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20, height: 0 }}
-                      className="bg-[#111113] border border-[#27272A] rounded-lg p-3 flex items-center gap-3"
+                      className="bg-[#111113] border border-[#27272A] rounded-lg p-3"
                     >
-                      <div
-                        className="w-9 h-9 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
-                        style={{ backgroundColor: (item.bg || '#3F3F46') + '40' }}
-                      >
-                        {item.emoji || '🏷️'}
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-9 h-9 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
+                          style={{ backgroundColor: (item.bg || '#3F3F46') + '40' }}
+                        >
+                          {item.emoji || '🏷️'}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-xs truncate text-[#D4D4D8]">{item.name}</p>
+                          <p className="text-[#34D399] text-[10px]">{item.price.toFixed(4)} QIE ea</p>
+                        </div>
+                        <span className="text-xs font-bold text-[#FAFAFA] tabular-nums">
+                          {(item.price * item.qty).toFixed(4)}
+                        </span>
+                        <button
+                          onClick={() => removeFromCart(item.id)}
+                          className="w-6 h-6 rounded-md hover:bg-red-500/10 flex items-center justify-center text-red-400/60 hover:text-red-400 transition-colors"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-xs truncate text-[#D4D4D8]">{item.name}</p>
-                        <p className="text-[#34D399] text-[10px]">{item.price.toFixed(4)} QIE ea</p>
-                      </div>
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center justify-end gap-1 mt-2">
                         <button
                           onClick={() => updateQty(item.id, -1)}
                           className="w-7 h-7 rounded-md bg-[#18181B] hover:bg-[#27272A] flex items-center justify-center transition-colors"
@@ -429,15 +440,6 @@ export default function POS() {
                           <Plus className="w-3 h-3" />
                         </button>
                       </div>
-                      <span className="text-xs font-bold w-16 text-right text-[#FAFAFA] tabular-nums">
-                        {(item.price * item.qty).toFixed(4)}
-                      </span>
-                      <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="w-6 h-6 rounded-md hover:bg-red-500/10 flex items-center justify-center text-red-400/60 hover:text-red-400 transition-colors"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
                     </motion.div>
                   ))}
                 </AnimatePresence>

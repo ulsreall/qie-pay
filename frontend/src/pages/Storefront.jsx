@@ -332,7 +332,7 @@ export default function Storefront() {
                   <div className="flex items-start justify-between mb-0.5">
                     <h3 className="font-semibold text-sm text-[#FAFAFA]">{product.name}</h3>
                     {isOwner && (
-                      <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex gap-0.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                         <button
                           onClick={() => openEdit(product)}
                           className="w-6 h-6 rounded-md hover:bg-[#18181B] flex items-center justify-center text-[#A1A1AA] hover:text-[#D4D4D8]"

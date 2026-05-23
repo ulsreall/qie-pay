@@ -334,6 +334,9 @@
   .data-table {
     width: 100%;
     border-collapse: collapse;
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .data-table th {
@@ -394,6 +397,35 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ============================================================
+   MOBILE RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  /* Smaller text on mobile */
+  .text-4xl { font-size: 1.75rem !important; }
+  .text-3xl { font-size: 1.5rem !important; }
+
+  /* Better touch targets */
+  button, a {
+    min-height: 36px;
+    min-width: 36px;
+  }
+
+  /* Tables scroll on mobile */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Page padding */
+  .p-6 { padding: 1rem !important; }
+  .p-5 { padding: 0.875rem !important; }
+
+  /* Toast position */
+  .go2072418542 { top: 60px !important; right: 8px !important; left: 8px !important; }
 }
 
 /* ============================================================

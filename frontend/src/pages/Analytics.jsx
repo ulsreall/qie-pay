@@ -204,7 +204,7 @@ export default function Analytics() {
         {(() => {
           const topPayments = [...filteredPayments].sort((a, b) => parseFloat(b.amount) - parseFloat(a.amount)).slice(0, 5);
           return topPayments.length > 0 ? (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto"><table className="w-full text-sm">
               <tbody>
                 {topPayments.map((p, i) => (
                   <tr key={p.id} className={`h-10 ${i % 2 === 0 ? '' : 'bg-[#111113]/50'}`}>
@@ -220,7 +220,7 @@ export default function Analytics() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           ) : (
             <p className="text-center text-[#71717A] text-xs py-6">No payments yet</p>
           );

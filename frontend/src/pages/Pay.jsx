@@ -370,7 +370,7 @@ export default function Pay() {
               </p>
               <div className="flex gap-2 justify-center">
                 <a
-                  href={`${EXPLORER_URL}/tx/${payment.customer || ''}`}
+                  href={`${EXPLORER_URL}/address/${payment.customer || ''}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-1.5 px-3 py-2 border border-[#3F3F46] hover:border-[#52525B] rounded-md text-xs text-[#A1A1AA] transition-colors"
