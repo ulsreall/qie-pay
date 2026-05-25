@@ -313,25 +313,27 @@ export default function Dashboard() {
 
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div>
-            <h1 className="text-lg font-semibold text-[#FAFAFA] tracking-tight">Dashboard</h1>
-            <p className="text-xs text-[#71717A] font-mono mt-0.5">{truncateAddr(address)}</p>
+          <div className="flex items-center gap-3">
+            <div>
+              <h1 className="text-lg font-semibold text-[#FAFAFA] tracking-tight">Dashboard</h1>
+              <p className="text-xs text-[#71717A] font-mono mt-0.5">{truncateAddr(address)}</p>
+            </div>
           </div>
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2">
             <Link
               to="/create"
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#10B981] hover:bg-[#059669] rounded-lg text-xs font-medium text-white transition-all hover:shadow-[0_0_16px_-4px_rgba(16,185,129,0.3)]"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2 bg-[#10B981] hover:bg-[#059669] rounded-lg text-xs font-medium text-white transition-all hover:shadow-[0_0_16px_-4px_rgba(16,185,129,0.3)]"
             >
               <PlusCircle className="w-3.5 h-3.5" />
-              New Payment
+              <span className="sm:inline">New Payment</span>
             </Link>
             <button
               onClick={handleRefresh}
               disabled={refreshing}
-              className="flex items-center gap-1.5 px-3 py-1.5 border border-[#27272A] hover:border-[#3F3F46] hover:bg-[#18181B] rounded-lg text-xs text-[#A1A1AA] transition-all disabled:opacity-50"
+              className="flex items-center justify-center gap-1.5 px-3 py-2 border border-[#27272A] hover:border-[#3F3F46] hover:bg-[#18181B] rounded-lg text-xs text-[#A1A1AA] transition-all disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
-              Refresh
+              <span className="hidden sm:inline">Refresh</span>
             </button>
           </div>
         </div>

@@ -46,7 +46,7 @@ export default function Layout({ children }) {
 
       {/* Main content — scrollable, offset for sidebar on desktop */}
       <main
-        className={`min-h-screen transition-[margin-left] duration-300 ease-in-out ${
+        className={`min-h-screen transition-[margin-left] duration-300 ease-in-out pt-14 lg:pt-0 ${
           collapsed ? 'lg:ml-[64px]' : 'lg:ml-[280px]'
         }`}
       >
