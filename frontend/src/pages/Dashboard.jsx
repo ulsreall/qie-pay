@@ -30,12 +30,37 @@ function StatusDot({ status }) {
   return <span className={`inline-block w-2 h-2 rounded-full ${colors[status] || 'bg-[#3F3F46]'}`} />;
 }
 
+/* ─── Gradient-border stat card ─── */
+function StatCard({ icon: Icon, label, children, className = '', delay = 0 }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay }}
+      className={`relative group ${className}`}
+    >
+      {/* Gradient border layer */}
+      <div className="absolute -inset-px rounded-xl bg-gradient-to-br from-[rgba(16,185,129,0.2)] via-transparent to-[rgba(56,189,248,0.08)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      {/* Card content */}
+      <div className="relative bg-[#111113] border border-[#27272A] group-hover:border-transparent rounded-xl p-4 transition-all duration-300 group-hover:shadow-[0_0_24px_-6px_rgba(16,185,129,0.1)]">
+        <div className="flex items-center gap-2.5 mb-2.5">
+          <div className="w-8 h-8 rounded-lg bg-[rgba(16,185,129,0.08)] flex items-center justify-center">
+            <Icon className="w-4 h-4 text-[#34D399]" />
+          </div>
+          <span className="text-xs text-[#A1A1AA]">{label}</span>
+        </div>
+        {children}
+      </div>
+    </motion.div>
+  );
+}
+
 /* ─── Skeleton ─── */
 function SkeletonCard() {
   return (
-    <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4 animate-pulse">
+    <div className="bg-[#111113] border border-[#27272A] rounded-xl p-4 animate-pulse">
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-8 h-8 rounded-md bg-[#18181B]" />
+        <div className="w-8 h-8 rounded-lg bg-[#18181B]" />
         <div className="h-3 w-20 bg-[#18181B] rounded" />
       </div>
       <div className="h-6 w-28 bg-[#18181B] rounded mb-2" />
@@ -46,16 +71,16 @@ function SkeletonCard() {
 
 function SkeletonChart() {
   return (
-    <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 animate-pulse">
+    <div className="bg-[#111113] border border-[#27272A] rounded-xl p-5 animate-pulse">
       <div className="h-5 w-32 bg-[#18181B] rounded mb-4" />
-      <div className="h-[200px] bg-[#18181B] rounded-md" />
+      <div className="h-[200px] bg-[#18181B] rounded-lg" />
     </div>
   );
 }
 
 function SkeletonTable() {
   return (
-    <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5 animate-pulse">
+    <div className="bg-[#111113] border border-[#27272A] rounded-xl p-5 animate-pulse">
       <div className="h-5 w-40 bg-[#18181B] rounded mb-4" />
       {[...Array(5)].map((_, i) => (
         <div key={i} className="flex items-center gap-4 py-2.5 border-b border-[#27272A]/50">
@@ -83,7 +108,7 @@ function DemoBanner() {
 function CustomTooltipDashboard({ active, payload, label }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#111113] border border-[#27272A] rounded-md px-3 py-2 shadow-lg">
+    <div className="bg-[#111113] border border-[#27272A] rounded-lg px-3 py-2 shadow-xl shadow-black/30">
       <p className="text-xs text-[#A1A1AA] mb-0.5">{label}</p>
       <p className="text-sm font-semibold text-[#FAFAFA] tabular-nums">{payload[0].value} QIE</p>
       <p className="text-xs text-[#71717A]">{formatUSD(payload[0].value)}</p>
@@ -295,7 +320,7 @@ export default function Dashboard() {
           <div className="flex items-center gap-2 flex-wrap">
             <Link
               to="/create"
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#10B981] hover:bg-[#059669] rounded-md text-xs font-medium text-white transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#10B981] hover:bg-[#059669] rounded-lg text-xs font-medium text-white transition-all hover:shadow-[0_0_16px_-4px_rgba(16,185,129,0.3)]"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               New Payment
@@ -303,7 +328,7 @@ export default function Dashboard() {
             <button
               onClick={handleRefresh}
               disabled={refreshing}
-              className="flex items-center gap-1.5 px-3 py-1.5 border border-[#27272A] hover:border-[#3F3F46] rounded-md text-xs text-[#A1A1AA] transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3 py-1.5 border border-[#27272A] hover:border-[#3F3F46] hover:bg-[#18181B] rounded-lg text-xs text-[#A1A1AA] transition-all disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin' : ''}`} />
               Refresh
@@ -313,7 +338,7 @@ export default function Dashboard() {
 
         {/* Getting Started — show when no payments yet (not in demo mode) */}
         {totalPayments === 0 && !isDemo && (
-          <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
+          <div className="bg-[#111113] border border-[#27272A] rounded-xl p-4">
             <p className="text-sm font-medium text-[#FAFAFA] mb-2">Getting Started</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {[
@@ -324,7 +349,7 @@ export default function Dashboard() {
                 <Link
                   key={item.step}
                   to={item.path}
-                  className="flex items-center gap-3 p-3 rounded-md border border-[#27272A] hover:border-[#3F3F46] hover:bg-[#18181B] transition-all group"
+                  className="flex items-center gap-3 p-3 rounded-lg border border-[#27272A] hover:border-[#3F3F46] hover:bg-[#18181B] transition-all group"
                 >
                   <span className="w-6 h-6 rounded-full bg-[rgba(16,185,129,0.1)] text-[#10B981] text-xs font-bold flex items-center justify-center">
                     {item.step}
@@ -338,68 +363,59 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Stats Cards — asymmetric layout */}
+        {/* Stats Cards — gradient border on hover, glow effect */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Earnings — wider */}
-          <div className="sm:col-span-2 bg-[#111113] border border-[#27272A] rounded-lg p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-md bg-[rgba(16,185,129,0.1)] flex items-center justify-center">
-                  <DollarSign className="w-4 h-4 text-[#34D399]" />
+          <div className="sm:col-span-2">
+            <StatCard icon={DollarSign} label="Total Earnings" delay={0} className="h-full">
+              <div className="flex items-end justify-between">
+                <div>
+                  <p className="text-xl font-semibold text-[#FAFAFA] tabular-nums">{parseFloat(earnings).toFixed(2)} QIE</p>
+                  <p className="text-xs text-[#71717A] mt-0.5">{formatUSD(earnings)}</p>
                 </div>
-                <span className="text-xs text-[#A1A1AA]">Total Earnings</span>
+                {/* Sparkline */}
+                <div className="w-24 h-10 opacity-70">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={chartData}>
+                      <Area type="monotone" dataKey="revenue" stroke="#10B981" strokeWidth={1.5} fill="#10B981" fillOpacity={0.1} />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
               </div>
-              {/* Sparkline */}
-              <div className="w-20 h-8">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartData}>
-                    <Area type="monotone" dataKey="revenue" stroke="#10B981" strokeWidth={1.5} fill="#10B981" fillOpacity={0.1} />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-            <p className="text-xl font-semibold text-[#FAFAFA] tabular-nums">{parseFloat(earnings).toFixed(2)} QIE</p>
-            <p className="text-xs text-[#71717A] mt-0.5">{formatUSD(earnings)}</p>
+            </StatCard>
           </div>
 
           {/* Volume */}
-          <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-md bg-[rgba(16,185,129,0.1)] flex items-center justify-center">
-                <TrendingUp className="w-4 h-4 text-[#34D399]" />
-              </div>
-              <span className="text-xs text-[#A1A1AA]">Volume</span>
-            </div>
+          <StatCard icon={TrendingUp} label="Volume" delay={0.05}>
             <p className="text-xl font-semibold text-[#FAFAFA] tabular-nums">{totalVolume.toFixed(2)} QIE</p>
             <p className="text-xs text-[#71717A] mt-0.5">{formatUSD(totalVolume)}</p>
-          </div>
+          </StatCard>
 
-          {/* Payments count — below volume on mobile, same row on desktop */}
-          <div className="bg-[#111113] border border-[#27272A] rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-8 h-8 rounded-md bg-[rgba(16,185,129,0.1)] flex items-center justify-center">
-                <CreditCard className="w-4 h-4 text-[#34D399]" />
-              </div>
-              <span className="text-xs text-[#A1A1AA]">Payments</span>
-            </div>
+          {/* Payments count */}
+          <StatCard icon={CreditCard} label="Payments" delay={0.1}>
             <p className="text-xl font-semibold text-[#FAFAFA] tabular-nums">{totalPayments}</p>
             <p className="text-xs text-[#71717A] mt-0.5">total</p>
-          </div>
+          </StatCard>
         </div>
 
         {/* Revenue Chart */}
-        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.15 }}
+          className="bg-[#111113] border border-[#27272A] rounded-xl p-5 hover:border-[#3F3F46] transition-colors duration-200"
+        >
           <h2 className="text-sm font-semibold text-[#A1A1AA] mb-4 tracking-tight">Revenue — Last 7 Days</h2>
           <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="emeraldFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#10B981" stopOpacity={0.1} />
+                    <stop offset="0%" stopColor="#10B981" stopOpacity={0.12} />
                     <stop offset="100%" stopColor="#10B981" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#1E1E21" vertical={false} />
                 <Tooltip content={<CustomTooltipDashboard />} />
                 <Area
                   type="monotone"
@@ -411,10 +427,15 @@ export default function Dashboard() {
               </AreaChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </motion.div>
 
         {/* Recent Payments */}
-        <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className="bg-[#111113] border border-[#27272A] rounded-xl p-5 hover:border-[#3F3F46] transition-colors duration-200"
+        >
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-semibold text-[#A1A1AA] tracking-tight">Recent Payments</h2>
             <Link to="/analytics" className="text-xs text-[#10B981] hover:text-[#34D399] transition-colors flex items-center gap-1">
@@ -458,14 +479,14 @@ export default function Dashboard() {
                             navigator.clipboard.writeText(url);
                             toast.success('Payment link copied!');
                           }}
-                          className="p-1 rounded hover:bg-[#27272A] text-[#71717A] hover:text-[#A1A1AA] transition-colors"
+                          className="p-1 rounded-md hover:bg-[#27272A] text-[#71717A] hover:text-[#A1A1AA] transition-colors"
                           title="Copy payment link"
                         >
                           <Copy className="w-3.5 h-3.5" />
                         </button>
                         <Link
                           to={`/pay/${p.id}`}
-                          className="p-1 rounded hover:bg-[#27272A] text-[#71717A] hover:text-[#A1A1AA] transition-colors"
+                          className="p-1 rounded-md hover:bg-[#27272A] text-[#71717A] hover:text-[#A1A1AA] transition-colors"
                           title="View payment"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
@@ -473,7 +494,7 @@ export default function Dashboard() {
                         {p.status === 1 && (
                           <button
                             onClick={() => handleSettle(p.id)}
-                            className="px-2 py-0.5 bg-[rgba(16,185,129,0.1)] hover:bg-[rgba(16,185,129,0.2)] text-[#34D399] text-xs rounded transition-colors"
+                            className="px-2 py-0.5 bg-[rgba(16,185,129,0.1)] hover:bg-[rgba(16,185,129,0.2)] text-[#34D399] text-xs rounded-md transition-colors"
                           >
                             Settle
                           </button>
@@ -498,7 +519,7 @@ export default function Dashboard() {
               <BarChart3 className="w-3 h-3" /> Analytics
             </Link>
           </div>
-        </div>
+        </motion.div>
       </div>
     </motion.div>
   );

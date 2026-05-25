@@ -38,7 +38,7 @@ export default function Layout({ children }) {
       {/* Mobile hamburger */}
       <button
         onClick={toggleSidebar}
-        className="lg:hidden fixed top-3 left-3 z-50 p-2 bg-[#111113] border border-[#27272A] rounded-md text-[#A1A1AA] hover:text-[#FAFAFA] transition-colors"
+        className="lg:hidden fixed top-3 left-3 z-50 p-2 bg-[#111113] border border-[#27272A] rounded-lg text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3F3F46] transition-all"
         aria-label="Toggle navigation"
       >
         <Menu size={18} />
@@ -46,15 +46,10 @@ export default function Layout({ children }) {
 
       {/* Main content — scrollable, offset for sidebar on desktop */}
       <main
-        className="min-h-screen transition-[margin-left] duration-300 ease-in-out lg:ml-[64px]"
-        style={{ marginLeft: undefined }}
+        className={`min-h-screen transition-[margin-left] duration-300 ease-in-out ${
+          collapsed ? 'lg:ml-[64px]' : 'lg:ml-[280px]'
+        }`}
       >
-        {/* Desktop: override margin based on collapsed state */}
-        <style>{`
-          @media (min-width: 1024px) {
-            main { margin-left: ${collapsed ? '64px' : '280px'} !important; }
-          }
-        `}</style>
         {children}
       </main>
     </div>

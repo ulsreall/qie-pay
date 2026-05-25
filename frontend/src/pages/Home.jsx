@@ -60,31 +60,66 @@ function AnimatedCounter({ end, suffix = '' }) {
   return <span>{count.toLocaleString()}{suffix}</span>;
 }
 
+/* ─── Grid Background (decorative) ─── */
+function GridBackground() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Grid pattern with radial fade */}
+      <div className="absolute inset-0 grid-bg-fade opacity-60" />
+      {/* Animated gradient orbs */}
+      <div
+        className="absolute top-[-20%] left-[10%] w-[500px] h-[500px] rounded-full opacity-[0.07] animate-float"
+        style={{ background: 'radial-gradient(circle, #10B981 0%, transparent 70%)' }}
+      />
+      <div
+        className="absolute bottom-[-10%] right-[5%] w-[400px] h-[400px] rounded-full opacity-[0.05]"
+        style={{
+          background: 'radial-gradient(circle, #38BDF8 0%, transparent 70%)',
+          animation: 'float 8s ease-in-out infinite reverse'
+        }}
+      />
+    </div>
+  );
+}
+
 /* ─── Page ─── */
 export default function Home() {
   const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-[#09090B] text-white">
       {/* ─── Hero Section ─── */}
-      <section className="relative min-h-screen flex items-center justify-center px-4">
+      <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
+        {/* Animated gradient background */}
+        <div
+          className="absolute inset-0 animate-gradient opacity-40"
+          style={{
+            background: 'linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(9,9,11,1) 30%, rgba(9,9,11,1) 60%, rgba(56,189,248,0.06) 100%)',
+            backgroundSize: '200% 200%',
+          }}
+        />
+        <GridBackground />
+
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#27272A] mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass mb-8">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10B981] opacity-60" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10B981]" />
+              </span>
               <span className="text-xs text-[#A1A1AA]">Live on QIE Testnet — Chain ID 1983</span>
             </div>
           </motion.div>
 
           {/* Logo */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.05 }}
-            className="mb-6"
+            transition={{ duration: 0.5, delay: 0.05 }}
+            className="mb-8"
           >
             <div className="inline-flex items-center gap-3">
               <svg width="48" height="48" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -110,13 +145,13 @@ export default function Home() {
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-2xl sm:text-4xl md:text-5xl font-bold leading-tight mb-4 text-[#FAFAFA] tracking-tight"
+            className="text-2xl sm:text-4xl md:text-5xl font-bold leading-tight mb-5 text-[#FAFAFA] tracking-tight"
           >
             Accept{' '}
-            <span className="text-[#10B981]">Crypto Payments</span>
+            <span className="gradient-text-emerald">Crypto Payments</span>
             <br />With Ease
           </motion.h1>
 
@@ -124,7 +159,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-sm text-[#A1A1AA] max-w-xl mx-auto mb-8 leading-relaxed"
+            className="text-sm sm:text-base text-[#A1A1AA] max-w-xl mx-auto mb-8 leading-relaxed"
           >
             A full-stack decentralized payment gateway on QIE Blockchain.
             Accept crypto with POS mode, storefronts, and developer APIs —
@@ -132,21 +167,21 @@ export default function Home() {
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
             className="flex flex-col sm:flex-row gap-3 justify-center"
           >
             <Link
               to="/create"
-              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md text-sm transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-lg text-sm transition-all hover:shadow-[0_0_20px_-4px_rgba(16,185,129,0.4)]"
             >
               Get Started
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               to="/pos"
-              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] font-medium rounded-md text-sm transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-6 py-2.5 glass rounded-lg text-[#A1A1AA] hover:text-[#FAFAFA] hover:border-[#3F3F46] font-medium text-sm transition-all"
             >
               Try POS Mode
               <Monitor className="w-4 h-4" />
@@ -157,8 +192,8 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mt-6 max-w-xs mx-auto"
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="mt-8 max-w-xs mx-auto"
           >
             <div className="relative mb-3">
               <div className="absolute inset-0 flex items-center">
@@ -174,49 +209,66 @@ export default function Home() {
       </section>
 
       {/* ─── Stats Bar (4 stats) ─── */}
-      <section className="py-8 px-4 border-y border-[#1E1E21] bg-[#09090B]">
-        <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-6">
+      <section className="py-10 px-4 border-y border-[#1E1E21] bg-[#09090B] relative">
+        <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8">
           {[
             { value: 30000, suffix: '+', label: 'TPS' },
             { value: 2, suffix: '.5%', label: 'Platform Fee' },
             { value: 1983, suffix: '', label: 'Chain ID' },
             { value: 100, suffix: '%', label: 'On-Chain' },
           ].map((stat, i) => (
-            <div key={i} className="text-center">
-              <div className="text-xl font-semibold text-[#10B981]">
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 8 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.3 }}
+              className="text-center"
+            >
+              <div className="text-2xl font-semibold gradient-text-emerald">
                 <AnimatedCounter end={stat.value} suffix={stat.suffix} />
               </div>
-              <p className="text-xs text-[#71717A] mt-0.5">{stat.label}</p>
-            </div>
+              <p className="text-xs text-[#71717A] mt-1">{stat.label}</p>
+            </motion.div>
           ))}
         </div>
       </section>
 
       {/* ─── Features Grid (3-column) ─── */}
-      <section className="py-16 px-4" id="features">
+      <section className="py-20 px-4 relative" id="features">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-10">
-            <p className="text-[#10B981] font-medium text-xs uppercase tracking-widest mb-2">
+          <div className="text-center mb-12">
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-[#10B981] font-medium text-xs uppercase tracking-widest mb-3"
+            >
               Features
-            </p>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#FAFAFA] tracking-tight">
+            </motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 8 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-2xl md:text-3xl font-bold text-[#FAFAFA] tracking-tight"
+            >
               Everything You Need to Accept Crypto
-            </h2>
+            </motion.h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {features.map((feat) => (
+            {features.map((feat, i) => (
               <motion.div
                 key={feat.title}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.15 }}
-                className="bg-[#111113] border border-[#27272A] rounded-md p-4 hover:border-[#3F3F46] transition-colors"
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.35, delay: i * 0.04 }}
+                className="glass-card p-5 group"
               >
-                <div className="flex items-center gap-2.5 mb-2">
-                  <div className="w-8 h-8 rounded-md bg-[rgba(16,185,129,0.1)] flex items-center justify-center shrink-0">
-                    <feat.icon className="w-4 h-4 text-[#10B981]" />
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-9 h-9 rounded-lg bg-[rgba(16,185,129,0.08)] flex items-center justify-center shrink-0 group-hover:bg-[rgba(16,185,129,0.14)] transition-colors">
+                    <feat.icon className="w-[18px] h-[18px] text-[#10B981]" />
                   </div>
                   <h3 className="font-medium text-sm text-[#FAFAFA]">{feat.title}</h3>
                 </div>
@@ -228,31 +280,46 @@ export default function Home() {
       </section>
 
       {/* ─── How It Works (horizontal with arrows) ─── */}
-      <section className="py-16 px-4 bg-[#09090B]">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-10">
-            <p className="text-[#10B981] font-medium text-xs uppercase tracking-widest mb-2">How It Works</p>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#FAFAFA] tracking-tight">Start in Three Simple Steps</h2>
+      <section className="py-20 px-4 bg-[#09090B] relative">
+        <div className="absolute inset-0 grid-bg-fade opacity-30 pointer-events-none" />
+        <div className="max-w-4xl mx-auto relative z-10">
+          <div className="text-center mb-12">
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-[#10B981] font-medium text-xs uppercase tracking-widest mb-3"
+            >
+              How It Works
+            </motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 8 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-2xl md:text-3xl font-bold text-[#FAFAFA] tracking-tight"
+            >
+              Start in Three Simple Steps
+            </motion.h2>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-0">
             {steps.map((step, i) => (
-              <div key={step.num} className="flex items-center gap-4">
+              <div key={step.num} className="flex items-center gap-6">
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: i * 0.15, duration: 0.15 }}
+                  transition={{ delay: i * 0.15, duration: 0.4 }}
                   className="text-center flex-shrink-0"
                 >
-                  <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#10B981] flex items-center justify-center text-lg font-bold text-white">
+                  <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br from-[#10B981] to-[#059669] flex items-center justify-center text-lg font-bold text-white shadow-lg shadow-emerald-500/20">
                     {step.num}
                   </div>
                   <h3 className="text-sm font-semibold text-[#FAFAFA] mb-1">{step.title}</h3>
                   <p className="text-xs text-[#A1A1AA] max-w-[160px]">{step.desc}</p>
                 </motion.div>
                 {i < steps.length - 1 && (
-                  <span className="text-[#52525B] text-xl font-light mx-4 hidden md:block">→</span>
+                  <span className="text-[#3F3F46] text-2xl font-light mx-2 hidden md:block">→</span>
                 )}
               </div>
             ))}
@@ -261,25 +328,41 @@ export default function Home() {
       </section>
 
       {/* ─── Tech Stack (2-column) ─── */}
-      <section className="py-16 px-4">
+      <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-10">
-            <p className="text-[#10B981] font-medium text-xs uppercase tracking-widest mb-2">Technology</p>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#FAFAFA] tracking-tight">Built on Proven Tech</h2>
+          <div className="text-center mb-12">
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="text-[#10B981] font-medium text-xs uppercase tracking-widest mb-3"
+            >
+              Technology
+            </motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 8 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-2xl md:text-3xl font-bold text-[#FAFAFA] tracking-tight"
+            >
+              Built on Proven Tech
+            </motion.h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {techStack.map((tech) => (
+            {techStack.map((tech, i) => (
               <motion.div
                 key={tech.name}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.15 }}
-                className="bg-[#111113] border border-[#27272A] rounded-md p-4 hover:border-[#3F3F46] transition-colors"
+                transition={{ duration: 0.35, delay: i * 0.08 }}
+                className="glass-card p-5 group"
               >
                 <div className="flex items-center gap-3">
-                  <tech.icon className="w-5 h-5 text-[#10B981] shrink-0" />
+                  <div className="w-10 h-10 rounded-lg bg-[rgba(16,185,129,0.08)] flex items-center justify-center shrink-0 group-hover:bg-[rgba(16,185,129,0.14)] transition-colors">
+                    <tech.icon className="w-5 h-5 text-[#10B981]" />
+                  </div>
                   <div>
                     <h3 className="font-medium text-sm text-[#FAFAFA]">{tech.name}</h3>
                     <p className="text-xs text-[#71717A]">{tech.desc}</p>
@@ -291,37 +374,50 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ─── CTA Section (no gradient) ─── */}
-      <section className="py-16 px-4">
+      {/* ─── CTA Section ─── */}
+      <section className="py-20 px-4">
         <div className="max-w-2xl mx-auto text-center">
-          <div className="bg-[#10B981] rounded-lg p-5 sm:p-8 md:p-10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight">Start Accepting Payments Today</h2>
-            <p className="text-[#D1FAE5] text-sm mb-6 max-w-md mx-auto">
-              Join the decentralized payment revolution. POS mode, storefronts, webhooks, developer APIs, and DeFi features — everything you need to accept crypto.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link
-                to="/create"
-                className="inline-flex items-center gap-2 px-6 py-2.5 bg-white text-[#047857] font-medium rounded-md text-sm hover:bg-[#ECFDF5] transition-colors"
-              >
-                Create Your First Payment
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                to="/developers"
-                className="inline-flex items-center gap-2 px-6 py-2.5 border border-[#6EE7B7] text-white font-medium rounded-md text-sm hover:bg-[#059669] transition-colors"
-              >
-                View API Docs
-                <Code2 className="w-4 h-4" />
-              </Link>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="relative rounded-2xl p-5 sm:p-8 md:p-10 overflow-hidden"
+            style={{
+              background: 'linear-gradient(135deg, #10B981 0%, #059669 50%, #047857 100%)',
+            }}
+          >
+            {/* Subtle pattern overlay */}
+            <div className="absolute inset-0 opacity-10 grid-bg" />
+            <div className="relative z-10">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 tracking-tight">Start Accepting Payments Today</h2>
+              <p className="text-emerald-100/80 text-sm mb-6 max-w-md mx-auto">
+                Join the decentralized payment revolution. POS mode, storefronts, webhooks, developer APIs, and DeFi features — everything you need to accept crypto.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link
+                  to="/create"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 bg-white text-[#047857] font-medium rounded-lg text-sm hover:bg-emerald-50 transition-all hover:shadow-lg"
+                >
+                  Create Your First Payment
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  to="/developers"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 border border-white/30 text-white font-medium rounded-lg text-sm hover:bg-white/10 transition-all"
+                >
+                  View API Docs
+                  <Code2 className="w-4 h-4" />
+                </Link>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* ─── Footer ─── */}
-      <footer className="border-t border-[#1E1E21] py-6 px-4">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+      <footer className="border-t border-[#1E1E21] py-8 px-4">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <svg width="24" height="24" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>

@@ -96,7 +96,7 @@ function NavTooltip({ label, children }) {
   return (
     <div className="relative group/tip">
       {children}
-      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-[#27272A] text-[#FAFAFA] text-xs rounded-md whitespace-nowrap opacity-0 invisible group-hover/tip:opacity-100 group-hover/tip:visible transition-all duration-150 pointer-events-none z-50">
+      <div className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-[#27272A] text-[#FAFAFA] text-xs rounded-md whitespace-nowrap opacity-0 invisible group-hover/tip:opacity-100 group-hover/tip:visible transition-all duration-200 pointer-events-none z-50 shadow-lg">
         {label}
       </div>
     </div>
@@ -106,12 +106,12 @@ function NavTooltip({ label, children }) {
 function SidebarContent({ onNavClick, collapsed, onToggle }) {
   const linkClass = ({ isActive }) => {
     const base = collapsed
-      ? 'flex items-center justify-center w-10 h-10 mx-auto rounded-md transition-all duration-150'
-      : 'flex items-center gap-3 px-3 py-2 rounded-md text-[13px] font-medium transition-all duration-150';
+      ? 'flex items-center justify-center w-10 h-10 mx-auto rounded-lg transition-all duration-200'
+      : 'flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all duration-200';
     return `${base} ${
       isActive
-        ? 'bg-[#111113] text-[#34D399]'
-        : 'text-[#A1A1AA] hover:text-[#D4D4D8] hover:bg-[#111113]/50'
+        ? 'bg-[rgba(16,185,129,0.08)] text-[#34D399] shadow-[inset_0_0_0_1px_rgba(16,185,129,0.12)]'
+        : 'text-[#A1A1AA] hover:text-[#D4D4D8] hover:bg-[#18181B]'
     }`;
   };
 
@@ -163,7 +163,7 @@ function SidebarContent({ onNavClick, collapsed, onToggle }) {
                     className={linkClass}
                     onClick={onNavClick}
                   >
-                    <Icon size={16} className="opacity-60 shrink-0" />
+                    <Icon size={16} className="opacity-60 shrink-0 transition-opacity duration-200 group-hover:opacity-100" />
                     {!collapsed && item.label}
                   </NavLink>
                 );
@@ -182,7 +182,7 @@ function SidebarContent({ onNavClick, collapsed, onToggle }) {
       {/* Collapse toggle — desktop only */}
       <button
         onClick={onToggle}
-        className="hidden lg:flex items-center justify-center gap-2 mx-3 mb-2 px-3 py-2 rounded-lg bg-[#111113] border border-[#27272A] hover:border-[#3F3F46] text-[#A1A1AA] hover:text-[#FAFAFA] transition-all duration-150 text-xs font-medium"
+        className="hidden lg:flex items-center justify-center gap-2 mx-3 mb-2 px-3 py-2 rounded-lg bg-[#111113] border border-[#27272A] hover:border-[#3F3F46] hover:bg-[#18181B] text-[#A1A1AA] hover:text-[#FAFAFA] transition-all duration-200 text-xs font-medium"
         aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
       >
         {collapsed ? <ChevronsRight size={14} /> : <ChevronsLeft size={14} />}
@@ -200,13 +200,13 @@ function SidebarContent({ onNavClick, collapsed, onToggle }) {
 export default function Sidebar({ isOpen, onClose, collapsed, onToggle }) {
   return (
     <>
-      {/* Mobile overlay */}
-      {isOpen && (
-        <div
-          className="lg:hidden fixed inset-0 z-40 bg-black/60"
-          onClick={onClose}
-        />
-      )}
+      {/* Mobile overlay with backdrop blur */}
+      <div
+        className={`lg:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
+          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={onClose}
+      />
 
       {/* Sidebar panel */}
       <aside
@@ -222,7 +222,7 @@ export default function Sidebar({ isOpen, onClose, collapsed, onToggle }) {
         {/* Mobile close button */}
         <button
           onClick={onClose}
-          className="lg:hidden absolute top-3 right-3 p-1 rounded-md text-[#71717A] hover:text-[#FAFAFA] hover:bg-[#111113] transition-colors"
+          className="lg:hidden absolute top-3 right-3 p-1.5 rounded-lg text-[#71717A] hover:text-[#FAFAFA] hover:bg-[#18181B] transition-all duration-200"
           aria-label="Close sidebar"
         >
           <X size={16} />
