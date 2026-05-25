@@ -275,9 +275,9 @@ export default function Settings() {
 
 function InfoRow({ label, value, mono }) {
   return (
-    <div className="flex items-center justify-between py-2 border-b border-[#27272A]/50 last:border-0">
+    <div className="flex items-center justify-between gap-3 py-2 border-b border-[#27272A]/50 last:border-0">
       <span className="text-xs text-[#A1A1AA]">{label}</span>
-      <span className={`text-xs text-[#A1A1AA] ${mono ? 'font-mono' : ''}`}>{value}</span>
+      <span className={`text-xs text-[#A1A1AA] text-right min-w-0 ${mono ? 'font-mono break-all' : 'truncate'}`}>{value}</span>
     </div>
   );
 }

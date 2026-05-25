@@ -95,7 +95,7 @@ export default function Faucet() {
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="max-w-2xl mx-auto space-y-6"
+      className="max-w-2xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8"
     >
       {/* Header */}
       <div>

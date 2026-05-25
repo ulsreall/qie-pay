@@ -210,7 +210,7 @@ export default function Home() {
 
       {/* ─── Stats Bar (4 stats) ─── */}
       <section className="py-10 px-4 border-y border-[#1E1E21] bg-[#09090B] relative">
-        <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-8">
+        <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8">
           {[
             { value: 30000, suffix: '+', label: 'TPS' },
             { value: 2, suffix: '.5%', label: 'Platform Fee' },
@@ -225,7 +225,7 @@ export default function Home() {
               transition={{ delay: i * 0.1, duration: 0.3 }}
               className="text-center"
             >
-              <div className="text-2xl font-semibold gradient-text-emerald">
+              <div className="text-xl sm:text-2xl font-semibold gradient-text-emerald">
                 <AnimatedCounter end={stat.value} suffix={stat.suffix} />
               </div>
               <p className="text-xs text-[#71717A] mt-1">{stat.label}</p>

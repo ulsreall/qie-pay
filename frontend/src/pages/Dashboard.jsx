@@ -286,7 +286,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#09090B] p-6 lg:p-8">
+      <div className="min-h-screen bg-[#09090B] p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl mx-auto space-y-5">
           <div className="h-6 w-48 bg-[#111113] rounded animate-pulse" />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -305,7 +305,7 @@ export default function Dashboard() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.15 }}
-      className="min-h-screen bg-[#09090B] p-6 lg:p-8"
+      className="min-h-screen bg-[#09090B] p-4 sm:p-6 lg:p-8"
     >
       <div className="max-w-7xl mx-auto space-y-5">
         {/* Demo Mode Banner */}
@@ -465,7 +465,7 @@ export default function Dashboard() {
                       <StatusDot status={p.status} />
                     </td>
                     <td className="pr-3">
-                      <p className="text-sm text-[#D4D4D8] truncate max-w-[200px]">{p.description || 'No description'}</p>
+                      <p className="text-sm text-[#D4D4D8] truncate max-w-[120px] sm:max-w-[200px]">{p.description || 'No description'}</p>
                     </td>
                     <td className="text-xs text-[#71717A] pr-3 whitespace-nowrap">
                       {relativeTime(p.createdAt)}

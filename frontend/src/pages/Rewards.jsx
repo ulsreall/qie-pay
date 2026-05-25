@@ -214,7 +214,7 @@ export default function Rewards() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div>
         <h1 className="text-lg font-semibold tracking-tight text-[#FAFAFA]">QIEP Rewards</h1>
@@ -420,7 +420,7 @@ export default function Rewards() {
         ) : (
           <div className="bg-[#111113] border border-[#27272A] rounded-lg divide-y divide-[#1E1E21]">
             {history.slice(0, 10).map((entry) => (
-              <div key={entry.id} className="flex items-center justify-between px-4 py-3">
+              <div key={entry.id} className="flex items-center justify-between px-3 sm:px-4 py-3 gap-3">
                 <div className="flex items-center gap-3">
                   <div className="w-7 h-7 rounded-md bg-[#09090B] flex items-center justify-center">
                     {getTypeIcon(entry.type)}

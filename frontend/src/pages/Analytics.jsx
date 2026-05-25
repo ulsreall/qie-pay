@@ -95,7 +95,7 @@ export default function Analytics() {
 
   if (!wallet && !loading) {
     return (
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-md mx-auto py-20 text-center">
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="max-w-md mx-auto py-20 px-4 text-center">
         <div className="bg-[#111113] border border-[#27272A] rounded-lg p-8">
           <BarChart3 size={36} className="text-[#10B981] mx-auto mb-3" />
           <h2 className="text-lg font-bold text-[#FAFAFA] mb-2">Analytics</h2>
@@ -120,7 +120,7 @@ export default function Analytics() {
   }
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15 }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15 }} className="px-4 sm:px-6 lg:px-8">
       {/* Demo Mode Banner */}
       {isDemo && <DemoBanner />}
 
@@ -130,7 +130,7 @@ export default function Analytics() {
           <h1 className="text-lg font-semibold text-[#FAFAFA] tracking-tight">Analytics</h1>
           <p className="text-xs text-[#71717A] mt-0.5">Revenue insights and payment metrics</p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           {['all', 'day', 'week', 'month'].map((p) => (
             <button
               key={p}

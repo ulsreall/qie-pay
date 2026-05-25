@@ -152,7 +152,7 @@ export default function MerchantSettings() {
     >
       <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:justify-between mb-6">
           <div>
             <h1 className="text-lg font-semibold text-[#FAFAFA] tracking-tight">Merchant Settings</h1>
             <p className="text-xs text-[#71717A] mt-0.5">Manage your business profile and preferences</p>
@@ -160,7 +160,7 @@ export default function MerchantSettings() {
           <button
             onClick={handleSave}
             disabled={saving || !wallet}
-            className="flex items-center gap-1.5 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-4 py-2 text-xs transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-1.5 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-4 py-2 text-xs transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
           >
             {saving ? (
               <><Loader2 size={14} className="animate-spin" /> Saving...</>
@@ -235,7 +235,7 @@ export default function MerchantSettings() {
                 <div>
                   <label className="text-xs text-[#71717A] mb-1.5 block">Display Currency</label>
                   <p className="text-[11px] text-[#52525B] mb-3">Choose which currency is shown as primary to customers</p>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <button
                       onClick={() => setCurrencyPref('qie')}
                       className={`flex-1 px-4 py-2.5 rounded-md text-sm font-medium transition-colors duration-150 border ${
@@ -276,7 +276,7 @@ export default function MerchantSettings() {
                 />
 
                 {logo ? (
-                  <div className="flex items-start gap-4">
+                  <div className="flex flex-col sm:flex-row items-start gap-4">
                     <div className="w-20 h-20 rounded-lg border border-[#27272A] bg-[#09090B] flex items-center justify-center overflow-hidden">
                       <img src={logo} alt="Logo" className="max-w-full max-h-full object-contain" />
                     </div>

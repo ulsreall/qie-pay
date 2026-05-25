@@ -190,7 +190,7 @@ export default function Staking() {
   }, [staked, isDemo]);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div>
         <h1 className="text-lg font-semibold tracking-tight text-[#FAFAFA]">Stake & Save</h1>
@@ -223,20 +223,20 @@ export default function Staking() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div>
             <p className="text-xs text-[#71717A] mb-1">Staked Amount</p>
-            <p className="text-3xl font-bold text-[#FAFAFA] tabular-nums tracking-tight">
+            <p className="text-2xl sm:text-3xl font-bold text-[#FAFAFA] tabular-nums tracking-tight">
               {staked.toLocaleString(undefined, { maximumFractionDigits: 4 })}
               <span className="text-sm font-normal text-[#A1A1AA] ml-1">QIE</span>
             </p>
           </div>
           <div>
             <p className="text-xs text-[#71717A] mb-1">Current Fee Rate</p>
-            <p className="text-3xl font-bold text-[#10B981] tabular-nums tracking-tight">
+            <p className="text-2xl sm:text-3xl font-bold text-[#10B981] tabular-nums tracking-tight">
               {feeRate}%
             </p>
           </div>
           <div>
             <p className="text-xs text-[#71717A] mb-1">Tier</p>
-            <p className="text-3xl font-bold text-[#FAFAFA] tabular-nums tracking-tight">
+            <p className="text-2xl sm:text-3xl font-bold text-[#FAFAFA] tabular-nums tracking-tight">
               {currentTier.label}
             </p>
           </div>

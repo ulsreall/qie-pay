@@ -299,7 +299,7 @@ export default function POS() {
           ) : (
             <button
               onClick={handleConnect}
-              className="bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-3 py-1.5 text-xs transition-colors"
+              className="bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-3 py-2.5 text-xs transition-colors min-h-[44px]"
             >
               Connect Wallet
             </button>
@@ -324,7 +324,7 @@ export default function POS() {
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
+                className={`px-3 py-2.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors min-h-[44px] ${
                   activeCategory === cat.id
                     ? 'bg-[#10B981] text-white'
                     : 'bg-[#111113] border border-[#27272A] text-[#A1A1AA] hover:border-[#3F3F46]'
@@ -335,14 +335,14 @@ export default function POS() {
             ))}
             <button
               onClick={() => setShowCustom(true)}
-              className="px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap bg-[#111113] border border-dashed border-[#3F3F46] text-[#A1A1AA] hover:border-[#10B981]/40 hover:text-[#34D399] transition-colors"
+              className="px-3 py-2.5 rounded-md text-xs font-medium whitespace-nowrap bg-[#111113] border border-dashed border-[#3F3F46] text-[#A1A1AA] hover:border-[#10B981]/40 hover:text-[#34D399] transition-colors min-h-[44px]"
             >
               🏷️ Custom
             </button>
           </div>
 
           {/* Product grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
             {CATEGORIES.find(c => c.id === activeCategory)?.items.map((product) => (
               <motion.button
                 key={product.id}
@@ -420,7 +420,7 @@ export default function POS() {
                         </span>
                         <button
                           onClick={() => removeFromCart(item.id)}
-                          className="w-6 h-6 rounded-md hover:bg-red-500/10 flex items-center justify-center text-red-400/60 hover:text-red-400 transition-colors"
+                          className="min-w-[44px] min-h-[44px] rounded-md hover:bg-red-500/10 flex items-center justify-center text-red-400/60 hover:text-red-400 transition-colors"
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
@@ -428,14 +428,14 @@ export default function POS() {
                       <div className="flex items-center justify-end gap-1 mt-2">
                         <button
                           onClick={() => updateQty(item.id, -1)}
-                          className="w-7 h-7 rounded-md bg-[#18181B] hover:bg-[#27272A] flex items-center justify-center transition-colors"
+                          className="min-w-[44px] min-h-[44px] rounded-md bg-[#18181B] hover:bg-[#27272A] flex items-center justify-center transition-colors"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
-                        <span className="w-7 text-center text-sm font-bold tabular-nums">{item.qty}</span>
+                        <span className="min-w-[44px] text-center text-sm font-bold tabular-nums">{item.qty}</span>
                         <button
                           onClick={() => updateQty(item.id, 1)}
-                          className="w-7 h-7 rounded-md bg-[#18181B] hover:bg-[#27272A] flex items-center justify-center transition-colors"
+                          className="min-w-[44px] min-h-[44px] rounded-md bg-[#18181B] hover:bg-[#27272A] flex items-center justify-center transition-colors"
                         >
                           <Plus className="w-3 h-3" />
                         </button>
@@ -461,7 +461,7 @@ export default function POS() {
                     placeholder="Item name"
                     value={customName}
                     onChange={e => setCustomName(e.target.value)}
-                    className="w-full bg-[#09090B] border border-[#27272A] rounded-md px-3 py-2 text-[#FAFAFA] text-xs focus:border-[#10B981] outline-none transition-all"
+                    className="w-full bg-[#09090B] border border-[#27272A] rounded-md px-3 py-2.5 text-[#FAFAFA] text-xs focus:border-[#10B981] outline-none transition-all min-h-[44px]"
                   />
                   <input
                     type="number"
@@ -470,18 +470,18 @@ export default function POS() {
                     onChange={e => setCustomPrice(e.target.value)}
                     step="0.01"
                     min="0"
-                    className="w-full bg-[#09090B] border border-[#27272A] rounded-md px-3 py-2 text-[#FAFAFA] text-xs focus:border-[#10B981] outline-none transition-all"
+                    className="w-full bg-[#09090B] border border-[#27272A] rounded-md px-3 py-2.5 text-[#FAFAFA] text-xs focus:border-[#10B981] outline-none transition-all min-h-[44px]"
                   />
                   <div className="flex gap-1.5">
                     <button
                       onClick={addCustomItem}
-                      className="flex-1 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-3 py-2 text-xs transition-colors"
+                      className="flex-1 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md px-3 py-2.5 text-xs transition-colors min-h-[44px]"
                     >
                       Add
                     </button>
                     <button
                       onClick={() => setShowCustom(false)}
-                      className="flex-1 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] font-medium rounded-md px-3 py-2 text-xs transition-colors"
+                      className="flex-1 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] font-medium rounded-md px-3 py-2.5 text-xs transition-colors min-h-[44px]"
                     >
                       Cancel
                     </button>

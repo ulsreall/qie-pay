@@ -95,7 +95,7 @@ export default function BatchPayments() {
   };
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15 }}>
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15 }} className="px-4 sm:px-6 lg:px-8">
       <div className="mb-6">
         <h1 className="text-lg font-semibold text-[#FAFAFA] tracking-tight">Batch Payments</h1>
         <p className="text-xs text-[#71717A] mt-0.5">Create multiple payment requests at once</p>
@@ -151,10 +151,10 @@ export default function BatchPayments() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <button
               onClick={addItem}
-              className="flex items-center gap-1.5 px-3 py-1.5 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md text-xs transition-colors"
+              className="flex items-center justify-center gap-1.5 px-3 py-1.5 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md text-xs transition-colors"
             >
               <Plus size={14} /> Add Payment
             </button>
@@ -162,7 +162,7 @@ export default function BatchPayments() {
             <button
               onClick={handleCreateAll}
               disabled={creating}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md text-xs transition-colors disabled:opacity-60"
+              className="flex items-center justify-center gap-1.5 px-3 py-1.5 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md text-xs transition-colors disabled:opacity-60 sm:w-auto"
             >
               {creating ? (
                 <><Loader2 size={14} className="animate-spin" /> {progress.current}/{progress.total}...</>
@@ -189,7 +189,7 @@ export default function BatchPayments() {
       ) : (
         /* Results */
         <div className="bg-[#111113] border border-[#27272A] rounded-lg p-5">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:justify-between mb-4">
             <h2 className="text-sm font-semibold text-[#A1A1AA]">Batch Results</h2>
             <button
               onClick={copyAllLinks}
@@ -200,7 +200,7 @@ export default function BatchPayments() {
           </div>
 
           <div className="overflow-x-auto">
-          <table className="w-full text-sm mb-4 min-w-[400px]">
+          <table className="w-full text-sm mb-4">
             <tbody>
               {results.map((r, i) => (
                 <tr key={i} className={`h-10 ${i % 2 === 0 ? '' : 'bg-[#111113]/50'}`}>

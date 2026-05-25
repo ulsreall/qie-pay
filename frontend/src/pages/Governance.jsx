@@ -139,7 +139,7 @@ function ProposalCard({ proposal, onVote, voting, isDemo }) {
         </div>
 
         {isActive && (
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button
               onClick={() => onVote(proposal.id, true)}
               disabled={voting}
@@ -205,7 +205,7 @@ function CreateProposalModal({ isOpen, onClose, onSubmit, loading }) {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.15 }}
-          className="bg-[#111113] border border-[#27272A] rounded-lg w-full max-w-md p-6"
+          className="bg-[#111113] border border-[#27272A] rounded-lg w-full max-w-md p-4 sm:p-6"
           onClick={(e) => e.stopPropagation()}
         >
           <h2 className="text-lg font-semibold text-[#FAFAFA] tracking-tight mb-4">
@@ -375,7 +375,7 @@ export default function Governance() {
   const pastProposals = proposals.filter((p) => getProposalStatus(p) !== 0);
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6 px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         <div>
@@ -384,7 +384,7 @@ export default function Governance() {
         </div>
         <button
           onClick={() => setShowCreate(true)}
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white text-sm font-medium rounded-md transition-colors duration-150"
+          className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white text-sm font-medium rounded-md transition-colors duration-150 w-full sm:w-auto"
         >
           <Plus size={14} />
           Create Proposal
