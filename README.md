@@ -1,12 +1,38 @@
+<div align="center">
+
 # QIEPay
 
-**Full-Stack Decentralized Payment Gateway on QIE Blockchain**
+### Full-Stack Decentralized Payment Gateway on QIE Blockchain
 
 A complete crypto payment solution with merchant dashboard, POS mode, storefronts, staking, governance, and developer APIs — all running 100% on-chain.
 
-**Live Demo:** [qie-pay.vercel.app](https://qie-pay.vercel.app)  
-**Explorer:** [testnet.qie.digital](https://testnet.qie.digital)  
-**Chain ID:** 1983 (QIE Testnet)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-qie--pay.vercel.app-10B981?style=for-the-badge&logo=vercel&logoColor=white)](https://qie-pay.vercel.app)
+[![Explorer](https://img.shields.io/badge/Explorer-testnet.qie.digital-10B981?style=for-the-badge&logo=ethereum&logoColor=white)](https://testnet.qie.digital)
+[![Chain ID](https://img.shields.io/badge/Chain_ID-1983-10B981?style=for-the-badge)](https://testnet.qie.digital)
+
+**QIE Hackathon 2026 Submission**
+
+</div>
+
+---
+
+## Screenshots
+
+<div align="center">
+
+| Home | Dashboard | Payment |
+|:----:|:---------:|:-------:|
+| ![Home](screenshots/ss-home.png) | ![Dashboard](screenshots/ss-dashboard.png) | ![Create Payment](screenshots/ss-calc.png) |
+
+| POS Mode | Staking | Governance |
+|:--------:|:-------:|:----------:|
+| ![POS](screenshots/ss-pos.png) | ![Staking](screenshots/ss-staking.png) | ![Governance](screenshots/ss-governance.png) |
+
+| Faucet | API Docs | Mobile |
+|:------:|:--------:|:------:|
+| ![Faucet](screenshots/ss-faucet.png) | ![API](screenshots/ss-api.png) | ![Mobile](screenshots/ss-mobile.png) |
+
+</div>
 
 ---
 
@@ -38,6 +64,8 @@ A complete crypto payment solution with merchant dashboard, POS mode, storefront
 
 ## Tech Stack
 
+<div align="center">
+
 | Layer | Technology |
 |-------|------------|
 | Blockchain | QIE Blockchain (Solidity 0.8.20) |
@@ -45,6 +73,8 @@ A complete crypto payment solution with merchant dashboard, POS mode, storefront
 | Web3 | Ethers.js + Wagmi |
 | Smart Contracts | Hardhat + OpenZeppelin |
 | Deployment | Vercel (Frontend) |
+
+</div>
 
 ---
 
@@ -54,11 +84,11 @@ All contracts are deployed on **QIE Testnet (Chain ID 1983)**.
 
 | Contract | Address |
 |----------|---------|
-| QIEPay (Payment Gateway) | `0xFFC670DA0f40c1602175415abd9CEcd6d6BADD42` |
-| QIEStaking | `0x98D953BE697C730Ebc94e5d5032f68503f7140fC` |
-| QIEGovernance | `0xDBdDb269CcBd0EcE141c14E9eCaF695f2b1f4d74` |
-| QIERewards | `0x56A140D3700aad23461605a3Cf7b9E880DfaECa4` |
-| QIEFaucet | `0xe0BC1D6C...95E1E2a6` |
+| QIEPay (Payment Gateway) | [`0xFFC670DA0f40c1602175415abd9CEcd6d6BADD42`](https://testnet.qie.digital/address/0xFFC670DA0f40c1602175415abd9CEcd6d6BADD42) |
+| QIEStaking | [`0x98D953BE697C730Ebc94e5d5032f68503f7140fC`](https://testnet.qie.digital/address/0x98D953BE697C730Ebc94e5d5032f68503f7140fC) |
+| QIEGovernance | [`0xDBdDb269CcBd0EcE141c14E9eCaF695f2b1f4d74`](https://testnet.qie.digital/address/0xDBdDb269CcBd0EcE141c14E9eCaF695f2b1f4d74) |
+| QIERewards | [`0x56A140D3700aad23461605a3Cf7b9E880DfaECa4`](https://testnet.qie.digital/address/0x56A140D3700aad23461605a3Cf7b9E880DfaECa4) |
+| QIEFaucet | [`0xe0BC1D6C...95E1E2a6`](https://testnet.qie.digital) |
 
 ---
 
@@ -110,7 +140,7 @@ qie-pay/
 │   └── QIEFaucet.sol    # Testnet faucet
 ├── frontend/
 │   └── src/
-│       ├── pages/       # React pages
+│       ├── pages/       # React pages (16 pages)
 │       ├── components/  # Reusable components
 │       ├── utils/       # Constants, helpers
 │       └── context/     # React context
@@ -140,6 +170,37 @@ qie-pay/
 | Developers | `/developers` | API documentation |
 | Webhooks | `/webhooks` | Event notification setup |
 | Settings | `/settings` | Account and wallet settings |
+| Invoice | `/invoice/:id` | Payment invoice view |
+
+---
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      QIEPay Architecture                     │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐  │
+│  │   Frontend   │────▶│   Ethers.js │────▶│   QIE Node  │  │
+│  │   React/Vite │     │    Wagmi    │     │   (RPC)     │  │
+│  └─────────────┘     └─────────────┘     └─────────────┘  │
+│         │                                       │          │
+│         ▼                                       ▼          │
+│  ┌─────────────┐                        ┌─────────────┐    │
+│  │   Vercel    │                        │  Smart      │    │
+│  │   Deploy    │                        │  Contracts  │    │
+│  └─────────────┘                        │  (Solidity) │    │
+│                                         └─────────────┘    │
+│                                                │            │
+│                                                ▼            │
+│                                         ┌─────────────┐    │
+│                                         │  QIE Chain  │    │
+│                                         │  ID: 1983   │    │
+│                                         └─────────────┘    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -159,8 +220,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## Links
+<div align="center">
 
-- **Live Demo:** [qie-pay.vercel.app](https://qie-pay.vercel.app)
-- **Block Explorer:** [testnet.qie.digital](https://testnet.qie.digital)
-- **GitHub:** [github.com/ulsreall/qie-pay](https://github.com/ulsreall/qie-pay)
+### Links
+
+[![Live Demo](https://img.shields.io/badge/Live_Demo-10B981?style=for-the-badge&logo=vercel&logoColor=white)](https://qie-pay.vercel.app)
+[![Explorer](https://img.shields.io/badge/Explorer-10B981?style=for-the-badge&logo=ethereum&logoColor=white)](https://testnet.qie.digital)
+[![GitHub](https://img.shields.io/badge/GitHub-10B981?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ulsreall/qie-pay)
+
+**Built for QIE Hackathon 2026**
+
+</div>
