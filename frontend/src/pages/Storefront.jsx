@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Store, BadgeCheck, CreditCard, Share2, Copy,
+  Store, BadgeCheck, CreditCard, Share2, Copy, ArrowLeft,
   Plus, Edit3, Trash2, X, Loader2, ShoppingBag
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -227,6 +227,12 @@ export default function Storefront() {
   return (
     <div className="min-h-screen bg-[#09090B] text-[#FAFAFA]">
       {/* Hero banner */}
+        {/* Back button */}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-4">
+          <button onClick={() => navigate("/dashboard")} className="flex items-center gap-1.5 text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors">
+            <ArrowLeft className="w-3.5 h-3.5" /> Back to Dashboard
+          </button>
+        </div>
       <div className="bg-[#111113] border-b border-[#27272A]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
