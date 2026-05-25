@@ -424,8 +424,8 @@ export default function Pay() {
 
           {/* Back link */}
           <div className="mt-4 text-center">
-            <Link to="/" className="text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors">
-              ← Back to QIE Pay
+            <Link to="/dashboard" className="text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors">
+              ← Back to Dashboard
             </Link>
           </div>
         </div>

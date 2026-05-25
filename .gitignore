@@ -12,3 +12,10 @@ coverage.json
 *.log
 .DS_Store
 .vercel
+demo-video/frames/
+demo-video/final-frames/
+demo-video/final-frames-v2/
+demo-video/frames-v7b/
+demo-video/screenshots/
+demo-screenshots/
+user-screenshots/

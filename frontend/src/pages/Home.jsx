@@ -435,7 +435,7 @@ export default function Home() {
             Built for QIE Blockchain Hackathon 2026
           </p>
           <div className="flex items-center gap-4">
-            <a href="https://explorer.qie.io" target="_blank" rel="noopener noreferrer" className="text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors">
+            <a href="https://testnet.qie.digital/" target="_blank" rel="noopener noreferrer" className="text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors">
               Explorer
             </a>
             <a href="https://rpc1testnet.qie.digital/" target="_blank" rel="noopener noreferrer" className="text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors">

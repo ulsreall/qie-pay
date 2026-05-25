@@ -3,8 +3,8 @@ export const CHAIN_ID = 1983;
 export const CHAIN_ID_HEX = '0x7BF';
 export const CHAIN_NAME = 'QIE Testnet';
 export const RPC_URL = 'https://rpc1testnet.qie.digital/';
-export const BLOCK_EXPLORER = 'https://explorer.qie.io';
-export const EXPLORER_URL = 'https://explorer.qie.io';
+export const BLOCK_EXPLORER = 'https://testnet.qie.digital/';
+export const EXPLORER_URL = 'https://testnet.qie.digital/';
 
 // Contract address - update after deployment
 export const CONTRACT_ADDRESS = '0xFFC670DA0f40c1602175415abd9CEcd6d6BADD42';
