@@ -32,7 +32,7 @@ export default function Settings() {
         setRegistered(reg);
       }
     } catch (err) {
-      console.error(err);
+      if (import.meta.env.DEV) console.error(err);
     }
     setLoading(false);
   };
@@ -93,10 +93,14 @@ export default function Settings() {
   };
 
   const handleCopy = (text, label) => {
-    navigator.clipboard.writeText(text);
-    setCopied(label);
-    toast.success('Copied!');
-    setTimeout(() => setCopied(null), 2000);
+    try {
+      navigator.clipboard.writeText(text);
+      setCopied(label);
+      toast.success('Copied!');
+      setTimeout(() => setCopied(null), 2000);
+    } catch {
+      toast.error('Failed to copy');
+    }
   };
 
   const truncateAddress = (addr) => addr ? `${addr.slice(0, 8)}...${addr.slice(-6)}` : '—';

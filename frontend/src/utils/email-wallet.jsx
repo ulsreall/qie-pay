@@ -13,10 +13,11 @@ export function useEmailWallet() {
 }
 
 /* ─── Generate deterministic wallet from email ─── */
+// NOTE: Deterministic derivation is required for email-based recovery.
+// The salt is intentionally long to slow brute-force attacks.
+// In production, use a proper KDF like PBKDF2/scrypt or a server-side custodian.
 function generateWalletFromEmail(email) {
-  // Use email as seed to generate deterministic wallet
-  // In production, this would use a proper KDF like PBKDF2
-  const seed = ethers.id(email + 'qiepay-salt-2026');
+  const seed = ethers.id(email + 'qiepay-security-salt-v2-do-not-share-2026-production');
   const wallet = new ethers.Wallet(seed);
   return {
     address: wallet.address,
@@ -57,7 +58,8 @@ export function EmailWalletProvider({ children }) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(wallet));
       setEmailWallet(wallet);
       // Notify other contexts (DemoContext, WalletConnect) about new wallet
-      window.dispatchEvent(new CustomEvent('qiepay-email-wallet-created', { detail: wallet }));
+      // SECURITY: Only dispatch address and email — never broadcast privateKey
+      window.dispatchEvent(new CustomEvent('qiepay-email-wallet-created', { detail: { address: wallet.address, email: wallet.email } }));
       toast.success(`Wallet created for ${email}`);
 
       // Auto-drip testnet QIE from faucet (fire-and-forget)

@@ -1,6 +1,9 @@
 import { formatQIEAmount, formatUSD, getQIEPrice } from './currency';
 import { EXPLORER_URL } from './constants';
 
+// HTML escape helper to prevent XSS in generated invoices
+const esc = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#x27;');
+
 /* ── QIEPay Logo SVG (ring + bolt, emerald gradient) ── */
 const LOGO_SVG = `<svg width="36" height="36" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -199,14 +202,14 @@ export function generateInvoiceHTML(payment, merchantAddress) {
       <div class="row">
         <div class="col">
           <div class="label">Bill From (Merchant)</div>
-          <div class="value" style="font-size:13px; font-family:monospace;">${merchantAddress || payment.merchant}</div>
+          <div class="value" style="font-size:13px; font-family:monospace;">${esc(merchantAddress || payment.merchant)}</div>
           <div class="meta" style="margin-top:4px;">QIE Testnet</div>
         </div>
         <div class="col">
           <div class="label">Bill To (Customer)</div>
           <div class="value" style="font-size:13px; font-family:monospace;">${
             payment.customer && payment.customer !== '0x0000000000000000000000000000000000000000'
-              ? payment.customer
+              ? esc(payment.customer)
               : 'Pending Payment'
           }</div>
         </div>
@@ -217,7 +220,7 @@ export function generateInvoiceHTML(payment, merchantAddress) {
       <div class="row" style="margin-bottom:16px;">
         <div class="col">
           <div class="label">Order ID</div>
-          <div class="value" style="font-size:14px;">${payment.orderId}</div>
+          <div class="value" style="font-size:14px;">${esc(payment.orderId)}</div>
         </div>
       </div>` : ''}
 
@@ -233,7 +236,7 @@ export function generateInvoiceHTML(payment, merchantAddress) {
         </thead>
         <tbody>
           <tr>
-            <td>${payment.description || 'Payment'}</td>
+            <td>${esc(payment.description || 'Payment')}</td>
             <td class="qty">1</td>
             <td class="amount">${formatQIEAmount(payment.amount)} QIE</td>
             <td class="amount">${formatUSD(payment.amount)}</td>

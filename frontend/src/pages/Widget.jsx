@@ -73,7 +73,7 @@ export default function Widget() {
       setAmount('');
       setDescription('');
     } catch (err) {
-      console.error('Widget payment error:', err);
+      if (import.meta.env.DEV) console.error('Widget payment error:', err);
       setResult({
         success: false,
         error: err.reason || err.message || 'Payment failed',
@@ -87,10 +87,14 @@ export default function Widget() {
   const embedCode = `<iframe src="${window.location.origin}/widget/${merchantAddress}" width="400" height="500" frameborder="0" style="border-radius: 12px; overflow: hidden;"></iframe>`;
 
   const handleCopyEmbed = () => {
-    navigator.clipboard.writeText(embedCode);
-    setCopied(true);
-    toast.success('Embed code copied!');
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      navigator.clipboard.writeText(embedCode);
+      setCopied(true);
+      toast.success('Embed code copied!');
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error('Failed to copy');
+    }
   };
 
   if (!merchantAddress) {

@@ -26,10 +26,14 @@ const EXAMPLE_PAYLOAD = {
 function CodeBlock({ code }) {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => {
-    navigator.clipboard.writeText(typeof code === 'string' ? code : JSON.stringify(code, null, 2));
-    setCopied(true);
-    toast.success('Copied!');
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      navigator.clipboard.writeText(typeof code === 'string' ? code : JSON.stringify(code, null, 2));
+      setCopied(true);
+      toast.success('Copied!');
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error('Failed to copy');
+    }
   };
 
   const formatted = typeof code === 'string' ? code : JSON.stringify(code, null, 2);
@@ -84,15 +88,23 @@ export default function Webhooks() {
 
   useEffect(() => {
     if (!storageKey) return;
-    const saved = localStorage.getItem(storageKey);
-    if (saved) {
-      const cfg = JSON.parse(saved);
-      setWebhookUrl(cfg.url || '');
-      setEnabled(cfg.enabled || false);
-      setSelectedEvents(cfg.events || []);
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        const cfg = JSON.parse(saved);
+        setWebhookUrl(cfg.url || '');
+        setEnabled(cfg.enabled || false);
+        setSelectedEvents(cfg.events || []);
+      }
+    } catch {
+      // Corrupted localStorage data — ignore
     }
-    const logs = localStorage.getItem(`${storageKey}_logs`);
-    if (logs) setEventLog(JSON.parse(logs));
+    try {
+      const logs = localStorage.getItem(`${storageKey}_logs`);
+      if (logs) setEventLog(JSON.parse(logs));
+    } catch {
+      // Corrupted log data — ignore
+    }
   }, [storageKey]);
 
   const saveConfig = () => {

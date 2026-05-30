@@ -34,11 +34,15 @@ function loadSettings(address) {
 
 function saveSettings(address, settings) {
   if (!address) return;
-  localStorage.setItem(getStorageKey(address, 'name'), settings.name);
-  localStorage.setItem(getStorageKey(address, 'desc'), settings.desc);
-  localStorage.setItem(getStorageKey(address, 'category'), settings.category);
-  localStorage.setItem(getStorageKey(address, 'currencyPref'), settings.currencyPref);
-  localStorage.setItem(getStorageKey(address, 'logo'), settings.logo);
+  try {
+    localStorage.setItem(getStorageKey(address, 'name'), settings.name);
+    localStorage.setItem(getStorageKey(address, 'desc'), settings.desc);
+    localStorage.setItem(getStorageKey(address, 'category'), settings.category);
+    localStorage.setItem(getStorageKey(address, 'currencyPref'), settings.currencyPref);
+    localStorage.setItem(getStorageKey(address, 'logo'), settings.logo);
+  } catch {
+    // localStorage full or unavailable
+  }
 }
 
 export default function MerchantSettings() {

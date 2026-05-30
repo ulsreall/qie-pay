@@ -24,7 +24,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid address' });
     }
 
-    if (!PRIVATE_KEY) {
+    if (!PRIVATE_KEY || PRIVATE_KEY.length < 64) {
       return res.status(503).json({ error: 'Faucet not configured' });
     }
 

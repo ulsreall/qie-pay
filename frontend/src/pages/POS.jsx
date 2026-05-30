@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ShoppingCart, Plus, Minus, Trash2, X, CreditCard, Package,
   ArrowLeft, Copy, ExternalLink, RotateCcw, Loader2, CheckCircle2,
-  QrCode, Coffee, Sandwich, Cake, GlassWater, IceCream, Cookie
+  QrCode, Coffee
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { QRCodeSVG } from 'qrcode.react';
@@ -187,10 +187,14 @@ export default function POS() {
     toast('New sale started', { icon: '✨' });
   };
 
-  const copyUrl = () => {
+  const copyUrl = async () => {
     if (result) {
-      navigator.clipboard.writeText(result.url);
-      toast.success('Link copied!');
+      try {
+        await navigator.clipboard.writeText(result.url);
+        toast.success('Copied!');
+      } catch {
+        toast.error('Failed to copy');
+      }
     }
   };
 
@@ -260,7 +264,7 @@ export default function POS() {
               <Copy className="w-3.5 h-3.5" /> Copy Link
             </button>
             <a
-              href={`${EXPLORER_URL}/tx/${result.paymentId}`}
+              href={`${EXPLORER_URL}/address/${result.paymentId}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 inline-flex items-center justify-center gap-1.5 border border-[#3F3F46] hover:border-[#52525B] text-[#A1A1AA] rounded-md px-3 py-2.5 text-xs transition-colors"

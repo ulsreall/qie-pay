@@ -17,6 +17,9 @@ export default function StatsCard({ icon: Icon, label, value, subValue, trend, c
 
   const colors = colorMap[color] || colorMap.emerald;
 
+  // Reset animation when value prop changes
+  useEffect(() => { setHasAnimated(false); }, [value]);
+
   // Animated counter
   useEffect(() => {
     if (hasAnimated || value === undefined || value === null) return;

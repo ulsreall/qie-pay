@@ -100,7 +100,7 @@ export default function NotificationCenter({ collapsed = false }) {
 
         // Toast for new payments
         for (const notif of newNotifications) {
-          if (notif.type === 1 || notif.type === 0) {
+          if (notif.type === 1) {
             toast.success('New payment received!', { icon: '💰', duration: 4000 });
           }
         }

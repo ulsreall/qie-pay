@@ -80,7 +80,7 @@ export default function Rewards() {
       const localHistory = loadHistory();
       setHistory(localHistory);
     } catch (err) {
-      console.error('Failed to load rewards:', err);
+      if (import.meta.env.DEV) console.error('Failed to load rewards:', err);
       setBalance(DEMO_BALANCE);
       setHistory(DEMO_HISTORY);
       setIsDemo(true);

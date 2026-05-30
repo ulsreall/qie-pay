@@ -179,14 +179,16 @@ export default function Faucet() {
               {dripResult.to && (
                 <>
                   <p>To: <span className="text-[#FAFAFA] font-mono text-xs">{dripResult.to}</span></p>
-                  <a
-                    href={`${EXPLORER}/tx/${dripResult.txHash}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[#10B981] hover:underline text-xs"
-                  >
-                    View on Explorer <ExternalLink size={12} />
-                  </a>
+                  {dripResult.txHash && (
+                    <a
+                      href={`${EXPLORER}/tx/${dripResult.txHash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[#10B981] hover:underline text-xs"
+                    >
+                      View on Explorer <ExternalLink size={12} />
+                    </a>
+                  )}
                 </>
               )}
               {dripResult.alreadyClaimed && (

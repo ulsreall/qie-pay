@@ -38,7 +38,11 @@ function loadProducts(address) {
 }
 
 function saveProducts(address, products) {
-  localStorage.setItem(getStoreKey(address), JSON.stringify(products));
+  try {
+    localStorage.setItem(getStoreKey(address), JSON.stringify(products));
+  } catch {
+    // localStorage full or unavailable
+  }
 }
 
 export default function Storefront() {
@@ -99,7 +103,7 @@ export default function Storefront() {
           } catch {}
         }
       } catch (err) {
-        console.error('Storefront init error:', err);
+        if (import.meta.env.DEV) console.error('Storefront init error:', err);
       } finally {
         setLoading(false);
       }
@@ -125,8 +129,12 @@ export default function Storefront() {
 
   const shareUrl = () => {
     const url = `${window.location.origin}/store/${address}`;
-    navigator.clipboard.writeText(url);
-    toast.success('Storefront URL copied!');
+    try {
+      navigator.clipboard.writeText(url);
+      toast.success('Storefront URL copied!');
+    } catch {
+      toast.error('Failed to copy');
+    }
   };
 
   const handlePay = async (product) => {

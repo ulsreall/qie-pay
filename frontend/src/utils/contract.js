@@ -197,10 +197,12 @@ export async function cancelPayment(paymentId) {
 }
 
 // Get payment details
-export async function getPayment(paymentId) {
-  // Check demo payments first
-  const demoPayment = DEMO_PAYMENTS.find((p) => p.id === paymentId || p.id === String(paymentId));
-  if (demoPayment) return { ...demoPayment };
+export async function getPayment(paymentId, { isDemoMode = false } = {}) {
+  // Only return demo data when explicitly in demo mode
+  if (isDemoMode) {
+    const demoPayment = DEMO_PAYMENTS.find((p) => p.id === paymentId || p.id === String(paymentId));
+    if (demoPayment) return { ...demoPayment };
+  }
 
   const contract = getReadContract();
   const payment = await contract.getPayment(paymentId);
@@ -286,7 +288,11 @@ export function onAccountChange(callback) {
   if (window.ethereum) {
     window.ethereum.on('accountsChanged', callback);
     window.ethereum.on('chainChanged', () => window.location.reload());
+    return () => {
+      window.ethereum.removeListener('accountsChanged', callback);
+    };
   }
+  return () => {};
 }
 
 // Check if wallet is connected

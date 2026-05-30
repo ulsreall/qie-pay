@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import { useEffect } from 'react';
 
 const backdropVariants = {
   hidden: { opacity: 0 },
@@ -29,6 +30,18 @@ export default function Modal({
   children,
   maxWidth = 'max-w-lg',
 }) {
+  // Escape key handler + body scroll lock
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEsc = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handleEsc);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, onClose]);
+
   return (
     <AnimatePresence>
       {isOpen && (

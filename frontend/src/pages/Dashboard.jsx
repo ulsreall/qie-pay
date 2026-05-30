@@ -476,10 +476,14 @@ export default function Dashboard() {
                     <td className="pl-1">
                       <div className="flex items-center gap-1">
                         <button
-                          onClick={() => {
+                          onClick={async () => {
                             const url = `${window.location.origin}/pay/${p.id}`;
-                            navigator.clipboard.writeText(url);
-                            toast.success('Payment link copied!');
+                            try {
+                              await navigator.clipboard.writeText(url);
+                              toast.success('Payment link copied!');
+                            } catch {
+                              toast.error('Failed to copy');
+                            }
                           }}
                           className="p-1 rounded-md hover:bg-[#27272A] text-[#71717A] hover:text-[#A1A1AA] transition-colors"
                           title="Copy payment link"

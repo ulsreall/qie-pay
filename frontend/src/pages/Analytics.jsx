@@ -57,9 +57,9 @@ export default function Analytics() {
         getMerchantPayments(connected.address),
       ]);
       setEarnings(earningsData);
-      setPayments(paymentsData.reverse());
+      setPayments([...paymentsData].reverse());
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err?.message || 'Failed to load analytics');
     }
     setLoading(false);
   };

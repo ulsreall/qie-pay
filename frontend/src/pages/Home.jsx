@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import {
   Zap, DollarSign, Shield, Wallet, QrCode, Layers, BarChart3,
   ArrowRight, Globe, Code2, Database, Cpu,
-  Monitor, Store, Webhook, FileText, Coins, Vote, Gift
+  Monitor, Store, Coins, Vote, Gift
 } from 'lucide-react';
 import { EmailLoginButton } from '../utils/email-wallet';
 

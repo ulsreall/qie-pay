@@ -10,7 +10,7 @@ import { formatUSD } from '../utils/currency';
 export default function BatchPayments() {
   const [wallet, setWallet] = useState(null);
   const [merchantRegistered, setMerchantRegistered] = useState(false);
-  const [items, setItems] = useState([{ description: '', amount: '', orderId: '' }]);
+  const [items, setItems] = useState([{ id: crypto.randomUUID(), description: '', amount: '', orderId: '' }]);
   const [creating, setCreating] = useState(false);
   const [results, setResults] = useState(null);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
@@ -24,7 +24,7 @@ export default function BatchPayments() {
     });
   }, []);
 
-  const addItem = () => setItems([...items, { description: '', amount: '', orderId: '' }]);
+  const addItem = () => setItems([...items, { id: crypto.randomUUID(), description: '', amount: '', orderId: '' }]);
 
   const removeItem = (index) => {
     if (items.length <= 1) return;
@@ -90,8 +90,12 @@ export default function BatchPayments() {
   const copyAllLinks = () => {
     if (!results) return;
     const links = results.filter((r) => r.success).map((r) => `${window.location.origin}/pay/${r.paymentId}`).join('\n');
-    navigator.clipboard.writeText(links);
-    toast.success('All links copied!');
+    try {
+      navigator.clipboard.writeText(links);
+      toast.success('All links copied!');
+    } catch {
+      toast.error('Failed to copy');
+    }
   };
 
   return (
@@ -107,7 +111,7 @@ export default function BatchPayments() {
           <div className="space-y-3 mb-4">
             {items.map((item, i) => (
               <div
-                key={i}
+                key={item.id}
                 className="bg-[#09090B] border border-[#27272A] rounded-md p-3"
               >
                 <div className="flex items-center justify-between mb-2">
@@ -229,7 +233,7 @@ export default function BatchPayments() {
           </div>
 
           <button
-            onClick={() => { setResults(null); setItems([{ description: '', amount: '', orderId: '' }]); }}
+            onClick={() => { setResults(null); setItems([{ id: crypto.randomUUID(), description: '', amount: '', orderId: '' }]); }}
             className="w-full px-4 py-2 bg-[#10B981] hover:bg-[#059669] text-white font-medium rounded-md text-sm transition-colors"
           >
             Create Another Batch

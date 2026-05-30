@@ -52,10 +52,14 @@ export default function Invoice() {
   };
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    toast.success('Link copied');
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      toast.success('Link copied');
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error('Failed to copy');
+    }
   };
 
   const formatDate = (ts) => {
@@ -225,7 +229,7 @@ export default function Invoice() {
             title={`Invoice QIE-${payment.id.toString().padStart(6, '0')}`}
             className="w-full border-0"
             style={{ minHeight: '700px', background: '#f8fafc' }}
-            sandbox="allow-same-origin"
+            sandbox="allow-same-origin allow-scripts"
           />
         </div>
 

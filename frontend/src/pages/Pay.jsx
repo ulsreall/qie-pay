@@ -104,7 +104,6 @@ export default function Pay() {
         // Fetch native balance on QIE Testnet
         setBalanceLoading(true);
         try {
-          const { getBalance } = await import('../utils/contract');
           const balResult = await getBalance(conn.address);
           setWalletBalance(balResult.balance);
         } catch { setWalletBalance('0'); }
@@ -137,8 +136,10 @@ export default function Pay() {
         setWalletAddress(wallet.address);
         // Fetch balance
         setBalanceLoading(true);
+        let fetchedBalance = '0';
         try {
           const balResult = await getBalance(wallet.address);
+          fetchedBalance = balResult.balance;
           setWalletBalance(balResult.balance);
         } catch { setWalletBalance('0'); }
         setBalanceLoading(false);
@@ -148,7 +149,7 @@ export default function Pay() {
           return;
         }
         // Check balance
-        const balNum = parseFloat(walletBalance || '0');
+        const balNum = parseFloat(fetchedBalance || '0');
         const payAmt = parseFloat(payment.amount);
         if (balNum < payAmt) {
           toast.error(`Insufficient balance. You need ${payment.amount} QIE on QIE Testnet (chain 1983).`);
@@ -173,8 +174,10 @@ export default function Pay() {
         setWalletAddress(wallet.address);
         // Fetch balance
         setBalanceLoading(true);
+        let fetchedBalance = '0';
         try {
           const balResult = await getBalance(wallet.address);
+          fetchedBalance = balResult.balance;
           setWalletBalance(balResult.balance);
         } catch { setWalletBalance('0'); }
         setBalanceLoading(false);
@@ -192,7 +195,7 @@ export default function Pay() {
         return;
       }
       // Check balance
-      const balNum = parseFloat(walletBalance || '0');
+      const balNum = parseFloat(fetchedBalance || '0');
       const payAmt = parseFloat(payment.amount);
       if (balNum < payAmt) {
         toast.error(`Insufficient balance. You need ${payment.amount} QIE on QIE Testnet (chain 1983).`);
@@ -424,8 +427,8 @@ export default function Pay() {
 
           {/* Back link */}
           <div className="mt-4 text-center">
-            <Link to="/dashboard" className="text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors">
-              ← Back to Dashboard
+            <Link to="/" className="text-xs text-[#71717A] hover:text-[#A1A1AA] transition-colors">
+              ← Back to Home
             </Link>
           </div>
         </div>

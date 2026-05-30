@@ -10,10 +10,14 @@ import { CONTRACT_ADDRESS, EXPLORER_URL, CHAIN_ID, CHAIN_NAME, RPC_URL } from '.
 function CopyBtn({ text }) {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    toast.success('Copied!');
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      navigator.clipboard.writeText(text);
+      setCopied(true);
+      toast.success('Copied!');
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error('Failed to copy');
+    }
   };
   return (
     <button
@@ -28,10 +32,14 @@ function CopyBtn({ text }) {
 function CodeBlock({ code }) {
   const [copied, setCopied] = useState(false);
   const handleCopy = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    toast.success('Copied!');
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      navigator.clipboard.writeText(code);
+      setCopied(true);
+      toast.success('Copied!');
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error('Failed to copy');
+    }
   };
 
   return (

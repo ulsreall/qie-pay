@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Wallet, UserPlus, FileText, ArrowRight, ArrowLeft, CheckCircle2,
-  Loader2, Copy, ExternalLink, QrCode
+  Loader2, Copy, ExternalLink
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { QRCodeSVG } from 'qrcode.react';

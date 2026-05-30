@@ -106,7 +106,7 @@ export default function Staking() {
       setTotalStaked(total);
       setStakerCount(Number(count));
     } catch (err) {
-      console.error('Failed to load staking data:', err);
+      if (import.meta.env.DEV) console.error('Failed to load staking data:', err);
     }
   }, []);
 

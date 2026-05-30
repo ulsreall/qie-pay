@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { Menu } from 'lucide-react';
 import Sidebar from './Sidebar';
 

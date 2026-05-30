@@ -9,6 +9,7 @@ import { formatQIEAmount, formatUSD } from './currency';
 function escapeCSV(value) {
   if (value === null || value === undefined) return '';
   const str = String(value);
+  if (/^[=+\-@]/.test(str)) return "'" + str;
   if (str.includes(',') || str.includes('"') || str.includes('\n')) {
     return `"${str.replace(/"/g, '""')}"`;
   }

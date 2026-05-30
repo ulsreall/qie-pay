@@ -7,10 +7,9 @@ import {
 } from '../utils/contract';
 import { useDemo } from '../context/DemoContext';
 import { useEmailWallet, EmailLoginButton } from '../utils/email-wallet';
+import { QIE_USD_PRICE } from '../utils/currency';
 import { Wallet, LogOut, Copy, Check, RefreshCw, Eye, Mail } from 'lucide-react';
 import toast from 'react-hot-toast';
-
-const QIE_USD_RATE = 0.5; // Mock exchange rate
 
 export default function WalletConnect({ compact = false, collapsed = false }) {
   const { isDemo, demoAddress, demoBalance, setConnected, setDisconnected } = useDemo();
@@ -43,7 +42,7 @@ export default function WalletConnect({ compact = false, collapsed = false }) {
       }
     };
 
-    onAccountChange(handleAccounts);
+    const cleanupAccounts = onAccountChange(handleAccounts);
 
     // Listen for email wallet creation
     const handleEmailWallet = (e) => {
@@ -57,7 +56,10 @@ export default function WalletConnect({ compact = false, collapsed = false }) {
       }
     };
     window.addEventListener('qiepay-email-wallet-created', handleEmailWallet);
-    return () => window.removeEventListener('qiepay-email-wallet-created', handleEmailWallet);
+    return () => {
+      cleanupAccounts();
+      window.removeEventListener('qiepay-email-wallet-created', handleEmailWallet);
+    };
   }, [setConnected, setDisconnected]);
 
   const handleConnect = async () => {
@@ -97,10 +99,14 @@ export default function WalletConnect({ compact = false, collapsed = false }) {
   const copyAddress = useCallback(() => {
     const addr = wallet?.address || demoAddress;
     if (!addr) return;
-    navigator.clipboard.writeText(addr);
-    setCopied(true);
-    toast.success('Address copied to clipboard');
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      navigator.clipboard.writeText(addr);
+      setCopied(true);
+      toast.success('Address copied to clipboard');
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error('Failed to copy');
+    }
   }, [wallet?.address, demoAddress]);
 
   const truncateAddress = (addr) =>
@@ -110,7 +116,7 @@ export default function WalletConnect({ compact = false, collapsed = false }) {
   const displayAddress = wallet?.address || demoAddress;
   const displayBalance = wallet?.balance || demoBalance;
   const usdValue = displayBalance
-    ? (parseFloat(displayBalance) * QIE_USD_RATE).toFixed(2)
+    ? (parseFloat(displayBalance) * QIE_USD_PRICE).toFixed(2)
     : '0.00';
 
   // ---- DEMO MODE (compact / sidebar) ----

@@ -36,7 +36,7 @@ export default function MerchantProfile() {
         setPayments(pmts.sort((a, b) => b.createdAt - a.createdAt));
         setEarnings(earned);
       } catch (err) {
-        console.error('Merchant profile error:', err);
+        if (import.meta.env.DEV) console.error('Merchant profile error:', err);
         toast.error('Failed to load merchant profile');
       } finally {
         setLoading(false);
