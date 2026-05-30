@@ -41,7 +41,7 @@ export function DemoProvider({ children }) {
       }
     };
 
-    onAccountChange(handleAccounts);
+    const cleanup = onAccountChange(handleAccounts);
 
     // Listen for email wallet creation
     const handleEmailWallet = (e) => {
@@ -51,7 +51,10 @@ export function DemoProvider({ children }) {
       }
     };
     window.addEventListener('qiepay-email-wallet-created', handleEmailWallet);
-    return () => window.removeEventListener('qiepay-email-wallet-created', handleEmailWallet);
+    return () => {
+      if (cleanup) cleanup();
+      window.removeEventListener('qiepay-email-wallet-created', handleEmailWallet);
+    };
   }, []);
 
   /* Called by WalletConnect when a real wallet is connected */

@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Layout from './components/Layout';
 import LoadingSpinner from './components/LoadingSpinner';
+import ErrorBoundary from './components/ErrorBoundary';
 import { EmailWalletProvider } from './utils/email-wallet';
 
 // Lazy load all pages — only download when visited
@@ -60,6 +61,7 @@ export default function App() {
         }}
       />
 
+      <ErrorBoundary>
       <Suspense fallback={<PageLoader />}>
         <Routes>
           {/* Full-width pages (no sidebar) */}
@@ -91,6 +93,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
+      </ErrorBoundary>
     </div>
     </EmailWalletProvider>
   );

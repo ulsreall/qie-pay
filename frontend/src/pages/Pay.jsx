@@ -169,33 +169,29 @@ export default function Pay() {
 
     setPaying(true);
     try {
-      if (!walletAddress) {
+      let activeWallet = walletAddress;
+      if (!activeWallet) {
         const wallet = await connectWallet();
         setWalletAddress(wallet.address);
-        // Fetch balance
-        setBalanceLoading(true);
-        let fetchedBalance = '0';
-        try {
-          const balResult = await getBalance(wallet.address);
-          fetchedBalance = balResult.balance;
-          setWalletBalance(balResult.balance);
-        } catch { setWalletBalance('0'); }
-        setBalanceLoading(false);
-        // Check self-pay after connecting
-        if (wallet.address.toLowerCase() === payment.merchant?.toLowerCase()) {
-          toast.error("You can't pay your own invoice. Switch to a different wallet.");
-          setPaying(false);
-          return;
-        }
+        activeWallet = wallet.address;
       }
-      // Check self-pay for already connected wallet
-      if (walletAddress && walletAddress.toLowerCase() === payment.merchant?.toLowerCase()) {
+      // Check self-pay
+      if (activeWallet.toLowerCase() === payment.merchant?.toLowerCase()) {
         toast.error("You can't pay your own invoice. Switch to a different wallet.");
         setPaying(false);
         return;
       }
+      // Always fetch fresh balance before checking
+      setBalanceLoading(true);
+      let currentBalance = '0';
+      try {
+        const balResult = await getBalance(activeWallet);
+        currentBalance = balResult.balance;
+        setWalletBalance(balResult.balance);
+      } catch { setWalletBalance('0'); }
+      setBalanceLoading(false);
       // Check balance
-      const balNum = parseFloat(fetchedBalance || '0');
+      const balNum = parseFloat(currentBalance || '0');
       const payAmt = parseFloat(payment.amount);
       if (balNum < payAmt) {
         toast.error(`Insufficient balance. You need ${payment.amount} QIE on QIE Testnet (chain 1983).`);
