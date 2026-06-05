@@ -4,7 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import Layout from './components/Layout';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorBoundary from './components/ErrorBoundary';
-import { EmailWalletProvider } from './utils/email-wallet';
+import { EmailWalletProvider, PasswordPrompt, useEmailWallet } from './utils/email-wallet';
 
 // Lazy load all pages — only download when visited
 const Home = lazy(() => import('./pages/Home'));
@@ -41,9 +41,36 @@ function PageLoader() {
   );
 }
 
+function PasswordGate({ children }) {
+  const { needsPassword } = useEmailWallet();
+
+  if (needsPassword) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#09090B]/95 backdrop-blur-sm">
+        <div className="w-full max-w-sm mx-4">
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 rounded-2xl bg-[#10B981]/10 flex items-center justify-center mx-auto mb-4">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <h1 className="text-xl font-semibold text-[#FAFAFA]">QIEPay</h1>
+            <p className="text-sm text-[#71717A] mt-1">Unlock your wallet to continue</p>
+          </div>
+          <PasswordPrompt />
+        </div>
+      </div>
+    );
+  }
+
+  return children;
+}
+
 export default function App() {
   return (
     <EmailWalletProvider>
+    <PasswordGate>
     <div className="min-h-screen bg-[#09090B] text-[#FAFAFA]">
       <Toaster
         position="top-right"
@@ -95,6 +122,7 @@ export default function App() {
       </Suspense>
       </ErrorBoundary>
     </div>
+    </PasswordGate>
     </EmailWalletProvider>
   );
 }

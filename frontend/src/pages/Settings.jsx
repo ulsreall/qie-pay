@@ -9,6 +9,7 @@ import { connectWallet, checkConnection, isMerchant, getMerchantPayments } from 
 import { CHAIN_ID, CHAIN_NAME, RPC_URL, CONTRACT_ADDRESS, EXPLORER_URL } from '../utils/constants';
 import { exportPaymentsCSV } from '../utils/export';
 import { downloadInvoice } from '../utils/invoice';
+import ExportWallet from '../components/ExportWallet';
 
 export default function Settings() {
   const [wallet, setWallet] = useState(null);
@@ -271,6 +272,11 @@ export default function Settings() {
               : <><FileText size={12} /> Download All Invoices</>
             }
           </button>
+        </div>
+
+        {/* Export Wallet Card — spans full width on larger screens */}
+        <div className="lg:col-span-2">
+          <ExportWallet />
         </div>
       </div>
     </motion.div>
