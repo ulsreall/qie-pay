@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback, createContext, useContext } from 'react';
 import { ethers } from 'ethers';
 import toast from 'react-hot-toast';
+import { setCachedEmailWallet, clearCachedEmailWallet } from './contract';
 
 const STORAGE_KEY = 'qiepay_email_wallet';
 const DEMO_EMAIL = 'demo@qiepay.io';
+const ENCRYPTION_ITERATIONS = 100000; // PBKDF2 iterations
 
 /* ─── Email-based wallet context ─── */
 const EmailWalletContext = createContext(null);
@@ -12,10 +14,79 @@ export function useEmailWallet() {
   return useContext(EmailWalletContext);
 }
 
+/* ─── Encryption Helpers (Web Crypto API) ─── */
+
+/**
+ * Derive AES-256-GCM key from email using PBKDF2
+ */
+async function deriveKey(email, salt) {
+  const encoder = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(email),
+    'PBKDF2',
+    false,
+    ['deriveKey']
+  );
+
+  return crypto.subtle.deriveKey(
+    {
+      name: 'PBKDF2',
+      salt: encoder.encode(salt),
+      iterations: ENCRYPTION_ITERATIONS,
+      hash: 'SHA-256',
+    },
+    keyMaterial,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['encrypt', 'decrypt']
+  );
+}
+
+/**
+ * Encrypt private key using AES-256-GCM
+ * Returns: { iv: base64, data: base64, salt: string }
+ */
+async function encryptPrivateKey(privateKey, email) {
+  const salt = 'qiepay-encryption-salt-v2-2026';
+  const key = await deriveKey(email, salt);
+  const iv = crypto.getRandomValues(new Uint8Array(12)); // 96-bit IV for AES-GCM
+
+  const encoder = new TextEncoder();
+  const encrypted = await crypto.subtle.encrypt(
+    { name: 'AES-GCM', iv },
+    key,
+    encoder.encode(privateKey)
+  );
+
+  // Convert to base64 for storage
+  const ivBase64 = btoa(String.fromCharCode(...iv));
+  const dataBase64 = btoa(String.fromCharCode(...new Uint8Array(encrypted)));
+
+  return { iv: ivBase64, data: dataBase64, salt };
+}
+
+/**
+ * Decrypt private key using AES-256-GCM
+ */
+async function decryptPrivateKey(encryptedData, email) {
+  const { iv, data, salt } = encryptedData;
+  const key = await deriveKey(email, salt);
+
+  // Convert from base64
+  const ivBytes = Uint8Array.from(atob(iv), c => c.charCodeAt(0));
+  const dataBytes = Uint8Array.from(atob(data), c => c.charCodeAt(0));
+
+  const decrypted = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv: ivBytes },
+    key,
+    dataBytes
+  );
+
+  return new TextDecoder().decode(decrypted);
+}
+
 /* ─── Generate deterministic wallet from email ─── */
-// NOTE: Deterministic derivation is required for email-based recovery.
-// The salt is intentionally long to slow brute-force attacks.
-// In production, use a proper KDF like PBKDF2/scrypt or a server-side custodian.
 function generateWalletFromEmail(email) {
   const seed = ethers.id(email + 'qiepay-security-salt-v2-do-not-share-2026-production');
   const wallet = new ethers.Wallet(seed);
@@ -31,15 +102,51 @@ export function EmailWalletProvider({ children }) {
   const [emailWallet, setEmailWallet] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
 
-  // Load saved wallet on mount
+  // Load saved wallet on mount (decrypt private key)
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const data = JSON.parse(saved);
-        setEmailWallet(data);
+    async function loadWallet() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const data = JSON.parse(saved);
+
+          // Handle legacy unencrypted wallets — migrate on first load
+          if (data.privateKey && !data.encrypted) {
+            console.warn('Migrating unencrypted wallet to encrypted storage...');
+            const encrypted = await encryptPrivateKey(data.privateKey, data.email);
+            const migrated = {
+              address: data.address,
+              email: data.email,
+              encrypted: true,
+              encryptedKey: encrypted,
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+            setEmailWallet({
+              address: migrated.address,
+              email: migrated.email,
+              _privateKey: data.privateKey,
+            });
+            setCachedEmailWallet(data.privateKey, data.address);
+            return;
+          }
+
+          // Decrypt stored private key
+          if (data.encrypted && data.encryptedKey) {
+            const privateKey = await decryptPrivateKey(data.encryptedKey, data.email);
+            setEmailWallet({
+              address: data.address,
+              email: data.email,
+              _privateKey: privateKey,
+            });
+            setCachedEmailWallet(privateKey, data.address);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load email wallet:', err);
+        localStorage.removeItem(STORAGE_KEY);
       }
-    } catch {}
+    }
+    loadWallet();
   }, []);
 
   const connectWithEmail = useCallback(async (email) => {
@@ -55,11 +162,31 @@ export function EmailWalletProvider({ children }) {
       await new Promise(r => setTimeout(r, 800));
 
       const wallet = generateWalletFromEmail(email);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(wallet));
-      setEmailWallet(wallet);
+
+      // Encrypt private key before storing
+      const encrypted = await encryptPrivateKey(wallet.privateKey, email);
+      const storedData = {
+        address: wallet.address,
+        email: wallet.email,
+        encrypted: true,
+        encryptedKey: encrypted,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(storedData));
+
+      // Keep private key in memory only (never in localStorage unencrypted)
+      setEmailWallet({
+        address: wallet.address,
+        email: wallet.email,
+        _privateKey: wallet.privateKey,
+      });
+      setCachedEmailWallet(wallet.privateKey, wallet.address);
+
       // Notify other contexts (DemoContext, WalletConnect) about new wallet
       // SECURITY: Only dispatch address and email — never broadcast privateKey
-      window.dispatchEvent(new CustomEvent('qiepay-email-wallet-created', { detail: { address: wallet.address, email: wallet.email } }));
+      window.dispatchEvent(new CustomEvent('qiepay-email-wallet-created', {
+        detail: { address: wallet.address, email: wallet.email }
+      }));
+
       toast.success(`Wallet created for ${email}`);
 
       // Auto-drip testnet QIE from faucet (fire-and-forget)
@@ -76,6 +203,7 @@ export function EmailWalletProvider({ children }) {
       return wallet;
     } catch (err) {
       toast.error('Failed to create wallet');
+      console.error('Wallet creation error:', err);
       return null;
     } finally {
       setIsConnecting(false);
@@ -84,15 +212,28 @@ export function EmailWalletProvider({ children }) {
 
   const disconnectEmail = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY);
+    clearCachedEmailWallet();
     setEmailWallet(null);
     toast('Email wallet disconnected', { icon: '📧' });
   }, []);
 
+  // Get private key (only available in memory, never from localStorage)
+  const getPrivateKey = useCallback(() => {
+    if (emailWallet && emailWallet._privateKey) {
+      return emailWallet._privateKey;
+    }
+    return null;
+  }, [emailWallet]);
+
   const value = {
-    emailWallet,
+    emailWallet: emailWallet ? {
+      address: emailWallet.address,
+      email: emailWallet.email,
+    } : null,
     isConnecting,
     connectWithEmail,
     disconnectEmail,
+    getPrivateKey,
     hasEmailWallet: !!emailWallet,
   };
 

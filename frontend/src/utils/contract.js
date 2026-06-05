@@ -10,20 +10,42 @@ import {
 // Email wallet storage key
 const EMAIL_WALLET_KEY = 'qiepay_email_wallet';
 
-// Get email wallet from localStorage
-function getEmailWallet() {
+// Module-level cache for decrypted private key (never in localStorage)
+let _cachedPrivateKey = null;
+let _cachedAddress = null;
+
+/**
+ * Set cached private key (called by EmailWalletProvider after decryption)
+ * This allows contract.js to use the key without re-reading localStorage
+ */
+export function setCachedEmailWallet(privateKey, address) {
+  _cachedPrivateKey = privateKey;
+  _cachedAddress = address;
+}
+
+/**
+ * Clear cached private key (called on disconnect)
+ */
+export function clearCachedEmailWallet() {
+  _cachedPrivateKey = null;
+  _cachedAddress = null;
+}
+
+/**
+ * Get email wallet info (address only, no private key exposure)
+ */
+function getEmailWalletInfo() {
   try {
     const saved = localStorage.getItem(EMAIL_WALLET_KEY);
     if (saved) {
-      return JSON.parse(saved);
+      const data = JSON.parse(saved);
+      return { address: data.address, email: data.email, encrypted: data.encrypted };
     }
   } catch {}
   return null;
 }
 
 // Get provider (read-only)
-// Direct RPC provider — always uses JSON-RPC, ignores browser extension
-// Used for email wallet operations to avoid network mismatch
 function getDirectProvider() {
   return new ethers.JsonRpcProvider(RPC_URL);
 }
@@ -37,12 +59,12 @@ export function getProvider() {
 
 // Get signer (requires wallet)
 export async function getSigner() {
-  // Check for email wallet first — uses direct RPC, not browser extension
-  const emailWallet = getEmailWallet();
-  if (emailWallet && emailWallet.privateKey) {
-    return new ethers.Wallet(emailWallet.privateKey, getDirectProvider());
+  // Check for email wallet first — uses cached private key
+  const walletInfo = getEmailWalletInfo();
+  if (walletInfo && _cachedPrivateKey) {
+    return new ethers.Wallet(_cachedPrivateKey, getDirectProvider());
   }
-  
+
   if (!window.ethereum) {
     throw new Error('Wallet not found. Please install QIE Wallet or MetaMask.');
   }
@@ -57,7 +79,6 @@ export async function getContract() {
 }
 
 // Get contract with provider (for reads) — always use direct RPC
-// Read calls don't need wallet connection, direct RPC is more reliable
 export function getReadContract() {
   return new ethers.Contract(CONTRACT_ADDRESS, QIEPAY_ABI, getDirectProvider());
 }
@@ -140,10 +161,7 @@ export async function registerMerchant() {
 export async function createPayment(description, orderId, amountInQIE) {
   const amountWei = ethers.parseEther(amountInQIE.toString());
 
-  // getContract() uses getSigner() which checks email wallet first,
-  // then falls back to browser extension (window.ethereum)
   const contract = await getContract();
-  // gasLimit bypasses wallet's eth_estimateGas which may fail on testnet
   const tx = await contract.createPayment(description, orderId, amountWei, { gasLimit: 500000 });
   const receipt = await tx.wait();
 
@@ -169,7 +187,6 @@ export async function createPayment(description, orderId, amountInQIE) {
 export async function payForPayment(paymentId, amountInQIE) {
   const value = ethers.parseEther(amountInQIE.toString());
   const contract = await getContract();
-  // gasLimit bypasses wallet's eth_estimateGas which may fail on testnet RPC mismatch
   const tx = await contract.pay(paymentId, { value, gasLimit: 300000 });
   return tx.wait();
 }
@@ -198,7 +215,6 @@ export async function cancelPayment(paymentId) {
 
 // Get payment details
 export async function getPayment(paymentId, { isDemoMode = false } = {}) {
-  // Only return demo data when explicitly in demo mode
   if (isDemoMode) {
     const demoPayment = DEMO_PAYMENTS.find((p) => p.id === paymentId || p.id === String(paymentId));
     if (demoPayment) return { ...demoPayment };
@@ -211,7 +227,6 @@ export async function getPayment(paymentId, { isDemoMode = false } = {}) {
 
 // Get merchant payments
 export async function getMerchantPayments(merchantAddress) {
-  // If requesting demo address payments, return demo data
   if (merchantAddress === DEMO_ADDRESS) {
     return [...DEMO_PAYMENTS];
   }
@@ -296,23 +311,21 @@ export function onAccountChange(callback) {
 }
 
 // Check if wallet is connected
-// Returns real wallet data if available, otherwise returns demo data for demo mode
 export async function checkConnection() {
-  // Check for email wallet first — synchronous, no RPC needed
-  const emailWallet = getEmailWallet();
-  if (emailWallet && emailWallet.address) {
-    // Always return email wallet immediately — balance fetched async below
+  // Check for email wallet first
+  const walletInfo = getEmailWalletInfo();
+  if (walletInfo && walletInfo.address) {
     const result = {
-      address: emailWallet.address,
+      address: walletInfo.address,
       balance: '0',
-      email: emailWallet.email,
+      email: walletInfo.email,
       isEmailWallet: true,
       isDemo: false,
     };
     // Try to fetch balance (non-blocking, best-effort)
     try {
       const provider = getDirectProvider();
-      const balance = await provider.getBalance(emailWallet.address);
+      const balance = await provider.getBalance(walletInfo.address);
       result.balance = ethers.formatEther(balance);
     } catch {
       // Balance fetch failed — still return the wallet with 0 balance
@@ -321,7 +334,6 @@ export async function checkConnection() {
   }
 
   if (!window.ethereum) {
-    // No wallet provider → enter demo mode
     return {
       address: DEMO_ADDRESS,
       balance: DEMO_BALANCE,
@@ -334,7 +346,6 @@ export async function checkConnection() {
       method: 'eth_accounts',
     });
     if (accounts.length === 0) {
-      // Wallet installed but no account connected → demo mode
       return {
         address: DEMO_ADDRESS,
         balance: DEMO_BALANCE,
