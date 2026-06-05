@@ -258,16 +258,7 @@ export function EmailWalletProvider({ children }) {
 
       toast.success(`Wallet created for ${email}`);
 
-      // Auto-drip testnet QIE from faucet (fire-and-forget)
-      fetch('/api/faucet/drip', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ address: wallet.address }),
-      }).then(r => r.json()).then(data => {
-        if (data.success) {
-          toast.success(`+${data.amount} QIE from faucet! 🎉`, { duration: 4000 });
-        }
-      }).catch(() => {});
+      // Faucet claim is manual — user goes to /faucet page to claim
 
       return wallet;
     } catch (err) {
